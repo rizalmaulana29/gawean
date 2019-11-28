@@ -49,8 +49,8 @@ class CartController extends Controller
       $order->save();
       $n++;
     }
-    $x = $order->quantity;
-    $count = count($x);
+    // $x = $order->quantity;
+    // $count = count($x);
 
     $result[1] = Payment::create([
                                   'id_transaksi' => $order->id_order,
@@ -72,19 +72,19 @@ class CartController extends Controller
       $result[2]->kota = $req['kota'][$key];
       $result[2]->kecamatan = $req['kecamatan'][$key];
       $result[2]->status = $status;
-      $result[2]->id_order = $order->id_order;
+      $result[2]->id_order = date("ymd") . $request->input('id_kantor') . str_pad(1, 4, '0', STR_PAD_LEFT);
       $result[2]->tgl_reg = $now;
       $result[2]->telepon = $request->input('telepon');
       $result[2]->hp = $request->input('hp');
       $result[2]->email = $request->input('email');
-      $result[2]->jk = $request->input('jk');
+      $result[2]->jk = $req['jk'][$key];
       $result[2]->id_kantor = $request->input('id_kantor');
       $result[2]->save();
     }
     
     
     
-    return response()->json(["status" => "success", "message" => $count, $result[1]->nominal],200);
+    return response()->json(["status" => "success", "message" => $result[1]->nominal],200);
   }
 
 }

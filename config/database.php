@@ -43,6 +43,18 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', 3306),
+            'database' => env('DB_DATABASE', 'ra_dev'),
+            'username' => env('DB_USERNAME', 'ra'),
+            'password' => env('DB_PASSWORD', 'TeuingAtuhBro123!'),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'prefix' => env('DB_PREFIX', ''),
+            'strict' => env('DB_STRICT_MODE', false),
+        ],
+
+        'mysql2' => [
+            'driver' => 'mysql',
             'host' => env('DB_HOST', '60.253.107.84'),
             'port' => env('DB_PORT', 8888),
             'database' => env('DB_DATABASE', 'ra_dev'),

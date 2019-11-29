@@ -61,7 +61,7 @@ $app->singleton(
 
 $app->middleware([
     // ...
-    \Barryvdh\Cors\HandleCors::class,
+    'cors'=>\Barryvdh\Cors\HandleCors::class,
 ]);
 
 // $app->middleware([

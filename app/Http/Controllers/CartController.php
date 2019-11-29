@@ -25,6 +25,7 @@ class CartController extends Controller
     $x = [];
     $n = 0;
     foreach ($req['id_produk'] as $key => $id_produk) {
+      dd($id_produk);
       $produk = Produk::find($id_produk);
       $id[$n] = $produk->produk;
       $order = new Order;

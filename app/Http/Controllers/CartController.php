@@ -30,6 +30,7 @@ class CartController extends Controller
       $order = new Order;
       $order->id_order = date("ymd") . $request->input('id_kantor') . str_pad(1, 4, '0', STR_PAD_LEFT);
       $order->id_kantor = $request->input('id_kantor');
+      $order->id_produk = $id_produk;
       $order->id_via_bayar = 1;
       $order->id_pelanggan = $order->id_order;
       $order->id_via_bayar = 1;

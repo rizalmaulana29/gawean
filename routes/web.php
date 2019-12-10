@@ -21,4 +21,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	// $router->get('produk', ['uses' =>'ProdukController@show']);
 	$router->get('code', ['uses' =>'CodeController@unicCode']);
 	$router->post('cart', ['uses' => 'CartController@cart']);
+	
+	$router->post('notifications', ['uses' => 'NotificationsController@dbProcess']);
+	$router->post('testRegistration', ['uses' => 'NotificationsController@Test']);
 });

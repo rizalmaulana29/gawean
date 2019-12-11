@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 use App\Thirdparty\Nicepay\Nicepay;
+use App\Thirdparty\Nicepay\Nicepaylog;
 
 class NotificationsController extends Controller
 {
@@ -27,40 +28,80 @@ class NotificationsController extends Controller
         $req = $request->all();
     }
 
-    public function Test(){
-        $this->npRegistration("1912100015235");
+    public function TestRegistration(Request $request){
+        $req = $request->all();
+        $this->passed = $req;
+        $id_unique = $this->getRandomString(10);
+        $this->npRegistration($id_unique);
     }
 
-    private function npRegistration($id_trx){
+    public function TestInquiry(){
+        $id_unique = $this->getRandomString(10);
+        $this->npInuqiry($id_unique);
+    }
 
+    private function npInuqiry($id_trx){
+  
         $nicepay = new Nicepay;
-        $vacctValidDt   = date("Ymd");
-        $vacctValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
-        $vacctValidTm   = date("His");
-
-        $trx            = Payment::where('id_transaksi',$id_trx)->first();
-        $detailOrder    = Order::where('id_order',$id_trx)->first();
-        $kontak         = Kontak::where('id_order',$id_trx)->where('status','Kostumer')->first();
+       
+        $NicepayLog     = Nicepaylog::where('id_order',$id_trx)->first();
+        $tXid           = $NicepayLog->tXid;
 
         $timestamp      = date("YmdHis");
         $referenceNo    = $id_trx;
         $amt            = "120000";
 
         $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
-
         $payMethod      = "02";
 
-        #ASK. GIMANA MENDINAMIS KAN PARAMETERNYA?
-        $bankCd             = "BMRI";
-        $customerName       = $kontak->nama_kontak;
-        $customerPhone      = $kontak->hp;
-        $customerEmail      = $kontak->email;
-        $customerAddress    = $kontak->alamat;
-        $customerCity       = $kontak->kota;
-        $customerProv       = "Jawa Barat";
-        $customerPostId     = "40331";
-        $customerCountry    = "Indonesia";
+        $detailTrans = array(
+                "timeStamp"     =>$timestamp,
+                "tXid"          =>"IONPAYTEST02201912101705334004",
+                "iMid"          =>$nicepay->getMerchantID(),
+                "referenceNo"   =>$referenceNo,
+                "amt"           =>$amt,
+                "merchantToken" =>$merchantToken
+            );
+        $detailTrans =json_encode($detailTrans);
 
+        $transaksiAPI = $nicepay->nicepayApi("nicepay/direct/v2/inquiry",$detailTrans); 
+        
+        return $transaksiAPI;
+    }
+
+    private function npRegistration($id_trx){
+      
+        $nicepay = new Nicepay;
+        $vacctValidDt   = date("Ymd");
+        $vacctValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
+        $vacctValidTm   = date("His");
+  
+        // $payment        = Payment::where('id_transaksi',$id_trx)->first();
+        // $detailOrder    = Order::where('id_order',$id_trx)->first();
+        // $kontak         = Kontak::where('id_order',$id_trx)->where('status','Kostumer')->first();
+  
+        $num      = $this->passed['id_payment'];
+        $num_pad  = sprintf("%02d", $num);
+        $bCode    = $this->passed['bankCd'];
+  
+        $timestamp      = date("YmdHis");
+        $referenceNo    = $id_trx;
+        $amt            = $this->passed['nominal_transaksi'];
+        $payMethod      = $num_pad;
+        $bankCd         = "BMRI";
+  
+        $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
+  
+        #ASK. GIMANA MENDINAMIS KAN PARAMETERNYA?
+        $customerName       = $this->passed['nama'][0];
+        $customerPhone      = $this->passed['hp'][0];
+        // $customerEmail      = $this->passed['email'][0];
+        $customerAddress    = $this->passed['alamat'][0];
+        $customerCity       = $this->passed['kota'][0];
+        // $customerProv       = "Jawa Barat";
+        // $customerPostId     = "40331";
+        // $customerCountry    = "Indonesia";
+  
         $deliveryNm         = "Nama Pengirim";
         $deliveryPhone      = "No Penerima";
         $deliveryAddr       = "Jalan Bukit Berbunga 22";
@@ -69,20 +110,7 @@ class NotificationsController extends Controller
         $deliveryPostCd     = "12345";
         $deliveryCountry    = "Indonesia";
         $description        = "Desctiption";
-        
-        #Test
-        if($test){
-            $bankCd             = "BMRI";
-            $customerName       = "Iqbal Sandi Isharmawan" ;
-            $customerPhone      = "089601722915";
-            $customerEmail      = "rivmochi7@gmail.com";
-            $customerAddress    = "Jalan Parakan Saat I No 40";
-            $customerCity       = "Bandung";
-            $customerProv       = "Jawa Barat";
-            $customerPostId     = "40381";
-            $customerCountry    = "Indonesia";
-        }
-
+  
         #billing = detail customer
         #delivery = detail pengiriman
         $detailTrans = array(
@@ -92,15 +120,15 @@ class NotificationsController extends Controller
                 "currency"      =>"IDR",
                 "amt"           =>$amt,
                 "referenceNo"   =>$referenceNo,
-                "goodsNm"       =>"Kambing Aqiqah",
+                "goodsNm"       =>"Rumah Aqiqah",
                 "billingNm"     =>$customerName,
                 "billingPhone"  =>$customerPhone,
-                "billingEmail"  =>$customerEmail,
+                // "billingEmail"  =>$customerEmail,
                 "billingAddr"   =>$customerAddress,
                 "billingCity"   =>$customerCity,
-                "billingState"  =>$customerProv,
-                "billingPostCd" =>$customerPostId,
-                "billingCountry"=>$customerCountry,
+                // "billingState"  =>$customerProv,
+                // "billingPostCd" =>$customerPostId,
+                // "billingCountry"=>$customerCountry,
                 "deliveryNm"    =>$deliveryNm,
                 "deliveryPhone" =>$deliveryPhone,
                 "deliveryAddr"  =>$deliveryAddr,
@@ -112,7 +140,7 @@ class NotificationsController extends Controller
                 "dbProcessUrl"  =>$nicepay->getUrlNotif(),
                 "merchantToken" =>$merchantToken,
                 "reqDomain"     =>"rumahaqiqah.co.id",
-                "reqServerIP"   =>"127.0.0.1",
+                // "reqServerIP"   =>"127.0.0.1",
                 // "userIP"        =>"127.0.0.1",
                 "userSessionID" =>"697D6922C961070967D3BA1BA5699C2C",
                 "userAgent"     =>"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/60.0.3112.101 Safari/537.36",
@@ -124,13 +152,39 @@ class NotificationsController extends Controller
                 "merFixAcctId"  =>""
             );
         $detailTrans =json_encode($detailTrans);
-
+  
+  
         $transaksiAPI = $nicepay->nicepayApi("nicepay/direct/v2/registration",$detailTrans); 
         
+        $response     = json_decode($transaksiAPI);
+        if($response->resultCd == '0000'){
+          $tXid     = $response->tXid;
+          $vacctno  = $response->vacctNo;
+          $msg      = $response->resultMsg;
+        }else{
+          $tXid     = "";
+          $vacctno  = "";
+          $msg      = $response->resultMsg;
+        }
+  
+        $nicepayLog    = new Nicepaylog;
+        $nicepayLog->id_order = $id_trx;
+        $nicepayLog->payment_method = $payMethod;
+        $nicepayLog->code     = $bCode;
+        $nicepayLog->txid     = $tXid;
+        $nicepayLog->no_reference = $referenceNo;
+        $nicepayLog->virtual_account_no = $vacctno;
+        // $nicepayLog->update = Carbon::now();
+        $nicepayLog->request  = addslashes($detailTrans);
+        $nicepayLog->response = addslashes($transaksiAPI);
+        $nicepayLog->status   = addslashes($msg);
+        $nicepayLog->action   = "Registration";
+        var_dump($nicepayLog);
+  
         return $transaksiAPI;
     }
 
-    function getName($n) { 
+    function getRandomString($n) { 
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
         $randomString = ''; 
   

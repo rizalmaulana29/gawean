@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 use App\Thirdparty\Nicepay\Nicepay;
+use App\Thirdparty\Nicepay\Nicepaylog;
 
 class CartController extends Controller
 {
@@ -26,6 +27,8 @@ class CartController extends Controller
     public function cart(Request $request){
       $req = $request->all();
       $now = Carbon::now()->addHour(7);
+ 
+      $this->passed = $req;
 
       $total = 0;
 
@@ -49,12 +52,12 @@ class CartController extends Controller
       $x = [];
       $n = 0;
       foreach ($req['id_produk'] as $key => $id_produk) {
-          $produk = Produk::find($id_produk);
+          $produk = Harga::find($id_produk);
           $id[$n] = $produk->produk;
           $order = new Order;
           $order->id_order = $result[1]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
-          $order->id_produk = $id_produk;
+          $order->ra_produk_harga_id = $id_produk;
           $order->id_via_bayar = 1;
           $order->id_pelanggan = $order->id_order;
           $order->id_via_bayar = 1;
@@ -70,7 +73,6 @@ class CartController extends Controller
           $order->keterangan = $req['keterangan'][$key];
           $order->nik_input = $request->input('nik_input');
           $order->cur = "IDR";
-          // dd($order);
           $order->save();
           $n++;
       }
@@ -79,21 +81,21 @@ class CartController extends Controller
       
       foreach ($req['status'] as $key => $status) {
           $result[2] = new Kontak;
-          $result[2]->id_kontak = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
+          $result[2]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
           $result[2]->nama_kontak = $req['nama'][$key];
-          $result[2]->tgl_lahir = $req['tgl_lahir'][$key];
+          $result[2]->tgl_lahir   = $req['tgl_lahir'][$key];
           $result[2]->tempat_lahir = $req['tempat_lahir'][$key];
-          $result[2]->alamat = $req['alamat'][$key];
-          $result[2]->kota = $req['kota'][$key];
-          $result[2]->kecamatan = $req['kecamatan'][$key];
-          $result[2]->status = $status;
-          $result[2]->id_order = $order->id_order;
-          $result[2]->tgl_reg = $now;
-          $result[2]->telepon = $request->input('telepon');
-          $result[2]->hp = $request->input('hp');
-          $result[2]->email = $request->input('email');
-          $result[2]->jk = $req['jk'][$key];
-          $result[2]->id_kantor = $request->input('id_kantor');
+          $result[2]->alamat      = $req['alamat'][$key];
+          $result[2]->kota        = $req['kota'][$key];
+          $result[2]->kecamatan   = $req['kecamatan'][$key];
+          $result[2]->status      = $status;
+          $result[2]->id_order    = $order->id_order;
+          $result[2]->tgl_reg     = $now;
+          $result[2]->telepon     = $request->input('telepon');
+          $result[2]->hp          = $request->input('hp');
+          $result[2]->email       = $request->input('email');
+          $result[2]->jk          = $req['jk'][$key];
+          $result[2]->id_kantor   = $request->input('id_kantor');
           $result[2]->save();
       }
       
@@ -101,7 +103,8 @@ class CartController extends Controller
           $npRegister = $this->npRegistration($result[1]->id_transaksi);
           $response = json_decode($npRegister);
 
-          (Nicepay::$isProduction)? : $this->deleteTestPayment($result[1]->id_transaksi);
+      #Delete test Inputed Data
+      // (Nicepay::$isProduction)? : $this->deleteTestPayment($result[1]->id_transaksi);
 
       #ASK. GIMANA RESPONSE TERBAIKNYA?
           if($response->resultCd == '0000'){
@@ -110,26 +113,26 @@ class CartController extends Controller
             return response()->json(["status" => "failed", "detail" => $response->resultCd, "message" => $response->resultMsg],200);
           }
   }
-
-  public function Test(){
-      $this->npRegistration("1912100015235");
-  }
-
+  
   private function npRegistration($id_trx){
-
+      
       $nicepay = new Nicepay;
       $vacctValidDt   = date("Ymd");
       $vacctValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
       $vacctValidTm   = date("His");
 
-      $trx            = Payment::where('id_transaksi',$id_trx)->first();
+      $payment        = Payment::where('id_transaksi',$id_trx)->first();
       $detailOrder    = Order::where('id_order',$id_trx)->first();
       $kontak         = Kontak::where('id_order',$id_trx)->where('status','Kostumer')->first();
 
+      $num      = $this->passed['id_payment'];
+      $num_pad  = sprintf("%02d", $num);
+      $bCode    = $this->passed['bankCd'];
+
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
-      $amt            = "120000";
-      $payMethod      = "02";
+      $amt            = $payment['nominal'];
+      $payMethod      = $num_pad;
       $bankCd         = "BMRI";
 
       $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
@@ -140,9 +143,9 @@ class CartController extends Controller
       $customerEmail      = $kontak['email'];
       $customerAddress    = $kontak['alamat'];
       $customerCity       = $kontak['kota'];
-      $customerProv       = "Jawa Barat";
-      $customerPostId     = "40331";
-      $customerCountry    = "Indonesia";
+      // $customerProv       = "Jawa Barat";
+      // $customerPostId     = "40331";
+      // $customerCountry    = "Indonesia";
 
       $deliveryNm         = "Nama Pengirim";
       $deliveryPhone      = "No Penerima";
@@ -174,19 +177,6 @@ class CartController extends Controller
         //   $description        = "Desctiption",
       // );
 
-      #Test
-      // if(Nicepay::$isProduction){
-      //     $bankCd             = "BMRI";
-      //     $customerName       = "Iqbal Sandi Isharmawan" ;
-      //     $customerPhone      = "089601722915";
-      //     $customerEmail      = "rivmochi7@gmail.com";
-      //     $customerAddress    = "Jalan Parakan Saat I No 40";
-      //     $customerCity       = "Bandung";
-      //     $customerProv       = "Jawa Barat";
-      //     $customerPostId     = "40381";
-      //     $customerCountry    = "Indonesia";
-      // }
-
       #billing = detail customer
       #delivery = detail pengiriman
       $detailTrans = array(
@@ -196,15 +186,15 @@ class CartController extends Controller
               "currency"      =>"IDR",
               "amt"           =>$amt,
               "referenceNo"   =>$referenceNo,
-              "goodsNm"       =>"Kambing Aqiqah",
+              "goodsNm"       =>"Rumah Aqiqah",
               "billingNm"     =>$customerName,
               "billingPhone"  =>$customerPhone,
               "billingEmail"  =>$customerEmail,
               "billingAddr"   =>$customerAddress,
               "billingCity"   =>$customerCity,
-              "billingState"  =>$customerProv,
-              "billingPostCd" =>$customerPostId,
-              "billingCountry"=>$customerCountry,
+              // "billingState"  =>$customerProv,
+              // "billingPostCd" =>$customerPostId,
+              // "billingCountry"=>$customerCountry,
               "deliveryNm"    =>$deliveryNm,
               "deliveryPhone" =>$deliveryPhone,
               "deliveryAddr"  =>$deliveryAddr,
@@ -229,13 +219,40 @@ class CartController extends Controller
           );
       $detailTrans =json_encode($detailTrans);
 
+
       $transaksiAPI = $nicepay->nicepayApi("nicepay/direct/v2/registration",$detailTrans); 
       
+      $response     = json_decode($transaksiAPI);
+      if($response->resultCd == '0000'){
+        $tXid     = $response->tXid;
+        $vacctno  = $response->vacctNo;
+        $msg      = $response->resultMsg;
+      }else{
+        $tXid     = "";
+        $vacctno  = "";
+        $msg      = $response->resultMsg;
+      }
+
+      $nicepayLog    = new Nicepaylog;
+      $nicepayLog->id_order = $id_trx;
+      $nicepayLog->payment_method = $payMethod;
+      $nicepayLog->code     = $bCode;
+      $nicepayLog->txid     = $tXid;
+      $nicepayLog->no_reference = $referenceNo;
+      $nicepayLog->virtual_account_no = $vacctno;
+      // $nicepayLog->update = Carbon::now();
+      $nicepayLog->request  = addslashes($detailTrans);
+      $nicepayLog->response = addslashes($transaksiAPI);
+      $nicepayLog->status   = addslashes($msg);
+      $nicepayLog->action   = "Registration";
+      // var_dump($nicepayLog);
+      $nicepayLog->save();
+
       return $transaksiAPI;
   }
 
 
-  function getRandomWord($n) { 
+  function getRandomString($n) { 
       $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
       $randomString = ''; 
 

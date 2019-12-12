@@ -124,7 +124,7 @@ class CartController extends Controller
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
       if($np){
-          if($response->resultCd) == '0000'){
+          if($response->resultCd == '0000'){
             return response()->json(["status" => "success", "message" => $response],200);
           }else{
             return response()->json(["status" => "failed", "detail" => $response->resultCd, "message" => $response->resultMsg],200);

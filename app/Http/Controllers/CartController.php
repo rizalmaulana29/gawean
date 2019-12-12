@@ -99,6 +99,7 @@ var_dump($request->input('id_payment'));
           'tgl_kirim' => $request->input('tgl_kirim'),
           'waktu_kirim' => $request->input('waktu_kirim')
       ]);
+      var_dump($result[2]);
 dd($request->input('id_payment'));
       $total = 0;
       $id = [];

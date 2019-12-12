@@ -65,7 +65,9 @@ class CartController extends Controller
           'id_kontak' => $result[1]->id,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('total'),
+          'nominal_transfer' => $request->input('total'),
           'coa_debit' => $request->input('coa'),
+          'tgl_transaksi' => $now,
           'status' => 'Tunai',
           'jenis' => 'Online',
           'kode' => $request->input('promo'),
@@ -108,7 +110,7 @@ class CartController extends Controller
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
       $paymeth = Paymeth::find($result[2]->id_payment_method);
       if($paymeth['parent_id'] <= 5){
-          $npRegister = $this->npRegistration($result[1]->id_transaksi);
+          $npRegister = $this->npRegistration($result[2]->id_transaksi);
           $response = json_decode($npRegister);
           $np     = true;
       }

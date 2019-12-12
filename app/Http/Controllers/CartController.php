@@ -105,10 +105,9 @@ class CartController extends Controller
       }
       
       
-      
-      
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
       $paymeth = Paymeth::find($result[2]->id_payment_method);
+      dd($paymeth);
       if(paymeth['parent_id'] <= 5){
           $npRegister = $this->npRegistration($result[1]->id_transaksi);
           $response = json_decode($npRegister);

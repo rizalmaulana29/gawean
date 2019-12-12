@@ -147,6 +147,8 @@ class CartController extends Controller
       $kontak         = Kontak::where('id',$payment['id_kontak'])->where('status','customer')->first();
       $paymeth        = Paymeth::find($payment['id_payment_method']);
 
+      dd($kontak);
+      
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
       $amt            = $payment['nominal'];

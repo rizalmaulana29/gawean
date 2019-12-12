@@ -55,6 +55,7 @@ class CartController extends Controller
         $kontakCus->id_kantor   = $request->input('id_kantor');
         $kontakCus->save();
 var_dump($kontakCus->id);
+var_dump($kontakCus->id_kontak);
 
       foreach ($req['status'] as $key => $status) {
         if($key != 0){

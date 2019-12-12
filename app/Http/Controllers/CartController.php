@@ -82,7 +82,7 @@ class CartController extends Controller
 
         }
       }
-var_dump($request->input('id_payment'));
+// var_dump($request->input('id_payment'));
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
           'id_kantor' => $request->input('id_kantor'),
@@ -99,8 +99,8 @@ var_dump($request->input('id_payment'));
           'tgl_kirim' => $request->input('tgl_kirim'),
           'waktu_kirim' => $request->input('waktu_kirim')
       ]);
-      var_dump($result[2]);
-dd($request->input('id_payment'));
+//       var_dump($result[2]);
+// dd($request->input('id_payment'));
       $total = 0;
       $id = [];
       $x = [];

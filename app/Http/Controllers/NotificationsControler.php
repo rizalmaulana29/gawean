@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Harga;
-use App\Kantor;
-use App\Produk;
-use App\Order;
-use App\Payment;
-use App\Kontak;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 use App\Thirdparty\Nicepay\Nicepay;
-use App\Thirdparty\Nicepay\Nicepaylog;
+use App\Nicepaylog;
+use App\Payment;
+use App\Response;
+use Carbon\Carbon;
 
 class NotificationsController extends Controller
 {
@@ -26,6 +21,50 @@ class NotificationsController extends Controller
     
     public function dbProcess(Request $request){
         $req = $request->all();
+
+        $amt            = $req['amt'];
+        $code           = $req['bankCd'];
+        $billingNm      = $req['billingNm'];
+        $currency	    = $req['currency'];
+        $goodsNm	    = $req['goodsNm'];
+        $instmntMon	    = $req['instmntMon'];
+        $instmntType	= $req['instmntType'];
+        $matchCl	    = $req['matchCl'];
+        $merchantToken	= $req['merchantToken'];
+        $payMethod	    = $req['payMethod'];
+        $referenceNo	= $req['referenceNo'];
+        $status	        = $req['status'];
+        $tXid	        = $req['tXid'];
+        $transDt	    = $req['transDt'];
+        $transTm	    = $req['transTm'];
+        $vacctNo	    = $req['vacctNo'];
+        $vacctValidDt	= $req['vacctValidDt'];
+        $vacctValidTm   = $req['vacctValidTm'];
+
+        $nicepayLog    = new Nicepaylog;
+
+        $nicepayLog->id_order = $referenceNo;
+        $nicepayLog->payment_method = $payMethod;
+        $nicepayLog->code     = $code;
+        $nicepayLog->txid     = $tXid;
+        $nicepayLog->virtual_account_no = $vacctNo;
+        $nicepayLog->update   = Carbon::now();
+        $nicepayLog->request  = addslashes(json_encode($req));
+        $nicepayLog->response = "";
+        $nicepayLog->status   = addslashes($status);
+        $nicepayLog->action   = "Notifications";
+        $nicepayLog->save();
+
+        $status = ($status == 0)?:($status == 1)?:($status == 2)?:($status == 3)?:
+
+        if($status == 0){
+            $payment = Payment::where('id_transaksi', $referenceNo);
+            $payment->status    = ;
+        }
+        else{
+            $payment = Payment::where('id_transaksi', $referenceNo)->first();
+        }
+            return json_encode(array("msg"=>"success"));
     }
 
     public function TestRegistration(Request $request){
@@ -35,37 +74,94 @@ class NotificationsController extends Controller
         $this->npRegistration($id_unique);
     }
 
-    public function TestInquiry(){
-        $id_unique = $this->getRandomString(10);
-        $this->npInuqiry($id_unique);
-    }
-
-    private function npInuqiry($id_trx){
-  
-        $nicepay = new Nicepay;
-       
-        $NicepayLog     = Nicepaylog::where('id_order',$id_trx)->first();
-        $tXid           = $NicepayLog->tXid;
+    public function npInuqiry(Request $request){
+        $req = $request->all();
 
         $timestamp      = date("YmdHis");
-        $referenceNo    = $id_trx;
-        $amt            = "120000";
+        $referenceNo    = $req['referenceNo'];
+        $tXid           = $req['tXid'];
+        $amt            = $req['amt'];
+
+        $nicepay = new Nicepay;
 
         $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
-        $payMethod      = "02";
 
         $detailTrans = array(
                 "timeStamp"     =>$timestamp,
-                "tXid"          =>"IONPAYTEST02201912101705334004",
+                "tXid"          =>$tXid,
                 "iMid"          =>$nicepay->getMerchantID(),
                 "referenceNo"   =>$referenceNo,
                 "amt"           =>$amt,
                 "merchantToken" =>$merchantToken
             );
         $detailTrans =json_encode($detailTrans);
-
-        $transaksiAPI = $nicepay->nicepayApi("nicepay/direct/v2/inquiry",$detailTrans); 
         
+        $transaksiAPI   = $nicepay->nicepayApi("nicepay/direct/v2/inquiry",$detailTrans); 
+        $response       = json_decode($transaksiAPI);
+        $msg            = $response->resultMsg;
+        
+        $nicepayLog    = new Nicepaylog;
+        $nicepayLog->id_order = $referenceNo;
+        $nicepayLog->txid     = $tXid;
+        $nicepayLog->request  = addslashes($detailTrans);
+        $nicepayLog->response = addslashes($transaksiAPI);
+        $nicepayLog->status   = addslashes($msg);
+        $nicepayLog->action   = "Inquiry";
+        $nicepayLog->save();
+
+        return $transaksiAPI;
+    }
+
+    public function npCancelVA(Request $request){
+        $req = $request->all();
+
+        $timestamp      = date("YmdHis");
+        $referenceNo    = $req['referenceNo'];
+        $tXid           = $req['tXid'];
+        $amt            = $req['amt'];
+        
+        $payMeth    = Payment::where("id_transaksi",$referenceNo)->pluck("id_payment_method");
+        $payMeth    = sprintf("%02d", $payMeth[0]);
+
+
+        $nicepay = new Nicepay;
+
+        $merchantToken  = $nicepay->merchantToken($timestamp,$tXid,$amt);
+
+        $detailTrans = array(
+                "timeStamp"     =>$timestamp,
+                "tXid"          =>$tXid,
+                "iMid"          =>$nicepay->getMerchantID(),
+                "amt"           =>$amt,
+                "merchantToken" =>$merchantToken,
+                "payMethod"     =>$payMeth,
+                "preauthToken"  =>"",
+                "worker"        =>"",
+                "cancelType"    =>1,
+                "cancelMsg"     =>"Need To Be Canceled",
+                "cancelServerIp"=>"",
+                "cancelUserId"  =>"",
+                "cancelUserInfo"=>"",
+                "cancelRetryCnt"=>""
+            );
+        // echo
+        $detailTrans =json_encode($detailTrans);
+        
+        $transaksiAPI   = $nicepay->nicepayApi("nicepay/direct/v2/cancel",$detailTrans); 
+        $response       = json_decode($transaksiAPI);
+        $msg            = $response->resultMsg;
+        
+        $nicepayLog    = new Nicepaylog;
+        $nicepayLog->id_order = $referenceNo;
+        $nicepayLog->txid     = $tXid;
+        $nicepayLog->update   = Carbon::now();
+        $nicepayLog->request  = addslashes($detailTrans);
+        $nicepayLog->response = addslashes($transaksiAPI);
+        $nicepayLog->status   = addslashes($msg);
+        $nicepayLog->action   = "CancelVA";
+        
+        $nicepayLog->save();
+
         return $transaksiAPI;
     }
 
@@ -172,14 +268,13 @@ class NotificationsController extends Controller
         $nicepayLog->payment_method = $payMethod;
         $nicepayLog->code     = $bCode;
         $nicepayLog->txid     = $tXid;
-        $nicepayLog->no_reference = $referenceNo;
+        $nicepayLog->update   = NOW();
         $nicepayLog->virtual_account_no = $vacctno;
-        // $nicepayLog->update = Carbon::now();
         $nicepayLog->request  = addslashes($detailTrans);
         $nicepayLog->response = addslashes($transaksiAPI);
         $nicepayLog->status   = addslashes($msg);
         $nicepayLog->action   = "Registration";
-        var_dump($nicepayLog);
+
   
         return $transaksiAPI;
     }

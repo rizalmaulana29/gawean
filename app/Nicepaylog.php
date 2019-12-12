@@ -1,10 +1,9 @@
 <?php
-
-namespace App\Thirdparty\Nicepay;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Nicepaylog
+class Nicepaylog extends Model 
 {
     protected $primaryKey = 'id';
     protected $table = 'ra_nicepayLog';

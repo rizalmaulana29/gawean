@@ -11,8 +11,8 @@ use App\Kontak;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
+use App\Nicepaylog;
 use App\Thirdparty\Nicepay\Nicepay;
-use App\Thirdparty\Nicepay\Nicepaylog;
 
 class CartController extends Controller
 {
@@ -124,16 +124,14 @@ class CartController extends Controller
       $payment        = Payment::where('id_transaksi',$id_trx)->first();
       $detailOrder    = Order::where('id_order',$id_trx)->first();
       $kontak         = Kontak::where('id_order',$id_trx)->where('status','Kostumer')->first();
-
-      $num      = $this->passed['id_payment'];
-      $num_pad  = sprintf("%02d", $num);
-      $bCode    = $this->passed['bankCd'];
-
+      
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
       $amt            = $payment['nominal'];
-      $payMethod      = $num_pad;
-      $bankCd         = "BMRI";
+      
+      $payMeth        = $this->passed['id_payment'];
+      $payMethod      = sprintf("%02d", $payMeth);
+      $code           = $this->passed['code'];
 
       $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
 
@@ -206,18 +204,20 @@ class CartController extends Controller
               "dbProcessUrl"  =>$nicepay->getUrlNotif(),
               "merchantToken" =>$merchantToken,
               "reqDomain"     =>"rumahaqiqah.co.id",
-              // "reqServerIP"   =>"127.0.0.1",
+              "reqServerIP"   =>"127.0.0.1",
               // "userIP"        =>"127.0.0.1",
-              "userSessionID" =>"697D6922C961070967D3BA1BA5699C2C",
+              "userSessionID" =>$this->getRandomString(32),
               "userAgent"     =>"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/60.0.3112.101 Safari/537.36",
               "userLanguage"  =>"ko-KR,en-US;q=0.8,ko;q=0.6,en;q=0.4",
               "cartData"      =>"{}",
-              "bankCd"        =>$bankCd,
               "vacctValidDt"  =>$vacctValidDt,
               "vacctValidTm"  =>$vacctValidTm,
               "merFixAcctId"  =>""
           );
-      $detailTrans =json_encode($detailTrans);
+      
+      $codeArray   = ($payMethod == "01")?array():($payMethod == "02")?array("bankCd"=>$code):($payMethod == "03")?array("mitraCd"=>$code):array();
+      $detailTrans = array_merge($detailTrans,$codeArray);
+      $detailTrans = json_encode($detailTrans);
 
 
       $transaksiAPI = $nicepay->nicepayApi("nicepay/direct/v2/registration",$detailTrans); 
@@ -233,19 +233,17 @@ class CartController extends Controller
         $msg      = $response->resultMsg;
       }
 
-      $nicepayLog    = new Nicepaylog;
+      $nicepayLog = new Nicepaylog;
       $nicepayLog->id_order = $id_trx;
       $nicepayLog->payment_method = $payMethod;
-      $nicepayLog->code     = $bCode;
+      $nicepayLog->code     = $code;
       $nicepayLog->txid     = $tXid;
-      $nicepayLog->no_reference = $referenceNo;
       $nicepayLog->virtual_account_no = $vacctno;
-      // $nicepayLog->update = Carbon::now();
+      $nicepayLog->update = Carbon::now();
       $nicepayLog->request  = addslashes($detailTrans);
       $nicepayLog->response = addslashes($transaksiAPI);
       $nicepayLog->status   = addslashes($msg);
       $nicepayLog->action   = "Registration";
-      // var_dump($nicepayLog);
       $nicepayLog->save();
 
       return $transaksiAPI;

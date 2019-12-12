@@ -33,7 +33,30 @@ class CartController extends Controller
 
       $total = 0;
 
+      #Create C'Babeh
+        $tempat_lahir = (isset($req['tempat_lahir'][0]))?$req['tempat_lahir'][0]:"";
+        $tgl_lahir    = (isset($req['tgl_lahir'][0]))?$req['tgl_lahir'][0]:"";
+        $jk    = (isset($req['jk'][0]))?$req['jk'][0]:"";
+
+        $result[1] = new Kontak;
+        $result[1]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
+        $result[1]->nama_kontak = $req['nama'][0];
+        $result[1]->tgl_lahir   = $tgl_lahir;
+        $result[1]->tempat_lahir = $tempat_lahir;
+        $result[1]->alamat      = $req['alamat'];
+        $result[1]->kota        = $req['kota'];
+        $result[1]->kecamatan   = $req['kecamatan'];
+        $result[1]->status      = $status;
+        $result[1]->tgl_reg     = $now;
+        $result[1]->telepon     = $request->input('telepon');
+        $result[1]->hp          = $request->input('hp');
+        $result[1]->email       = $request->input('email');
+        $result[1]->jk          = $jk;
+        $result[1]->id_kantor   = $request->input('id_kantor');
+        $result[1]->save();
+
       foreach ($req['status'] as $key => $status) {
+        if($key != 0){
           
           $tempat_lahir = (isset($req['tempat_lahir'][$key]))?$req['tempat_lahir'][$key]:"";
           $tgl_lahir    = (isset($req['tgl_lahir'][$key]))?$req['tgl_lahir'][$key]:"";
@@ -56,6 +79,7 @@ class CartController extends Controller
           $result[1]->jk          = $jk;
           $result[1]->id_kantor   = $request->input('id_kantor');
           $result[1]->save();
+        }
       }
 
 
@@ -147,8 +171,6 @@ class CartController extends Controller
       $kontak         = Kontak::where('id',$payment['id_kontak'])->where('status','customer')->first();
       $paymeth        = Paymeth::find($payment['id_payment_method']);
 
-      dd($kontak);
-      
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
       $amt            = $payment['nominal'];

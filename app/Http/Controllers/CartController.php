@@ -111,8 +111,8 @@ class CartController extends Controller
           $order->id_order = $result[2]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
-          $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->first();
-          $order->id_anak = Kontak::where('id',$kontakCus->id_kontak)->where('status','anak')->first();
+          $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->value('id');
+          $order->id_anak = Kontak::where('id',$result[1]->id_kontak)->where('status','anak')->value('id');
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 
@@ -261,7 +261,7 @@ class CartController extends Controller
               "merFixAcctId"  =>""
           );
       
-      $codeArray   = ($payMethod == "01")?array():($payMethod == "02")?array("bankCd"=>$code):($payMethod == "03")?array("mitraCd"=>$code):array();
+      $codeArray   = ($payMeth == 1)?array():($payMeth == 2)?array("bankCd"=>$code):($payMeth == 3)?array("mitraCd"=>$code):array();
       $detailTrans = array_merge($detailTrans,$codeArray);
       $detailTrans = json_encode($detailTrans);
 

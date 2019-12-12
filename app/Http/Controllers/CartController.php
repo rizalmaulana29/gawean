@@ -38,22 +38,22 @@ class CartController extends Controller
         $tgl_lahir    = (isset($req['tgl_lahir'][0]))?$req['tgl_lahir'][0]:"";
         $jk    = (isset($req['jk'][0]))?$req['jk'][0]:"";
 
-        $result[1] = new Kontak;
-        $result[1]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
-        $result[1]->nama_kontak = $req['nama'][0];
-        $result[1]->tgl_lahir   = $tgl_lahir;
-        $result[1]->tempat_lahir = $tempat_lahir;
-        $result[1]->alamat      = $req['alamat'];
-        $result[1]->kota        = $req['kota'];
-        $result[1]->kecamatan   = $req['kecamatan'];
-        $result[1]->status      = $status;
-        $result[1]->tgl_reg     = $now;
-        $result[1]->telepon     = $request->input('telepon');
-        $result[1]->hp          = $request->input('hp');
-        $result[1]->email       = $request->input('email');
-        $result[1]->jk          = $jk;
-        $result[1]->id_kantor   = $request->input('id_kantor');
-        $result[1]->save();
+        $result[0] = new Kontak;
+        $result[0]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(0000,9999);
+        $result[0]->nama_kontak = $req['nama'][0];
+        $result[0]->tgl_lahir   = $tgl_lahir;
+        $result[0]->tempat_lahir = $tempat_lahir;
+        $result[0]->alamat      = $req['alamat'];
+        $result[0]->kota        = $req['kota'];
+        $result[0]->kecamatan   = $req['kecamatan'];
+        $result[0]->status      = $req['status'][0];
+        $result[0]->tgl_reg     = $now;
+        $result[0]->telepon     = $request->input('telepon');
+        $result[0]->hp          = $request->input('hp');
+        $result[0]->email       = $request->input('email');
+        $result[0]->jk          = $jk;
+        $result[0]->id_kantor   = $request->input('id_kantor');
+        $result[0]->save();
 
       foreach ($req['status'] as $key => $status) {
         if($key != 0){
@@ -86,7 +86,7 @@ class CartController extends Controller
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
           'id_kantor' => $request->input('id_kantor'),
-          'id_kontak' => $result[1]->id,
+          'id_kontak' => $result[0]->id,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('total'),
           'nominal_transfer' => $request->input('total'),
@@ -111,8 +111,8 @@ class CartController extends Controller
           $order->id_order = $result[2]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
-          $order->id_pelanggan = Kontak::where('id',$result[1]->id)->where('status','customer')->first();
-          $order->id_anak = Kontak::where('id',$result[1]->id)->where('status','anak')->first();
+          $order->id_pelanggan = Kontak::where('id',$result[0]->id)->where('status','customer')->first();
+          $order->id_anak = Kontak::where('id',$result[0]->id)->where('status','anak')->first();
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 

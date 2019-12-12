@@ -38,23 +38,23 @@ class CartController extends Controller
         $tgl_lahir    = (isset($req['tgl_lahir'][0]))?$req['tgl_lahir'][0]:"";
         $jk    = (isset($req['jk'][0]))?$req['jk'][0]:"";
 
-        $result[0] = new Kontak;
-        $result[0]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(0000,9999);
-        $result[0]->nama_kontak = $req['nama'][0];
-        $result[0]->tgl_lahir   = $tgl_lahir;
-        $result[0]->tempat_lahir = $tempat_lahir;
-        $result[0]->alamat      = $req['alamat'];
-        $result[0]->kota        = $req['kota'];
-        $result[0]->kecamatan   = $req['kecamatan'];
-        $result[0]->status      = $req['status'][0];
-        $result[0]->tgl_reg     = $now;
-        $result[0]->telepon     = $request->input('telepon');
-        $result[0]->hp          = $request->input('hp');
-        $result[0]->email       = $request->input('email');
-        $result[0]->jk          = $jk;
-        $result[0]->id_kantor   = $request->input('id_kantor');
-        $result[0]->save();
-var_dump($result[0]->id);
+        $kontakCus = new Kontak;
+        $kontakCus->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(0000,9999);
+        $kontakCus->nama_kontak = $req['nama'][0];
+        $kontakCus->tgl_lahir   = $tgl_lahir;
+        $kontakCus->tempat_lahir = $tempat_lahir;
+        $kontakCus->alamat      = $req['alamat'];
+        $kontakCus->kota        = $req['kota'];
+        $kontakCus->kecamatan   = $req['kecamatan'];
+        $kontakCus->status      = $req['status'][0];
+        $kontakCus->tgl_reg     = $now;
+        $kontakCus->telepon     = $request->input('telepon');
+        $kontakCus->hp          = $request->input('hp');
+        $kontakCus->email       = $request->input('email');
+        $kontakCus->jk          = $jk;
+        $kontakCus->id_kantor   = $request->input('id_kantor');
+        $kontakCus->save();
+var_dump($kontakCus->id);
 
       foreach ($req['status'] as $key => $status) {
         if($key != 0){
@@ -82,12 +82,12 @@ var_dump($result[0]->id);
           $result[1]->save();
         }
       }
-dd($result[0]->id);
+dd($kontakCus->id);
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
           'id_kantor' => $request->input('id_kantor'),
-          'id_kontak' => $result[0]->id,
+          'id_kontak' => $kontakCus->id,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('total'),
           'nominal_transfer' => $request->input('total'),
@@ -112,8 +112,8 @@ dd($result[0]->id);
           $order->id_order = $result[2]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
-          $order->id_pelanggan = Kontak::where('id',$result[0]->id)->where('status','customer')->first();
-          $order->id_anak = Kontak::where('id',$result[0]->id)->where('status','anak')->first();
+          $order->id_pelanggan = Kontak::where('id',$kontakCus->id)->where('status','customer')->first();
+          $order->id_anak = Kontak::where('id',$kontakCus->id)->where('status','anak')->first();
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 

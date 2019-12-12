@@ -144,7 +144,7 @@ class CartController extends Controller
 
       $payment        = Payment::where('id_transaksi',$id_trx)->first();
       $detailOrder    = Order::where('id_order',$id_trx)->first();
-      $kontak         = Kontak::where('id_order',$id_trx)->where('status','Kostumer')->first();
+      $kontak         = Kontak::where('id',$payment['id_pelanggan'])->where('status','customer')->first();
       $paymeth        = Paymeth::find($payment['id_payment_method']);
 
       $timestamp      = date("YmdHis");

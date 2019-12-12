@@ -36,6 +36,7 @@ class CartController extends Controller
           
           $tempat_lahir = (isset($req['tempat_lahir'][$key]))?$req['tempat_lahir'][$key]:"";
           $tgl_lahir    = (isset($req['tgl_lahir'][$key]))?$req['tgl_lahir'][$key]:"";
+          $jk    = (isset($req['jk'][$key]))?$req['jk'][$key]:"";
 
 
           $result[1] = new Kontak;
@@ -51,7 +52,7 @@ class CartController extends Controller
           $result[1]->telepon     = $request->input('telepon');
           $result[1]->hp          = $request->input('hp');
           $result[1]->email       = $request->input('email');
-          $result[1]->jk          = $req['jk'][$key];
+          $result[1]->jk          = $jk;
           $result[1]->id_kantor   = $request->input('id_kantor');
           $result[1]->save();
       }

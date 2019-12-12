@@ -67,6 +67,7 @@ class CartController extends Controller
           'nominal' => $request->input('total'),
           'coa_debit' => $request->input('coa'),
           'status' => 'Tunai',
+          'jenis' => 'Online',
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),

@@ -54,7 +54,7 @@ class CartController extends Controller
         $kontakCus->jk          = $jk;
         $kontakCus->id_kantor   = $request->input('id_kantor');
         $kontakCus->save();
-        
+
 var_dump($kontakCus->id);
 var_dump($kontakCus->id_kontak);
 var_dump($kontakCus->nama_kontak);
@@ -87,6 +87,10 @@ var_dump($kontakCus->kota);
           $result[1]->jk          = $jk;
           $result[1]->id_kantor   = $request->input('id_kantor');
           $result[1]->save();
+
+          var_dump($result[1]->id);
+          var_dump($result[1]->id_kontak);
+          var_dump($result[1]->nama_kontak);
         }
       }
 dd($kontakCus->id);

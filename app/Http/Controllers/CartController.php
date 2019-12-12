@@ -33,14 +33,19 @@ class CartController extends Controller
       $total = 0;
 
       foreach ($req['status'] as $key => $status) {
+          
+          $tempat_lahir = (isset($req['tempat_lahir'][$key]))?$req['tempat_lahir'][$key]:"";
+          $tgl_lahir    = (isset($req['tgl_lahir'][$key]))?$req['tgl_lahir'][$key]:"";
+
+
           $result[1] = new Kontak;
           $result[1]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
           $result[1]->nama_kontak = $req['nama'][$key];
-          $result[1]->tgl_lahir   = $req['tgl_lahir'][$key];
-          $result[1]->tempat_lahir = $req['tempat_lahir'][$key];
-          $result[1]->alamat      = $req['alamat'][$key];
-          $result[1]->kota        = $req['kota'][$key];
-          $result[1]->kecamatan   = $req['kecamatan'][$key];
+          $result[1]->tgl_lahir   = $tgl_lahir;
+          $result[1]->tempat_lahir = $tempat_lahir;
+          $result[1]->alamat      = $req['alamat'];
+          $result[1]->kota        = $req['kota'];
+          $result[1]->kecamatan   = $req['kecamatan'];
           $result[1]->status      = $status;
           $result[1]->tgl_reg     = $now;
           $result[1]->telepon     = $request->input('telepon');

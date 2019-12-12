@@ -32,81 +32,83 @@ class CartController extends Controller
 
       $total = 0;
 
-      #ASK. TOTAL NYA NGAMBIL DARIMANA?
-      foreach ($req['id_produk'] as $key => $id_produk) {
-          $total += $req['qty'][$key] * $req['harga'][$key];
+      foreach ($req['status'] as $key => $status) {
+          $result[1] = new Kontak;
+          $result[1]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
+          $result[1]->nama_kontak = $req['nama'][$key];
+          $result[1]->tgl_lahir   = $req['tgl_lahir'][$key];
+          $result[1]->tempat_lahir = $req['tempat_lahir'][$key];
+          $result[1]->alamat      = $req['alamat'][$key];
+          $result[1]->kota        = $req['kota'][$key];
+          $result[1]->kecamatan   = $req['kecamatan'][$key];
+          $result[1]->status      = $status;
+          $result[1]->tgl_reg     = $now;
+          $result[1]->telepon     = $request->input('telepon');
+          $result[1]->hp          = $request->input('hp');
+          $result[1]->email       = $request->input('email');
+          $result[1]->jk          = $req['jk'][$key];
+          $result[1]->id_kantor   = $request->input('id_kantor');
+          $result[1]->save();
       }
 
-      $result[1] = Payment::create([
+
+      $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
+          'id_kantor' => $request->input('id_kantor'),
+          'id_kontak' => $result[1]->id,
           'id_payment_method' => $request->input('id_payment'),
-          'nominal' => $total,
-          'coa_debit' => $request->input('coa_debit'),
-          'status' => 0,
-          'kode' => $request->input('kode'),
-          'nominal_transfer' => $request->input('nominal_transfer')
+          'nominal' => $request->input('total'),
+          'coa_debit' => $request->input('coa'),
+          'status' => 'Tunai',
+          'kode' => $request->input('promo'),
+          'id_agen' => $request->input('agen'),
+          'tgl_kirim' => $request->input('tgl_kirim'),
+          'waktu_kirim' => $request->input('waktu_kirim')
       ]);
 
       $total = 0;
       $id = [];
       $x = [];
       $n = 0;
-      foreach ($req['id_produk'] as $key => $id_produk) {
-          $produk = Harga::find($id_produk);
-          $id[$n] = $produk->produk;
+      foreach ($req['id_produk_harga'] as $key => $id_produk) {
+  
           $order = new Order;
+          $order->id_ra_payment = $result[1]->id;
           $order->id_order = $result[1]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
-          $order->ra_produk_harga_id = $id_produk;
+          $order->ra_produk_harga_id = $id_produk_harga;
           $order->id_via_bayar = 1;
-          $order->id_pelanggan = $order->id_order;
+          $order->id_pelanggan = Kontak::where('id',$result[1]->id)->where('status','Kostumer')->first();
+          $order->id_anak = Kontak::where('id',$result[1]->id)->where('status','Anak')->first();
           $order->id_via_bayar = 1;
-          $order->coa_debit = $request->input('coa_debit'); 
+          $order->id_agen = $request->input('agen');
+          $order->coa_debit = $request->input('coa'); 
           $order->quantity = $req['qty'][$key];
           $order->harga = $req['harga'][$key];
-          $total += $order->quantity * $order->harga;
           $order->tgl_transaksi = $now;
-          $order->total_transaksi = $total;
+          $order->total_transaksi = $request->input('total');
           $order->id_payment_method = $request->input('id_payment');
+          $order->id_produk_parent = $request->input('id_produk_parent');
           $order->lunas = 'y';
           $order->approve = 'y';
-          $order->keterangan = $req['keterangan'][$key];
+          $order->keterangan = 'Tunai';
           $order->nik_input = $request->input('nik_input');
           $order->cur = "IDR";
           $order->save();
           $n++;
       }
-      // $x = $order->quantity;
-      // $count = count($x);
       
-      foreach ($req['status'] as $key => $status) {
-          $result[2] = new Kontak;
-          $result[2]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
-          $result[2]->nama_kontak = $req['nama'][$key];
-          $result[2]->tgl_lahir   = $req['tgl_lahir'][$key];
-          $result[2]->tempat_lahir = $req['tempat_lahir'][$key];
-          $result[2]->alamat      = $req['alamat'][$key];
-          $result[2]->kota        = $req['kota'][$key];
-          $result[2]->kecamatan   = $req['kecamatan'][$key];
-          $result[2]->status      = $status;
-          $result[2]->id_order    = $order->id_order;
-          $result[2]->tgl_reg     = $now;
-          $result[2]->telepon     = $request->input('telepon');
-          $result[2]->hp          = $request->input('hp');
-          $result[2]->email       = $request->input('email');
-          $result[2]->jk          = $req['jk'][$key];
-          $result[2]->id_kantor   = $request->input('id_kantor');
-          $result[2]->save();
-      }
       
-      #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA?
+      
+      
+      #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
           $npRegister = $this->npRegistration($result[1]->id_transaksi);
           $response = json_decode($npRegister);
 
       #Delete test Inputed Data
       // (Nicepay::$isProduction)? : $this->deleteTestPayment($result[1]->id_transaksi);
 
-      #ASK. GIMANA RESPONSE TERBAIKNYA?
+      #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
           if($response->resultCd == '0000'){
             return response()->json(["status" => "success", "message" => $response],200);
           }else{

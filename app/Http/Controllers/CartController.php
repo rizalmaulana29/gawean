@@ -98,7 +98,7 @@ dd($kontakCus->id);
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
           'id_kantor' => $request->input('id_kantor'),
-          'id_kontak' => $kontakCus->id,
+          'id_kontak' => $kontakCus->id_kontak,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('total'),
           'nominal_transfer' => $request->input('total'),
@@ -123,8 +123,8 @@ dd($kontakCus->id);
           $order->id_order = $result[2]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
-          $order->id_pelanggan = Kontak::where('id',$kontakCus->id)->where('status','customer')->first();
-          $order->id_anak = Kontak::where('id',$kontakCus->id)->where('status','anak')->first();
+          $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->first();
+          $order->id_anak = Kontak::where('id',$kontakCus->id_kontak)->where('status','anak')->first();
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 

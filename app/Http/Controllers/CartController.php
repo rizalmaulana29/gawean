@@ -99,7 +99,7 @@ class CartController extends Controller
           'tgl_kirim' => $request->input('tgl_kirim'),
           'waktu_kirim' => $request->input('waktu_kirim')
       ]);
-
+dd($request->input('id_payment'));
       $total = 0;
       $id = [];
       $x = [];

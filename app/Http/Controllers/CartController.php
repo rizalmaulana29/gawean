@@ -7,6 +7,7 @@ use App\Kantor;
 use App\Produk;
 use App\Order;
 use App\Payment;
+use App\Paymeth;
 use App\Kontak;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -107,18 +108,31 @@ class CartController extends Controller
       
       
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
+      $paymeth = Paymeth::find($result[2]->id_payment_method);
+      if(payment['parent_id'] <= 5){
           $npRegister = $this->npRegistration($result[1]->id_transaksi);
           $response = json_decode($npRegister);
+          $np     = true;
+      }
+      else{
+          $response = $result;
+          $np     = false;
+      }
 
       #Delete test Inputed Data
       // (Nicepay::$isProduction)? : $this->deleteTestPayment($result[1]->id_transaksi);
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
-          if($response->resultCd == '0000'){
+      if($np){
+          if($response->resultCd) == '0000'){
             return response()->json(["status" => "success", "message" => $response],200);
           }else{
             return response()->json(["status" => "failed", "detail" => $response->resultCd, "message" => $response->resultMsg],200);
           }
+      }
+      else{
+          return response()->json(["status" => "success", "message" => $response],200);
+      }
   }
   
   private function npRegistration($id_trx){
@@ -132,13 +146,18 @@ class CartController extends Controller
       $detailOrder    = Order::where('id_order',$id_trx)->first();
       $kontak         = Kontak::where('id_order',$id_trx)->where('status','Kostumer')->first();
       
+      $paymeth        = Paymeth::find($payment->id_payment_method);
+      if(payment['parent_id'] <= 5){
+          
+      }
+
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
       $amt            = $payment['nominal'];
       
-      $payMeth        = $this->passed['id_payment'];
+      $payMeth        = $paymeth->parent_id;
       $payMethod      = sprintf("%02d", $payMeth);
-      $code           = $this->passed['code'];
+      $code           = $paymeth->code;
 
       $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
 

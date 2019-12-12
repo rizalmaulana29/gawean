@@ -81,7 +81,7 @@ class CartController extends Controller
           $result[1]->save();
         }
       }
-
+dd($result[0]->id);
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),

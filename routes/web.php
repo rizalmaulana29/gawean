@@ -17,13 +17,11 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('harga', 	['uses' =>'HargaController@show']);
-	// $router->get('kantor', ['uses' =>'KAntorController@show']);
-	// $router->get('produk', ['uses' =>'ProdukController@show']);
 	$router->get('code',	['uses' =>'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 	
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);
-	$router->post('testInquiry', 		['uses' => 'NotificationsController@npInuqiry']);
-	$router->post('testCancelVA', 		['uses' => 'NotificationsController@npCancelVA']);
+	$router->post('inquiry', 			['uses' => 'NotificationsController@npInuqiry']);
+	$router->post('cancelVA', 			['uses' => 'NotificationsController@npCancelVA']);
 });

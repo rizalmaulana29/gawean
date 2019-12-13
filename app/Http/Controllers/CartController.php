@@ -151,19 +151,26 @@ class CartController extends Controller
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
       if($np){
           if($response->resultCd == '0000'){
-            return response()->json(["status" => "true", "message" => $response->resultMsg,"data"=>$response],200);
-          }else{
-            return response()->json(["status" => "false", 
-                                      "errCode" => $response->resultCd, 
+            return response()->json(["data"=>$response, 
+                                      "status" => "true", 
                                       "message" => $response->resultMsg,
-                                      "id_transaksi"=>$result[2]->id_transaksi
+                                      "id_transaksi"=>$result[2]->id_transaksi,
+                                      "parent_id"=>$paymeth['parent_id']
+                                    ],200);
+          }else{
+            return response()->json(["errCode" => $response->resultCd, 
+                                      "status" => "false",
+                                      "message" => $response->resultMsg,
+                                      "id_transaksi"=>$result[2]->id_transaksi,
+                                      "parent_id"=>$paymeth['parent_id']
                                     ],200);
           }
       }
       else{
           return response()->json(["status" => "true", 
                                     "message" => $response,
-                                    "id_transaksi"=>$result[2]->id_transaksi
+                                    "id_transaksi"=>$result[2]->id_transaksi,
+                                    "parent_id"=>$paymeth['parent_id']
                                   ],200);
       }
   }

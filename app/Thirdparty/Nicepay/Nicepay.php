@@ -317,6 +317,6 @@ Class Nicepay
             )
 
         );
-        return (json_encode($this->oneLiner($error[$id])));
+        // return (json_encode($this->oneLiner($error[$id])));
     }
 }

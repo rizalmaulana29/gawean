@@ -113,7 +113,7 @@ class CartController extends Controller
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
           $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->value('id');
-          $order->id_anak = 'non';
+          $order->id_anak = Kontak::where('id',$result[1]->id_kontak)->where('status','anak')->value('id');;
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 

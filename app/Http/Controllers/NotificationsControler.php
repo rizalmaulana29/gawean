@@ -21,14 +21,12 @@ class NotificationsController extends Controller
     
     public function dbProcess(Request $request){
         $req = $request->all();
+        $nicepay = new Nicepay;
 
         $amt            = $req['amt'];
-        $code           = $req['bankCd'];
         $billingNm      = $req['billingNm'];
         $currency	    = $req['currency'];
         $goodsNm	    = $req['goodsNm'];
-        $instmntMon	    = $req['instmntMon'];
-        $instmntType	= $req['instmntType'];
         $matchCl	    = $req['matchCl'];
         $merchantToken	= $req['merchantToken'];
         $payMethod	    = $req['payMethod'];
@@ -37,9 +35,47 @@ class NotificationsController extends Controller
         $tXid	        = $req['tXid'];
         $transDt	    = $req['transDt'];
         $transTm	    = $req['transTm'];
-        $vacctNo	    = $req['vacctNo'];
         $vacctValidDt	= $req['vacctValidDt'];
         $vacctValidTm   = $req['vacctValidTm'];
+
+        $mtNotif    = $nicepay->getMerTokNotif($tXid,$amt);
+        if($merchantToken != $mtNotif) {
+            die("Antum Dilarang Masuk Euy!! Beda Data na ge.");exit();
+        }
+
+        if($payMethod == "01"){
+            $authNo         = $req['authNo'];
+            $IssueBankCd    = $req['IssueBankCd'];
+            $IssueBankNm    = $req['IssueBankNm'];
+            $acquBankCd     = $req['acquBankCd'];
+            $acquBankNm     = $req['acquBankNm'];
+            $cardNo         = $req['cardNo'];
+            $cardExpYymm    = $req['cardExpYymm'];
+            $instmntMon     = $req['instmntMon'];
+            $instmntType    = $req['instmntType'];
+            $preauthToken   = $req['preauthToken'];
+            $recurringToken = $req['recurringToken'];
+            $ccTransType    = $req['ccTransType'];
+            $vat            = $req['vat'];
+            $fee	        = $req['fee'];
+            $notaxAmt       = $req['notaxAmt'];
+        }
+        else if($payMethod == "02"){
+            $code           = $req['bankCd'];
+            $vacctNo        = $req['vacctNo'];
+            $vacctValidDt   = $req['vacctValidDt'];
+            $vacctValidTm   = $req['vacctValidTm'];
+        }
+        else if($payMethod == "03"){
+            $code           = $req['mitraCd'];
+            $payNo          = $req['payNo'];
+            $payValidDt     = $req['payValidDt'];
+            $payValidTm     = $req['payValidTm'];
+            $receiptCode    = $req['receiptCode'];
+            $mRefNo         = $req['mRefNo'];
+            $depositDt      = $req['depositDt'];
+            $depositTm      = $req['depositTm'];
+        }
 
         $nicepayLog    = new Nicepaylog;
 
@@ -52,19 +88,22 @@ class NotificationsController extends Controller
         $nicepayLog->request  = addslashes(json_encode($req));
         $nicepayLog->response = "";
         $nicepayLog->status   = addslashes($status);
-        $nicepayLog->action   = "Notifications";
+        $nicepayLog->action   = "Notification";
+
+        // echo json_encode($req);
         $nicepayLog->save();
+        echo $status;
+        $status = ($status == 0)?"success":($status == 1)?"failed":($status == 2)?"void":($status == 3)?"expired":($status == 4)?"expired":($status == 5)?"readyToPaid":"What method?";
 
-        $status = ($status == 0)?:($status == 1)?:($status == 2)?:($status == 3)?:
-
-        if($status == 0){
-            $payment = Payment::where('id_transaksi', $referenceNo);
-            $payment->status    = ;
+        $payment = Payment::where('id_transaksi', $referenceNo)->first();
+        if($payment){
+            $payment->status = $status;
+            $payment->save();
+            $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
+        }else{
+            $msg = array("status"=>"false","msg"=>"No Transaction Available");
         }
-        else{
-            $payment = Payment::where('id_transaksi', $referenceNo)->first();
-        }
-            return json_encode(array("msg"=>"success"));
+        echo json_encode($msg);
     }
 
     public function TestRegistration(Request $request){

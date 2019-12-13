@@ -113,7 +113,7 @@ class CartController extends Controller
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
           $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->value('id');
-          $order->id_anak = Kontak::where('id',$result[]->id_kontak)->where('status','anak')->value('id');
+          $order->id_anak = 'non';
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 
@@ -122,7 +122,7 @@ class CartController extends Controller
           $order->tgl_transaksi = $now;
           $order->total_transaksi = $request->input('total');
           $order->id_payment_method = $request->input('id_payment');
-          $order->id_produk_parent = $request->input('id_produk_parent');
+          // $order->id_produk_parent = $request->input('id_produk_parent');
           $order->lunas = 'y';
           $order->approve = 'y';
           $order->keterangan = 'Tunai';
@@ -145,14 +145,14 @@ class CartController extends Controller
       }
 
       #Delete test Inputed Data
-      // (Nicepay::$isProduction)? : $this->deleteTestPayment($result[1]->id_transaksi);
+      // (Nicepay::$isProduction)? : $this->deleteTestPayment($result[2]->id_transaksi);
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
       if($np){
           if($response->resultCd == '0000'){
-            return response()->json(["status" => "success", "message" => $response],200);
+            return response()->json(["status" => "success", "message" => $response->resultMsg,"data"=>$response],200);
           }else{
-            return response()->json(["status" => "failed", "detail" => $response->resultCd, "message" => $response->resultMsg],200);
+            return response()->json(["status" => "failed", "errCode" => $response->resultCd, "message" => $response->resultMsg,"id_transaksi"=>$result[2]->id_transaksi],200);
           }
       }
       else{
@@ -262,7 +262,14 @@ class CartController extends Controller
               "merFixAcctId"  =>""
           );
       
-      $codeArray   = ($payMeth == 1)?array():($payMeth == 2)?array("bankCd"=>$code):($payMeth == 3)?array("mitraCd"=>$code):array();
+      $codeArray   = ($payMeth == 1)?array():
+                      (
+                        ($payMeth == 2)?array("bankCd"=>$code):
+                        (
+                          ($payMeth == 3)?array("mitraCd"=>$code):array()
+                        )
+                      );
+
       $detailTrans = array_merge($detailTrans,$codeArray);
       $detailTrans = json_encode($detailTrans);
 
@@ -292,7 +299,7 @@ class CartController extends Controller
       $nicepayLog->status   = addslashes($msg);
       $nicepayLog->action   = "Registration";
       $nicepayLog->save();
-
+      
       return $transaksiAPI;
   }
 
@@ -310,8 +317,11 @@ class CartController extends Controller
   }
 
   private function deleteTestPayment($id_trx){
+      $payment = Payment::select('id_kontak')->where('id_transaksi',$id_trx)->get();
+      foreach($payment as $key => $val){
+        Kontak::where('id',$val)->delete();
+      }
       Payment::where('id_transaksi',$id_trx)->delete();
       Order::where('id_order',$id_trx)->delete();
-      Kontak::where('id_order',$id_trx)->delete();
   }
 }

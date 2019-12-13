@@ -78,16 +78,17 @@ Class Nicepay
     }
 
     public function merchantToken($timestamp,$referenceNo, $amt) {
-        // SHA256( Concatenate(iMid + referenceNo + amt + merchantKey) )
-        // echo $timestamp.' ';
-        // echo $this->getMerchantID().' ';
-        // echo $referenceNo.' ';
-        // echo $amt.' ';
-        // echo $this->getMerchantKey().' ';
-        // echo 
         $hash = hash('sha256',$timestamp.
                             $this->getMerchantID().
                             $referenceNo.
+                            $amt.
+                            $this->getMerchantKey()
+        );
+        return $hash;
+    }
+    public function getMerTokNotif($tXid,$amt){
+        $hash = hash('sha256',$this->getMerchantID().
+                            $tXid.
                             $amt.
                             $this->getMerchantKey()
         );

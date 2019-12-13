@@ -121,7 +121,7 @@ class CartController extends Controller
           $order->quantity = $req['qty'][$key];
           $order->harga = $req['harga'][$key];
           $order->tgl_transaksi = $now;
-          $order->total_transaksi = $request->input('total');
+          $order->total_transaksi = $req['qty'][$key] * $req['harga'][$key];
           $order->id_payment_method = $request->input('id_payment');
           // $order->id_produk_parent = $request->input('id_produk_parent');
           $order->lunas = 'y';

@@ -93,7 +93,19 @@ class NotificationsController extends Controller
         // echo json_encode($req);
         $nicepayLog->save();
         echo $status;
-        $status = ($status == 0)?"success":($status == 1)?"failed":($status == 2)?"void":($status == 3)?"expired":($status == 4)?"expired":($status == 5)?"readyToPaid":"What method?";
+        $status = ($status == 0)?"success":(
+                        ($status == 1)?"failed":(
+                            ($status == 2)?"void":(
+                                ($status == 3)?"unpaid":(
+                                    ($status == 4)?"expired":(
+                                        ($status == 5)?"readyToPaid":(
+                                            ($status == 9)?"readyToPaid":"What method?"
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    );
 
         $payment = Payment::where('id_transaksi', $referenceNo)->first();
         if($payment){

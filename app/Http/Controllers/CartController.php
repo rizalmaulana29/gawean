@@ -9,8 +9,10 @@ use App\Order;
 use App\Payment;
 use App\Paymeth;
 use App\Kontak;
+use App\Mail\Invoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 use App\Nicepaylog;
 use App\Thirdparty\Nicepay\Nicepay;
@@ -114,7 +116,7 @@ class CartController extends Controller
           $order->id_kantor = $request->input('id_kantor');
           $order->ra_produk_harga_id = $id_produk;
           $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->value('id');
-          $order->id_anak = Kontak::where('id',$result[1]->id_kontak)->where('status','anak')->value('id');;
+          $order->id_anak = Kontak::where('id',$result[1]->id_kontak)->where('status','anak')->value('id');
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 
@@ -132,6 +134,15 @@ class CartController extends Controller
           $order->save();
           $n++;
       }
+
+
+      $to_address = $request->input('email');
+      $transdata = Payment::where('id',$result[2]->id)->get();
+      $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();
+
+      $hasil = Mail::send(
+            (new Invoice($to_address, $transdata, $orderdata))->build()
+        );
       
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
       $paymeth = Paymeth::find($result[2]->id_payment_method);
@@ -339,4 +350,22 @@ class CartController extends Controller
       Payment::where('id_transaksi',$id_trx)->delete();
       Order::where('id_order',$id_trx)->delete();
   }
+
+  public function sendemail()
+    {
+
+      $to_address = 'sandi@niagateknologi.net';
+      $invoice = '123456terwy3';
+      $packet = 'nan';
+      $date = '$now';
+      $payment_method = 'ngutang';
+      $total = '123456';
+
+      $hasil = Mail::send(
+            (new Invoice($to_address, $invoice, $packet, $date, $payment_method, $total))->build()
+        );
+
+        return response($hasil);
+
+    }
 }

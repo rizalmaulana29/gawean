@@ -27,6 +27,12 @@ $app->withEloquent();
 
 $app->configure('cors');
 
+
+$app->configure('mail');
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -82,11 +88,13 @@ $app->middleware([
 | totally optional, so you are not required to uncomment this line.
 |
 */
+$app->register(Illuminate\Mail\MailServiceProvider::class);
 
 $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +106,8 @@ $app->register(App\Providers\EventServiceProvider::class);
 | can respond to, as well as the controllers that may handle them.
 |
 */
+
+
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

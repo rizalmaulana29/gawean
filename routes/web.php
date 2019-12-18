@@ -24,4 +24,5 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);
 	$router->post('inquiry', 			['uses' => 'NotificationsController@npInuqiry']);
 	$router->post('cancelVA', 			['uses' => 'NotificationsController@npCancelVA']);
+	$router->get('mail',  ['uses' => 'CartController@sendemail']);
 });

@@ -14,11 +14,16 @@ class Invoice extends Mailable
      * @return void
      */
     
-    public function __construct($to_address, $transdata, $orderdata)
+    public function __construct($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion)
     {
         $this->to_address = $to_address;
         $this->transdata = $transdata;
         $this->orderdata = $orderdata;
+        $this->nama = $nama;
+        $this->alamat = $alamat;
+        $this->kokec = $kokec;
+        $this->email = $email;
+        $this->instruksion = $instruksion;
         
     }
 
@@ -36,7 +41,12 @@ class Invoice extends Mailable
             ->with(
                 [
                     'transdata' => $this->transdata,
-                    'orderdata' => $this->orderdata
+                    'orderdata' => $this->orderdata,
+                    'nama'      => $this->nama,
+                    'alamat'    => $this->alamat,
+                    'kokec'     => $this->kokec,
+                    'email'     => $this->email,
+                    'instruksion'=> $this->instruksion
                 ]
             );
     }

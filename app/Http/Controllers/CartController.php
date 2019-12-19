@@ -139,9 +139,14 @@ class CartController extends Controller
       $to_address = $request->input('email');
       $transdata = Payment::where('id',$result[2]->id)->get();
       $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();
+      $nama = $req['nama'][0];
+      $alamat = $req['alamat'];
+      $kokec = $req['kota'] $req['kecamatan'];
+      $email = $request->input('email') '/' $request->input('hp');
+      $instruksion = DB::table('ra_payment_instruction')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
 
       $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata))->build()
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion))->build()
         );
       
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT

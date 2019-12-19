@@ -81,9 +81,9 @@
                         </p>
                     </td>
                     <td colspan="2">
-                        <p>{{ $kontak->nama_kontak }}<br>
-                            {{ $kontak->alamat }}<br>
-                            {{ $kontak->kota }} {{ $kontak->kecamatan }}<br>
+                        <p>{{ $nama }}<br>$nama, $alamat, $kokec, $email
+                            {{ $alamat }}<br>
+                            {{ $kokec }}<br>
                             {{ $kontak->hp }} <br>
                             {{ $kontak->email }}
                         </p>
@@ -129,6 +129,8 @@
                     
                 </tr>
             </tbody>
+            <br>
+            <p>{{$instruksion}}</p>
             
         </table>
         

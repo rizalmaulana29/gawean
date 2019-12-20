@@ -33,7 +33,12 @@
             margin:0 auto;
             /* width:740px; */
         }
-        td, tr, th{
+        .noborder{
+            border:0;
+            margin:0 !important;
+            border-collapse:collapse;
+        }
+        table.produk td, tr, th{
             padding:10px;
             border:1px solid #333;
             /* width:185px; */
@@ -49,62 +54,78 @@
 <body>
 
     <div class="container">
-        <img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
-        <table width="100%">
-            <!-- <tr>
-                <td>
-                    Heyyyyy
-                </td>
-            </tr> -->
+        <div style="margin-bottom: 5px;">
+            <img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+        </div>
+        <?php $kantor = DB::table('ra_kantor')->select('alamat','kota','tlp')->where('id', $transdata['id_kantor'])->first();?>
+        <div style="margin-bottom: 20px;"><p>{{$kantor->alamat}} {{$kantor->kota}} {{$kantor->tlp}}</p>
+        </div>
+
+        <hr>
+
+        <div style="margin-bottom: 20px; margin-top: 20px; text-align: left;float" >
+            
+            <table class="noborder" cellspacing="0" width="100%">
+                <tr class="noborder" >
+                    <td class="noborder">No. Invoice</td>
+                    <td class="noborder" style="width: 5px;">:</td>
+                    <td class="noborder">{{$transdata['id_transaksi']}}</td>
+                    <td width="40%"></td>
+                    <td class="noborder">Tgl. Transaksi</td>
+                    <td class="noborder" style="width: 5px;">:</td>
+                    <td class="noborder">{{ date("Y-m-d",strtotime($transdata['tgl_transaksi'])) }}</td>
+                </tr>
+                <tr>
+                    <td>Nama Customer</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{ $nama }}</td>
+                    <td></td> 
+                    <td class="noborder">Jenis</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{$transdata['jenis']}}</td>             
+                </tr>
+                <tr>
+                    <td class="noborder">Alamat</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{ $alamat }} {{ $kokec }}</td>                
+                    <td></td>  
+                    <td class="noborder">Status</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{$transdata['status']}}</td>            
+                </tr>
+                <tr>
+                    <td class="noborder">No. Handphone</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{ $hp }}</td>                
+                    <td></td> 
+                    <td class="noborder">Tipe</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{$transdata['tipe']}}</td>             
+                </tr>
+                <tr>
+                    <td class="noborder">Email</td>
+                    <td class="noborder">:</td>
+                    <td class="noborder">{{ $email }}</td>                
+                    <td></td>  
+                    <?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata['id_payment_method'])->first();
+                        if($bankRek->keterangan == "cash")
+                    
+                            {echo "<td>".$bankRek->keterangan."</td>";}
+                        else
+                            {echo "<td>Bank </td>
+                                   <td>:</td>
+                                   <td>".$bankRek->keterangan."<br>".$bankRek->id_rekening."</td>";}
+                    ?>                           
+            </table>
+        </div>
+        <table width="100%" class="produk">
+            
             <tbody>
+                
                 <tr>
-                    <th colspan="3">Invoice <strong>#{{$transdata->id_transaksi}}</strong></th>
-                    <th colspan="3">{{ date("Y-m-d",strtotime($transdata->tgl_transaksi)) }}</th>
-                </tr>
-                <tr>
-                    <th colspan="2">
-                        <h4>Perusahaan: </h4>
-                    </th>
-                    <th colspan="2">
-                        <h4>Pelanggan: </h4>
-                    </th>
-                    <th colspan="2">
-                        <h4>Status Pembayaran</h4>
-                    </th>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <p>Agro Surya Perkasa<br>
-                            <br>
-                            <br>
-                            rumahaqiqah.co.id
-                        </p>
-                    </td>
-                    <td colspan="2">
-                        <p>{{ $nama }}<br>
-                            {{ $alamat }}<br>
-                            {{ $kokec }}<br>
-                            {{ $email }}
-                        </p>
-                    </td>
-                    <td colspan="2">
-                        <?php 
-                            $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
-                            if($bankRek->keterangan == "cash")
-                                {echo "<b>".$bankRek->keterangan."</b><br>";}
-                            else
-                                {echo "<b>Bank : </b>".$bankRek->keterangan." <br><b>No. Rek : </b>".$bankRek->id_rekening."<br>";}
-                        ?>
-                        Jenis : {{$transdata->jenis}}<br>
-                        Status : {{$transdata->status}}<br>
-                        Tipe : {{$transdata->tipe}}<br>
-                        Lunas : {{$transdata->lunas}}
-                    </td>
-                </tr>
-                <tr>
-                    <th colspan="2">Produk</th>
-                    <th>Harga</th>
-                    <th>Qty</th>
+                    <th colspan="2" style="text-align: center;">Produk</th>
+                    <th style="text-align: center;">Harga</th>
+                    <th style="text-align: center;">Qty</th>
                     <th colspan="2">Subtotal</th>
                 </tr>
                 @foreach ($orderdata as $row)
@@ -115,14 +136,14 @@
                             echo $label->label;
                         ?>
                     </td>
-                    <td>Rp {{ number_format($row->harga) }}</td>
-                    <td>{{ $row->quantity }}</td>
-                    <td colspan="2">Rp {{ number_format($row->total_transaksi) }}</td>
+                    <td style="text-align: right;">Rp {{ number_format($row->harga) }}</td>
+                    <td style="text-align: center;">{{ $row->quantity }}</td>
+                    <td colspan="2" style="text-align: right;">Rp {{ number_format($row->total_transaksi) }}</td>
                 </tr>
                 @endforeach
                 <tr>
                     <th colspan="4">Total</th>
-                    <td colspan="2">Rp {{ number_format($transdata['nominal']) }}</td>
+                    <th colspan="2" style="text-align: right;">Rp {{ number_format($transdata['nominal']) }}</th>
                 </tr>
                 <tr>
                     
@@ -130,10 +151,18 @@
             </tbody>
             
         </table>
+        <div style="margin-top: 30px">
+            <br>
+            <br>
+            <br>
+            <table class="noborder" cellspacing="0" width="100%">
+                <tr class="noborder" >
+                    <td class="noborder" style="text-align: left;">{{$instruksion}}</td>
+                    
+                </tr>
+            </table>
 
-        <br>
-            <p>{{$instruksion}}</p>
-        
+        </div>
     </div>
 </body>
 </html>

@@ -84,7 +84,7 @@
                         <p>{{ $nama }}<br>
                             {{ $alamat }}<br>
                             {{ $kokec }}<br>
-                            {{ $kontak->email }}
+                            {{ $email }}
                         </p>
                     </td>
                     <td colspan="2">

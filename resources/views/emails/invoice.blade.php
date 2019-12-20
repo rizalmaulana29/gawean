@@ -58,8 +58,8 @@
             </tr> -->
             <tbody>
                 <tr>
-                    <th colspan="3">Invoice <strong>#{{$transdata['id_transaksi']}}</strong></th>
-                    <th colspan="3">{{ date("Y-m-d",strtotime($transdata['tgl_transaksi'])) }}</th>
+                    <th colspan="3">Invoice <strong>#{{$transdata->id_transaksi}}</strong></th>
+                    <th colspan="3">{{ date("Y-m-d",strtotime($transdata->tgl_transaksi)) }}</th>
                 </tr>
                 <tr>
                     <th colspan="2">
@@ -81,7 +81,7 @@
                         </p>
                     </td>
                     <td colspan="2">
-                        <p>{{ $nama }}<br>$nama, $alamat, $kokec, $email
+                        <p>{{ $nama }}<br>
                             {{ $alamat }}<br>
                             {{ $kokec }}<br>
                             {{ $kontak->email }}
@@ -89,16 +89,16 @@
                     </td>
                     <td colspan="2">
                         <?php 
-                            $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata['id_payment_method'])->first();
+                            $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
                             if($bankRek->keterangan == "cash")
                                 {echo "<b>".$bankRek->keterangan."</b><br>";}
                             else
                                 {echo "<b>Bank : </b>".$bankRek->keterangan." <br><b>No. Rek : </b>".$bankRek->id_rekening."<br>";}
                         ?>
-                        Jenis : {{$transdata['jenis']}}<br>
-                        Status : {{$transdata['status']}}<br>
-                        Tipe : {{$transdata['tipe']}}<br>
-                        Lunas : {{$transdata['lunas']}}
+                        Jenis : {{$transdata->jenis}}<br>
+                        Status : {{$transdata->status}}<br>
+                        Tipe : {{$transdata->tipe}}<br>
+                        Lunas : {{$transdata->lunas}}
                     </td>
                 </tr>
                 <tr>
@@ -122,7 +122,7 @@
                 @endforeach
                 <tr>
                     <th colspan="4">Total</th>
-                    <td colspan="2">Rp {{ number_format($transdata['nominal']) }}</td>
+                    <td colspan="2">Rp {{ number_format($transdata->nominal) }}</td>
                 </tr>
                 <tr>
                     

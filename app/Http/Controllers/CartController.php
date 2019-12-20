@@ -141,8 +141,8 @@ class CartController extends Controller
       $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();
       $nama = $req['nama'][0];
       $alamat = $req['alamat'];
-      $kokec = $req['kota'] $req['kecamatan'];
-      $email = $request->input('email') '/' $request->input('hp');
+      $kokec = $req['kota']; $req['kecamatan'];
+      $email = $request->input('email'); $request->input('hp');
       $instruksion = DB::table('ra_payment_instruction')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
 
       $hasil = Mail::send(
@@ -356,21 +356,23 @@ class CartController extends Controller
       Order::where('id_order',$id_trx)->delete();
   }
 
-  public function sendemail()
-    {
+  public function sendemail(Request $request){
+      // $req = $request->all();
+      // $to_address = $request->input('email');
+      // $transdata = ['id_transaksi' => 123,'tgl_transaksi' => '2019-12-20' ,'id_payment_method'=> 185 ,'jenis'=> 'online','status'=> 'lunas','tipe'=> 'transaksi','lunas'=>'y'];
+      // $orderdata = 1912180016137;
+     
+      // $nama = $req['nama'];
+      // $alamat = $req['alamat'];
+      // $kokec = $req['kota']; $req['kecamatan'];
+      // $email = $request->input('email'); $request->input('hp');
+      // $instruksion = DB::table('ra_payment_instruction')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
 
-      $to_address = 'sandi@niagateknologi.net';
-      $invoice = '123456terwy3';
-      $packet = 'nan';
-      $date = '$now';
-      $payment_method = 'ngutang';
-      $total = '123456';
+      // $hasil = Mail::send(
+      //       (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion))->build()
+      //   );
 
-      $hasil = Mail::send(
-            (new Invoice($to_address, $invoice, $packet, $date, $payment_method, $total))->build()
-        );
-
-        return response($hasil);
+      //   return response($hasil);
 
     }
 }

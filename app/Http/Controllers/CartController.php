@@ -8,6 +8,7 @@ use App\Produk;
 use App\Order;
 use App\Payment;
 use App\Paymeth;
+use App\AdminEntitas;
 use App\Kontak;
 use App\Mail\Invoice;
 use Carbon\Carbon;
@@ -203,6 +204,10 @@ class CartController extends Controller
       $detailOrder    = Order::where('id_order',$id_trx)->first();
       $kontak         = Kontak::where('id',$payment['id_kontak'])->where('status','customer')->first();
       $paymeth        = Paymeth::find($payment['id_payment_method']);
+      $merData        = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+
+      $iMid       = $nicepay->isProduction ? $merData['mid']:$merData['mid_sand'];
+      $merKey     = $nicepay->isProduction ? $merData['merkey']:$merData['merkey_sand'];
 
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
@@ -212,7 +217,7 @@ class CartController extends Controller
       $payMethod      = sprintf("%02d", $payMeth);
       $code           = $paymeth['code'];
 
-      $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
+      $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey);
 
       #ASK. GIMANA MENDINAMIS KAN PARAMETERNYA?
       $customerName       = $kontak['nama_kontak'];
@@ -258,7 +263,7 @@ class CartController extends Controller
       #delivery = detail pengiriman
       $detailTrans = array(
               "timeStamp"     =>$timestamp,
-              "iMid"          =>$nicepay->getMerchantID(),
+              "iMid"          =>$iMid,
               "payMethod"     =>$payMethod,
               "currency"      =>"IDR",
               "amt"           =>$amt,

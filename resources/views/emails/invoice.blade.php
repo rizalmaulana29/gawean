@@ -128,10 +128,11 @@
                     
                 </tr>
             </tbody>
-            <br>
-            <p>{{$instruksion}}</p>
             
         </table>
+
+        <br>
+            <p>{{$instruksion}}</p>
         
     </div>
 </body>

@@ -152,8 +152,15 @@
             
         </table>
         <div style="margin-top: 30px">
-            <br>
-            {{$instruksion}}
+            <?php $va = DB::table('ra_nicepaylog')->select('virtual_account_no')->where('id_order', $transdata['id_transaksi'])->where('action','Registration')->first();?><br>
+            <p>Virtual Account/Kode Pembayaran : {{$va}}</p>
+            <table>
+	            @foreach ($instruksion as row)
+	            <tr>
+	            	<td>{{$row->keterangan}}</td>
+	            </tr>
+	            @endforeach
+            </table>
         </div>
     </div>
 </body>

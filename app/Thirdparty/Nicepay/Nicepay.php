@@ -52,15 +52,6 @@ Class Nicepay
     {
         return Nicepay::$isProduction ? env('NICEPAY_MERCHAT_KEY_PROD') : env('NICEPAY_MERCHAT_KEY_SAND');
     }
-    // public static function getClientID()
-  	// {
-    // 	return Nicepay::$isProduction ? env('NICEPAY_CLIENT_ID_PROD') : env('NICEPAY_CLIENT_ID_SAND');
-    // }
-
-    // public static function getClientSecret()
-  	// {
-    // 	return Nicepay::$isProduction ? env('NICEPAY_CLIENT_SECRET_PROD') : env('NICEPAY_CLIENT_SECRET_SAND');
-    // }
 
     /**
      * Generate random GUID
@@ -77,20 +68,20 @@ Class Nicepay
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public function merchantToken($timestamp,$referenceNo, $amt) {
+    public function merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey) {
         $hash = hash('sha256',$timestamp.
-                            $this->getMerchantID().
+                            $iMid.
                             $referenceNo.
                             $amt.
-                            $this->getMerchantKey()
+                            $merKey
         );
         return $hash;
     }
-    public function getMerTokNotif($tXid,$amt){
-        $hash = hash('sha256',$this->getMerchantID().
+    public function getMerTokNotif($iMid,$tXid,$amt,$merKey){
+        $hash = hash('sha256',$iMid.
                             $tXid.
                             $amt.
-                            $this->getMerchantKey()
+                            $merKey
         );
         return $hash;
     }

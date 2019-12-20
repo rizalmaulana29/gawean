@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Thirdparty\Nicepay\Nicepay;
 use App\Nicepaylog;
 use App\Payment;
+use App\Paymeth;
+use App\AdminEntitas;
 use App\Response;
 use Carbon\Carbon;
+
 
 class NotificationsController extends Controller
 {
@@ -38,7 +41,13 @@ class NotificationsController extends Controller
         $vacctValidDt	= $req['vacctValidDt'];
         $vacctValidTm   = $req['vacctValidTm'];
 
-        $mtNotif    = $nicepay->getMerTokNotif($tXid,$amt);
+        $payment    = Payment::where('id_transaksi',$referenceNo)->first();
+        $paymeth    = Paymeth::find($payment['id_payment_method']);
+        $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        $iMid       = Nicepay::$isProduction ? $merData['mid']:$merData['mid_sand'];
+        $merKey     = Nicepay::$isProduction ? $merData['merkey']:$merData['merkey_sand'];
+
+        $mtNotif    = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
         if($merchantToken != $mtNotif) {
             die("Antum Dilarang Masuk Euy!! Beda Data na ge.");exit();
         }
@@ -99,7 +108,7 @@ class NotificationsController extends Controller
                                 ($status == 3)?"unpaid":(
                                     ($status == 4)?"expired":(
                                         ($status == 5)?"readyToPaid":(
-                                            ($status == 9)?"readyToPaid":"What method?"
+                                            ($status == 9)?"Initialization / Reversal":"What method?"
                                         )
                                     )
                                 )
@@ -133,14 +142,20 @@ class NotificationsController extends Controller
         $tXid           = $req['tXid'];
         $amt            = $req['amt'];
 
+        $payment    = Payment::where('id_transaksi',$referenceNo)->first();
+        $paymeth    = Paymeth::find($payment['id_payment_method']);
+        $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        $iMid       = Nicepay::$isProduction ? $merData['mid']:$merData['mid_sand'];
+        $merKey     = Nicepay::$isProduction ? $merData['merkey']:$merData['merkey_sand'];
+
         $nicepay = new Nicepay;
 
-        $merchantToken  = $nicepay->merchantToken($timestamp,$referenceNo,$amt);
+        $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey);
 
         $detailTrans = array(
                 "timeStamp"     =>$timestamp,
                 "tXid"          =>$tXid,
-                "iMid"          =>$nicepay->getMerchantID(),
+                "iMid"          =>$iMid,
                 "referenceNo"   =>$referenceNo,
                 "amt"           =>$amt,
                 "merchantToken" =>$merchantToken
@@ -171,18 +186,23 @@ class NotificationsController extends Controller
         $tXid           = $req['tXid'];
         $amt            = $req['amt'];
         
-        $payMeth    = Payment::where("id_transaksi",$referenceNo)->pluck("id_payment_method");
-        $payMeth    = sprintf("%02d", $payMeth[0]);
+        $payment    = Payment::where("id_transaksi",$referenceNo)->first();
+        $paymeth    = Paymeth::find($payment['id_payment_method']);
+        $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        $iMid       = Nicepay::$isProduction ? $merData['mid']:$merData['mid_sand'];
+        $merKey     = Nicepay::$isProduction ? $merData['merkey']:$merData['merkey_sand'];
+        
+        $payMeth    = sprintf("%02d", $payment["id_payment_method"]);
 
 
         $nicepay = new Nicepay;
 
-        $merchantToken  = $nicepay->merchantToken($timestamp,$tXid,$amt);
+        $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$tXid,$amt,$merKey);
 
         $detailTrans = array(
                 "timeStamp"     =>$timestamp,
                 "tXid"          =>$tXid,
-                "iMid"          =>$nicepay->getMerchantID(),
+                "iMid"          =>$iMid,
                 "amt"           =>$amt,
                 "merchantToken" =>$merchantToken,
                 "payMethod"     =>$payMeth,
@@ -216,6 +236,7 @@ class NotificationsController extends Controller
         return $transaksiAPI;
     }
 
+    /*
     private function npRegistration($id_trx){
       
         $nicepay = new Nicepay;
@@ -329,6 +350,7 @@ class NotificationsController extends Controller
   
         return $transaksiAPI;
     }
+    */
 
     function getRandomString($n) { 
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 

@@ -10,6 +10,7 @@ use App\Payment;
 use App\Paymeth;
 use App\AdminEntitas;
 use App\Kontak;
+use App\Instruction;
 use App\Mail\Invoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -145,7 +146,7 @@ class CartController extends Controller
       $alamat = $req['alamat'];
       $kokec = $req['kota']; $req['kecamatan'];
       $email = $request->input('email'); $request->input('hp');
-      $instruksion = DB::table('ra_payment_instructions')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
+      $instruksion = Instruction::where('id_payment_method',$request->input('id_payment'))->get()->value('keterangan');
       dd($instruksion);
       $hasil = Mail::send(
             (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion))->build()

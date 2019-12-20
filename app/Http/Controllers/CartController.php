@@ -143,7 +143,7 @@ class CartController extends Controller
       $alamat = $req['alamat'];
       $kokec = $req['kota']; $req['kecamatan'];
       $email = $request->input('email'); $request->input('hp');
-      $instruksion = DB::table('ra_payment_instruction')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
+      $instruksion = DB::table('ra_payment_instructions')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
 
       $hasil = Mail::send(
             (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion))->build()

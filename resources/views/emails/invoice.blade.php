@@ -153,15 +153,7 @@
         </table>
         <div style="margin-top: 30px">
             <br>
-            <br>
-            <br>
-            <table class="noborder" cellspacing="0" width="100%">
-                <tr class="noborder" >
-                    <td class="noborder" style="text-align: left;">{{$instruksion}}</td>
-                    
-                </tr>
-            </table>
-
+            {{$instruksion}}
         </div>
     </div>
 </body>

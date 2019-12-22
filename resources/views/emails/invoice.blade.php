@@ -155,9 +155,9 @@
             <?php $va = DB::table('ra_nicepaylog')->select('virtual_account_no')->where('id_order', $transdata['id_transaksi'])->where('action','Registration')->first();?><br>
             <p>Virtual Account/Kode Pembayaran : {{$va}}</p>
             <table>
-	            @foreach ($instruksion as row)
+	            @foreach ($instruksion as $wow)
 	            <tr>
-	            	<td>{{$row->keterangan}}</td>
+	            	<td>{{$wow->keterangan}}</td>
 	            </tr>
 	            @endforeach
 	            <tr>

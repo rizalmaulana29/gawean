@@ -172,10 +172,10 @@ class CartController extends Controller
       $kokec = $req['kota']; $req['kecamatan'];
       $email = $request->input('email'); 
       $hp = $request->input('hp');
-      $instruksion = Instruction::where('id_payment_method',$request->input('parent_id'))->get();
+      $parent_id = $request->input('parent_id');
       // dd($instruksion);
       $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp,$number,$title))->build()
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp,$number,$title))->build()
         );
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE

@@ -51,8 +51,8 @@ class Invoice extends Mailable
                     'email'         => $this->email,
                     'hp'            => $this->hp,
                     'instruksion'   => $this->instruksion,
-                    'number'        => $this->$number,
-                    'title'         => $this->$title
+                    'number'        => $this->number,
+                    'title'         => $this->title
                 ]
             );
     }

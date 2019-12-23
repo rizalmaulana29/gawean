@@ -160,11 +160,7 @@
 	            <div>{!!$wow->nama!!}</div>
 	            <div>{!!$wow->keterangan!!}</div>
 	        @endforeach
-            <table>
-	            <tr>
-	            	<td style="text-align: left;"><p>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p></td>
-	            </tr>
-            </table>
+        	<div style="text-align: left;"><p>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p</div>
         </div>
     </div>
 </body>

@@ -152,7 +152,7 @@
             
         </table>
         <div style="margin-top: 30px">
-            <div>{{$text}} : {{$code}}</div>
+            <div>{{$title}} : {{$number}}</div>
             <table>
 	            @foreach ($instruksion as $wow)
 	            <tr>

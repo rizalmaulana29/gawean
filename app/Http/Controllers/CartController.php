@@ -145,14 +145,14 @@ class CartController extends Controller
           $response = json_decode($npRegister);
           $np     = true;
           if ($paymeth['parent_id'] == 2 && $response->resultCd == '0000') {
-            $text = "Virtual Account :";
-            $code = $response->vacctNo;
+            $title = "Virtual Account :";
+            $number = $response->vacctNo;
           } elseif ($paymeth['parent_id'] == 3 && $response->resultCd == '0000') {
-            $text = "Kode Pembayaran :";
-            $code = $response->mitraCd;
+            $title = "Kode Pembayaran :";
+            $number = $response->mitraCd;
           } else{
-            $text = "No.Rekening :";
-            $code = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+            $title = "No.Rekening :";
+            $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
           }
 
           
@@ -161,7 +161,9 @@ class CartController extends Controller
           $response = $result;
           $np     = false;
       }
-      dd($code);
+      // dd($code);
+      // $code = $number;
+      // $text = $title;
       $to_address = $request->input('email');
       $transdata = Payment::where('id',$result[2]->id)->first();
       $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();
@@ -174,7 +176,7 @@ class CartController extends Controller
       $instruksion = Instruction::where('id_payment_method',$request->input('parent_id'))->get();
       // dd($instruksion);
       $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp,$code,$text))->build()
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp,$number,$title))->build()
         );
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE

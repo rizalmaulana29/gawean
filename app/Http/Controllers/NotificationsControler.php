@@ -102,7 +102,7 @@ class NotificationsController extends Controller
         // echo json_encode($req);
         $nicepayLog->save();
         echo $status;
-        $status = ($status == 0)?"success":(
+        $status = ($status == 0)?"paid":(
                         ($status == 1)?"failed":(
                             ($status == 2)?"void":(
                                 ($status == 3)?"unpaid":(

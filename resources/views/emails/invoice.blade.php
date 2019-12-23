@@ -157,12 +157,12 @@
             <table>
 	            @foreach ($instruksion as $wow)
 	            <tr>
-	            	<th>{{$wow->nama}}</th>
-	            	<th>{{$wow->keterangan}}</th>
+	            	<td>{{$wow->nama}}</td>
+	            	<td>{{$wow->keterangan}}</td>
 	            </tr>
 	            @endforeach
 	            <tr>
-	            	<th><p>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p></th>
+	            	<td><p>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p></td>
 	            </tr>
             </table>
         </div>

@@ -153,10 +153,11 @@
         </table>
         <div style="margin-top: 30px">
             <?php $va = DB::table('ra_nicepaylog')->select('virtual_account_no')->where('id_order', $transdata->id_transaksi)->where('action','Registration')->first();?><br>
-            <p>Virtual Account/Kode Pembayaran : {{$va}}</p>
+            <p>Virtual Account/Kode Pembayaran : {{$va->virtual_account_no}}</p>
             <table>
 	            @foreach ($instruksion as $wow)
 	            <tr>
+
 	            	<td>{{$wow->nama}}</td>
 	            	<td>{{$wow->keterangan}}</td>
 	            </tr>

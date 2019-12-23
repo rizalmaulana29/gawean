@@ -161,7 +161,7 @@ class CartController extends Controller
           $response = $result;
           $np     = false;
       }
-      // dd($code);
+      dd($number);
       // $code = $number;
       // $text = $title;
       $to_address = $request->input('email');

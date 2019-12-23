@@ -14,17 +14,19 @@ class Invoice extends Mailable
      * @return void
      */
     
-    public function __construct($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp)
+    public function __construct($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp,$code,$text)
     {
-        $this->to_address = $to_address;
+        $this->to_address= $to_address;
         $this->transdata = $transdata;
         $this->orderdata = $orderdata;
-        $this->nama = $nama;
-        $this->alamat = $alamat;
-        $this->kokec = $kokec;
-        $this->email = $email;
-        $this->hp = $hp;
+        $this->nama      = $nama;
+        $this->alamat    = $alamat;
+        $this->kokec     = $kokec;
+        $this->email     = $email;
+        $this->hp        = $hp;
         $this->instruksion = $instruksion;
+        $this->code      = $code;
+        $this->text      = $text;
         
     }
 
@@ -41,14 +43,16 @@ class Invoice extends Mailable
             ->view('emails.invoice')
             ->with(
                 [
-                    'transdata' => $this->transdata,
-                    'orderdata' => $this->orderdata,
-                    'nama'      => $this->nama,
-                    'alamat'    => $this->alamat,
-                    'kokec'     => $this->kokec,
-                    'email'     => $this->email,
-                    'hp'     => $this->hp,
-                    'instruksion'=> $this->instruksion
+                    'transdata'     => $this->transdata,
+                    'orderdata'     => $this->orderdata,
+                    'nama'          => $this->nama,
+                    'alamat'        => $this->alamat,
+                    'kokec'         => $this->kokec,
+                    'email'         => $this->email,
+                    'hp'            => $this->hp,
+                    'instruksion'   => $this->instruksion,
+                    'code'          => $this->$code,
+                    'text'          => $this->$text
                 ]
             );
     }

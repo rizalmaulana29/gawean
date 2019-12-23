@@ -144,6 +144,18 @@ class CartController extends Controller
           $npRegister = $this->npRegistration($result[2]->id_transaksi);
           $response = json_decode($npRegister);
           $np     = true;
+          if ($paymeth['parent_id'] == 2 && $response->resultCd == '0000') {
+            $text = "Virtual Account :";
+            $code = $response->vacctNo;
+          } elseif ($paymeth['parent_id'] == 3 && $response->resultCd == '0000') {
+            $text = "Kode Pembayaran :";
+            $code = $response->mitraCd;
+          } else{
+            $text = "No.Rekening :";
+            $code = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+          }
+
+          
       }
       else{
           $response = $result;
@@ -159,10 +171,10 @@ class CartController extends Controller
       $kokec = $req['kota']; $req['kecamatan'];
       $email = $request->input('email'); 
       $hp = $request->input('hp');
-      $instruksion = Instruction::where('id_payment_method',$request->input('id_payment'))->first();
+      $instruksion = Instruction::where('id_payment_method',$request->input('parent_id'))->get();
       // dd($instruksion);
       $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp))->build()
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp,$code,$text))->build()
         );
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE

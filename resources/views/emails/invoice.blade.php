@@ -57,7 +57,7 @@
         <div style="margin-bottom: 5px;">
             <img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
         </div>
-        <?php $kantor = DB::table('ra_kantor')->select('alamat','kota','tlp')->where('id', $transdata['id_kantor'])->first();?>
+        <?php $kantor = DB::table('ra_kantor')->select('alamat','kota','tlp')->where('id', $transdata->id_kantor)->first();?>
         <div style="margin-bottom: 20px;"><p>{{$kantor->alamat}} {{$kantor->kota}} {{$kantor->tlp}}</p>
         </div>
 
@@ -69,11 +69,11 @@
                 <tr class="noborder" >
                     <td class="noborder">No. Invoice</td>
                     <td class="noborder" style="width: 5px;">:</td>
-                    <td class="noborder">{{$transdata['id_transaksi']}}</td>
+                    <td class="noborder">{{$transdata->id_transaksi}}</td>
                     <td width="40%"></td>
                     <td class="noborder">Tgl. Transaksi</td>
                     <td class="noborder" style="width: 5px;">:</td>
-                    <td class="noborder">{{ date("Y-m-d",strtotime($transdata['tgl_transaksi'])) }}</td>
+                    <td class="noborder">{{ date("Y-m-d",strtotime($transdata->tgl_transaksi)) }}</td>
                 </tr>
                 <tr>
                     <td>Nama Customer</td>
@@ -82,7 +82,7 @@
                     <td></td> 
                     <td class="noborder">Jenis</td>
                     <td class="noborder">:</td>
-                    <td class="noborder">{{$transdata['jenis']}}</td>             
+                    <td class="noborder">{{$transdata->jenis}}</td>             
                 </tr>
                 <tr>
                     <td class="noborder">Alamat</td>
@@ -91,7 +91,7 @@
                     <td></td>  
                     <td class="noborder">Status</td>
                     <td class="noborder">:</td>
-                    <td class="noborder">{{$transdata['status']}}</td>            
+                    <td class="noborder">{{$transdata->status}}</td>            
                 </tr>
                 <tr>
                     <td class="noborder">No. Handphone</td>
@@ -100,14 +100,14 @@
                     <td></td> 
                     <td class="noborder">Tipe</td>
                     <td class="noborder">:</td>
-                    <td class="noborder">{{$transdata['tipe']}}</td>             
+                    <td class="noborder">{{$transdata->tipe}}</td>             
                 </tr>
                 <tr>
                     <td class="noborder">Email</td>
                     <td class="noborder">:</td>
                     <td class="noborder">{{ $email }}</td>                
                     <td></td>  
-                    <?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata['id_payment_method'])->first();
+                    <?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
                         if($bankRek->keterangan == "cash")
                     
                             {echo "<td>".$bankRek->keterangan."</td>";}
@@ -152,16 +152,18 @@
             
         </table>
         <div style="margin-top: 30px">
-            <br>
-            <br>
-            <br>
-            <table class="noborder" cellspacing="0" width="100%">
-                <tr class="noborder" >
-                    <td class="noborder" style="text-align: left;">{{$instruksion}}</td>
-                    
-                </tr>
+            <?php $va = DB::table('ra_nicepaylog')->select('virtual_account_no')->where('id_order', $transdata->id_transaksi)->where('action','Registration')->first();?><br>
+            <p>Virtual Account/Kode Pembayaran : {{$va}}</p>
+            <table>
+	            @foreach ($instruksion as $wow)
+	            <tr>
+	            	<td>{{$wow->keterangan}}</td>
+	            </tr>
+	            @endforeach
+	            <tr>
+	            	<p>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p>
+	            </tr>
             </table>
-
         </div>
     </div>
 </body>

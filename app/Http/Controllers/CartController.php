@@ -144,24 +144,23 @@ class CartController extends Controller
           $npRegister = $this->npRegistration($result[2]->id_transaksi);
           $response = json_decode($npRegister);
           $np     = true;
-          if ($paymeth['parent_id'] == 2 && $response->resultCd == '0000') {
-            $title = "Virtual Account :";
-            $number = $response->vacctNo;
-          } elseif ($paymeth['parent_id'] == 3 && $response->resultCd == '0000') {
-            $title = "Kode Pembayaran :";
-            $number = $response->mitraCd;
-          } else{
-            $title = "No.Rekening :";
-            $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
-          }
-
-          
       }
       else{
           $response = $result;
           $np     = false;
       }
-      dd($number);
+
+      if ($paymeth['parent_id'] == 2 && $response->resultCd == '0000') {
+        $title = "Virtual Account :";
+        $number = $response->vacctNo;
+      } elseif ($paymeth['parent_id'] == 3 && $response->resultCd == '0000') {
+        $title = "Kode Pembayaran :";
+        $number = $response->mitraCd;
+      } else{
+        $title = "No.Rekening :";
+        $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+      }
+      dd($title);
       // $code = $number;
       // $text = $title;
       $to_address = $request->input('email');

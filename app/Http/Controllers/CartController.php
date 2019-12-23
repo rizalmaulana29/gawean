@@ -161,7 +161,7 @@ class CartController extends Controller
           $response = $result;
           $np     = false;
       }
-
+      dd($code);
       $to_address = $request->input('email');
       $transdata = Payment::where('id',$result[2]->id)->first();
       $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();

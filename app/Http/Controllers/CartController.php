@@ -137,6 +137,18 @@ class CartController extends Controller
           $n++;
       }
 
+      
+      #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
+      $paymeth = Paymeth::find($result[2]->id_payment_method);
+      if($paymeth['parent_id'] <= 5){
+          $npRegister = $this->npRegistration($result[2]->id_transaksi);
+          $response = json_decode($npRegister);
+          $np     = true;
+      }
+      else{
+          $response = $result;
+          $np     = false;
+      }
 
       $to_address = $request->input('email');
       $transdata = Payment::where('id',$result[2]->id)->first();
@@ -152,21 +164,6 @@ class CartController extends Controller
       $hasil = Mail::send(
             (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion,$hp))->build()
         );
-      
-      #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
-      $paymeth = Paymeth::find($result[2]->id_payment_method);
-      if($paymeth['parent_id'] <= 5){
-          $npRegister = $this->npRegistration($result[2]->id_transaksi);
-          $response = json_decode($npRegister);
-          $np     = true;
-      }
-      else{
-          $response = $result;
-          $np     = false;
-      }
-
-      #Delete test Inputed Data
-      // (Nicepay::$isProduction)? : $this->deleteTestPayment($result[2]->id_transaksi);
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
       if($np){

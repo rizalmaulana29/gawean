@@ -152,17 +152,17 @@
             
         </table>
         <div style="margin-top: 30px">
-            <div>{{$title}} : {{$number}}</div>
+            <?php 
+            $instruksion = DB::table('ra_payment_instructions')->where('id_payment_method', 6)->get();
+            // dd($instruksion);
+        	?>
+	        @foreach ($instruksion as $wow)
+	            <div>{!!$wow->nama!!}</div>
+	            <div>{!!$wow->keterangan!!}</div>
+	        @endforeach
             <table>
-	            @foreach ($instruksion as $wow)
 	            <tr>
-
-	            	<td>{{$wow->nama}}</td>
-	            	<td>{{$wow->keterangan}}</td>
-	            </tr>
-	            @endforeach
-	            <tr>
-	            	<td><p>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p></td>
+	            	<td style="text-align: left;"><p style="text-align: left;>Konsultasi pembayaran <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini</a></p></td>
 	            </tr>
             </table>
         </div>

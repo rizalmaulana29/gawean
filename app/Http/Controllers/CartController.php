@@ -160,7 +160,7 @@ class CartController extends Controller
         $title = "No.Rekening :";
         $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
       }
-      dd($title);
+      // dd($title);
       // $code = $number;
       // $text = $title;
       $to_address = $request->input('email');

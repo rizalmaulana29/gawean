@@ -209,8 +209,8 @@ class CartController extends Controller
       
       $nicepay = new Nicepay;
       $vacctValidDt   = date("Ymd");
-      $vacctValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
-      $vacctValidTm   = date("His");
+      $ValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
+      $ValidTm   = date("His");
 
       $payment        = Payment::where('id_transaksi',$id_trx)->first();
       $detailOrder    = Order::where('id_order',$id_trx)->first();
@@ -306,16 +306,14 @@ class CartController extends Controller
               "userAgent"     =>"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/60.0.3112.101 Safari/537.36",
               "userLanguage"  =>"ko-KR,en-US;q=0.8,ko;q=0.6,en;q=0.4",
               "cartData"      =>"{}",
-              "vacctValidDt"  =>$vacctValidDt,
-              "vacctValidTm"  =>$vacctValidTm,
               "merFixAcctId"  =>""
           );
       
       $codeArray   = ($payMeth == 1)?array():
                       (
-                        ($payMeth == 2)?array("bankCd"=>$code):
+                        ($payMeth == 2)?array("bankCd"=>$code,"vacctValidDt"=>$ValidDt,"vacctValidTm"=>$ValidTm):
                         (
-                          ($payMeth == 3)?array("mitraCd"=>$code):array()
+                          ($payMeth == 3)?array("mitraCd"=>$code,"payValidDt"=>$ValidDt,"payValidTm"=>$ValidTm):array()
                         )
                       );
 
@@ -347,8 +345,15 @@ class CartController extends Controller
       $nicepayLog->response = addslashes($transaksiAPI);
       $nicepayLog->status   = addslashes($msg);
       $nicepayLog->action   = "Registration";
+      
+      $t = strtotime($ValidDt.$ValidTm);
+      $t = date('Y-m-d H:i:s',$t);
+      
+      $nicepayLog->expired_at= $t;
       $nicepayLog->save();
       
+      $payment->expired_at =  $t;
+      $payment->save();
       return $transaksiAPI;
   }
 

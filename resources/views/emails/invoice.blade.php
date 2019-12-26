@@ -152,6 +152,7 @@
             
         </table>
         <div style="margin-top: 30px">
+        	<div><h4>{{$title}} = {{$number}}</h4></div>
             <?php 
             $instruksion = DB::table('ra_payment_instructions')->where('id_payment_method', 6)->get();
             // dd($instruksion);

@@ -5,12 +5,17 @@ use Illuminate\Http\Request;
 
 use App\Thirdparty\Nicepay\Nicepay;
 use App\Nicepaylog;
+use App\Order;
 use App\Payment;
 use App\Paymeth;
 use App\AdminEntitas;
+use App\Kontak;
 use App\Response;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Invoice;
+use App\Mail\Notification;
 
 class NotificationsController extends Controller
 {
@@ -71,13 +76,13 @@ class NotificationsController extends Controller
         }
         else if($payMethod == "02"){
             $code           = $req['bankCd'];
-            $vacctNo        = $req['vacctNo'];
+            $code_bayar        = $req['vacctNo'];
             $vacctValidDt   = $req['vacctValidDt'];
             $vacctValidTm   = $req['vacctValidTm'];
         }
         else if($payMethod == "03"){
             $code           = $req['mitraCd'];
-            $payNo          = $req['payNo'];
+            $code_bayar          = $req['payNo'];
             $payValidDt     = $req['payValidDt'];
             $payValidTm     = $req['payValidTm'];
             $receiptCode    = $req['receiptCode'];
@@ -92,7 +97,7 @@ class NotificationsController extends Controller
         $nicepayLog->payment_method = $payMethod;
         $nicepayLog->code     = $code;
         $nicepayLog->txid     = $tXid;
-        $nicepayLog->virtual_account_no = $vacctNo;
+        $nicepayLog->virtual_account_no = $code_bayar;
         $nicepayLog->update   = Carbon::now();
         $nicepayLog->request  = addslashes(json_encode($req));
         $nicepayLog->response = "";
@@ -117,6 +122,23 @@ class NotificationsController extends Controller
                     );
 
         $payment = Payment::where('id_transaksi', $referenceNo)->first();
+        if($status == "paid"){
+            $to_address = $payment;
+            $orderdata  = Order::where('id_order',$referenceNo)->get();
+            $kontak     = Kontak::where('id', $payment['id_kontak'])->first();
+
+            $nama       = $kontak['nama_kontak'];
+            $alamat     = $kontak['alamat'];
+            $kokec      = $kontak['kota']." - ".$kontak['kecamatan'];
+            $email      = $kontak['email']; 
+            $hp         = $kontak['hp'];
+            $parent_id  = $kontak['parent_id'];
+            // dd($instruksion);
+            $hasil = Mail::send(
+                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp))->build()
+                );
+        }
+
         if($payment){
             $payment->status = $status;
             $payment->save();

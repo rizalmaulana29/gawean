@@ -42,13 +42,15 @@
 							<tbody>
 								<tr>
 									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$title}}</td>
-									<?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();?>
+									<?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
+									?>
 									@if($bankRek->keterangan == "cash")
 									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$bankRek->keterangan}}</td>
 									@else
 									<td>Bank </td>
 									<td>:</td>
 									<td>{{$bankRek->keterangan}}<br>{{$bankRek->id_rekening}}</td>
+									@endif
 
 								</tr>
 

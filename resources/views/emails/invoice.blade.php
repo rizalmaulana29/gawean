@@ -57,7 +57,7 @@
 										{{$number}}
 									</td>
                                 <td style="font-size:14px;padding:0 3px">
-                                    <img style="max-height:20px;max-width:100%" src="https://dev.rumahaqiqah.co.id/wp-content/{{$bankRek->gambar}}">
+                                    <img style="max-height:20px;max-width:100%" src="https://dev-backend.rumahaqiqah.co.id/{!!$bankRek->gambar!!}">
                                 </td>
                             </tr>
 

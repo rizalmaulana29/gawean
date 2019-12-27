@@ -43,8 +43,6 @@ class NotificationsController extends Controller
         $tXid	        = $req['tXid'];
         $transDt	    = $req['transDt'];
         $transTm	    = $req['transTm'];
-        $vacctValidDt	= $req['vacctValidDt'];
-        $vacctValidTm   = $req['vacctValidTm'];
 
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
@@ -52,10 +50,10 @@ class NotificationsController extends Controller
         $iMid       = Nicepay::$isProduction ? $merData['mid']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merkey']:$merData['merkey_sand'];
 
-        $mtNotif    = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
-        if($merchantToken != $mtNotif) {
-            die("Antum Dilarang Masuk Euy!! Beda Data na ge.");exit();
-        }
+        // $mtNotif    = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
+        // if($merchantToken != $mtNotif) {
+        //     die("Antum Dilarang Masuk Euy!! Beda Data na ge.");exit();
+        // }
 
         if($payMethod == "01"){
             $authNo         = $req['authNo'];
@@ -75,38 +73,38 @@ class NotificationsController extends Controller
             $notaxAmt       = $req['notaxAmt'];
         }
         else if($payMethod == "02"){
-            $code           = $req['bankCd'];
-            $code_bayar        = $req['vacctNo'];
-            $vacctValidDt   = $req['vacctValidDt'];
-            $vacctValidTm   = $req['vacctValidTm'];
+            $code       = $req['bankCd'];
+            $code_bayar = $req['vacctNo'];
+            $ValidDt    = $req['vacctValidDt'];
+            $ValidTm    = $req['vacctValidTm'];
         }
         else if($payMethod == "03"){
             $code           = $req['mitraCd'];
-            $code_bayar          = $req['payNo'];
-            $payValidDt     = $req['payValidDt'];
-            $payValidTm     = $req['payValidTm'];
-            $receiptCode    = $req['receiptCode'];
-            $mRefNo         = $req['mRefNo'];
-            $depositDt      = $req['depositDt'];
-            $depositTm      = $req['depositTm'];
+            $code_bayar     = $req['payNo'];
+            $ValidDt        = $req['payValidDt'];
+            $ValidTm        = $req['payValidTm'];
+            // $receiptCode    = $req['receiptCode'];
+            // $mRefNo         = $req['mRefNo'];
+            // $depositDt      = $req['depositDt'];
+            // $depositTm      = $req['depositTm'];
         }
 
-        $nicepayLog    = new Nicepaylog;
+        // $nicepayLog    = new Nicepaylog;
 
-        $nicepayLog->id_order = $referenceNo;
-        $nicepayLog->payment_method = $payMethod;
-        $nicepayLog->code     = $code;
-        $nicepayLog->txid     = $tXid;
-        $nicepayLog->virtual_account_no = $code_bayar;
-        $nicepayLog->update   = Carbon::now();
-        $nicepayLog->request  = addslashes(json_encode($req));
-        $nicepayLog->response = "";
-        $nicepayLog->status   = addslashes($status);
-        $nicepayLog->action   = "Notification";
+        // $nicepayLog->id_order = $referenceNo;
+        // $nicepayLog->payment_method = $payMethod;
+        // $nicepayLog->code     = $code;
+        // $nicepayLog->txid     = $tXid;
+        // $nicepayLog->virtual_account_no = $code_bayar;
+        // $nicepayLog->update   = Carbon::now();
+        // $nicepayLog->request  = addslashes(json_encode($req));
+        // $nicepayLog->response = "";
+        // $nicepayLog->status   = addslashes($status);
+        // $nicepayLog->action   = "Notification";
 
         // echo json_encode($req);
-        $nicepayLog->save();
-        echo $status;
+        // $nicepayLog->save();
+
         $status = ($status == 0)?"paid":(
                         ($status == 1)?"failed":(
                             ($status == 2)?"void":(
@@ -123,14 +121,14 @@ class NotificationsController extends Controller
 
         $payment = Payment::where('id_transaksi', $referenceNo)->first();
         if($status == "paid"){
-            $to_address = $payment;
             $orderdata  = Order::where('id_order',$referenceNo)->get();
             $kontak     = Kontak::where('id', $payment['id_kontak'])->first();
-
+            
+            $to_address = trim($kontak['email']);
             $nama       = $kontak['nama_kontak'];
             $alamat     = $kontak['alamat'];
-            $kokec      = $kontak['kota']." - ".$kontak['kecamatan'];
-            $email      = $kontak['email']; 
+            $kokec      = $kontak['kota']; $kontak['kecamatan'];
+            $email      = trim($kontak['email']); 
             $hp         = $kontak['hp'];
             $parent_id  = $kontak['parent_id'];
             // dd($instruksion);

@@ -14,10 +14,10 @@ class Notification extends Mailable
      * @return void
      */
     
-    public function __construct($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp)
+    public function __construct($to_address, $payment, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp)
     {
         $this->to_address  = $to_address;
-        $this->transdata   = $transdata;
+        $this->payment   = $payment;
         $this->orderdata   = $orderdata;
         $this->nama        = $nama;
         $this->alamat      = $alamat;
@@ -37,13 +37,23 @@ class Notification extends Mailable
      */
     public function build()
     {
+        // dd(
+        // $this->to_address , 
+        // $this->payment   ,
+        // $this->orderdata   ,
+        // $this->nama        ,
+        // $this->alamat      ,
+        // $this->kokec       ,
+        // $this->email       ,
+        // $this->hp          ,
+        // $this->parent_id );
         return $this
             ->to($this->to_address)
             ->subject('Paid Notifikasi')
             ->view('emails.notification')
             ->with(
                 [
-                    'transdata'     => $this->transdata,
+                    'transdata'     => $this->payment,
                     'orderdata'     => $this->orderdata,
                     'nama'          => $this->nama,
                     'alamat'        => $this->alamat,

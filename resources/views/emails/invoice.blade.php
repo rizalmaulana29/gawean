@@ -27,7 +27,7 @@
 							<tr>
 								<td>
 									<h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
-									<p style="margin:0;font-size:16px;line-height:24px">Silahkan ikuti instruksi pembayaran di email ini dan selesaikan pembayaran sebelum: <b>{{date('Ymd',strtotime($transdata->expired_at))}}</b></p>
+									<p style="margin:0;font-size:16px;line-height:24px">Silahkan ikuti instruksi pembayaran di email ini dan selesaikan pembayaran sebelum: <b>{{date('d M Y ,H:i',strtotime($transdata->expired_at))}}</b></p>
 								</td>
 							</tr>
 						</tbody>
@@ -95,9 +95,9 @@
         				<table style="width:100%" cellspacing="0" cellpadding="0">
         					<tbody>
         						<tr>
-					                <th colspan="2" style="text-align: center;">Produk</th>
-					                <th style="text-align: center;">Harga</th>
-					                <th style="text-align: center;">Qty</th>
+					                <th colspan="2" style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Produk</th>
+					                <th style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Harga</th>
+					                <th style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Qty</th>
 					                <th colspan="2">Subtotal</th>
 					            </tr>
         						@foreach ($orderdata as $row)
@@ -108,14 +108,14 @@
         								echo $label->label;
         								?>
         							</td>
-        							<td style="text-align: right;">Rp {{ number_format($row->harga) }}</td>
-        							<td style="text-align: center;">{{ $row->quantity }}</td>
-        							<td colspan="2" style="text-align: right;">Rp {{ number_format($row->total_transaksi) }}</td>
+        							<td style="text-align: right; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->harga) }}</td>
+        							<td style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">{{ $row->quantity }}</td>
+        							<td colspan="2" style="text-align: right; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->total_transaksi) }}</td>
         						</tr>
         						@endforeach
         						<tr>
-        							<th colspan="4">Total</th>
-        							<th colspan="2" style="text-align: right;">Rp {{ number_format($transdata['nominal']) }}</th>
+        							<th colspan="4" style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Total</th>
+        							<th colspan="2" style="text-align: right; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($transdata['nominal']) }}</th>
         						</tr>
         					</tbody>
         				</table>

@@ -24,7 +24,7 @@
 							<tr>
 								<td>
 									<h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
-									<p style="margin:0;font-size:16px;line-height:24px">Silahkan ikuti instruksi pembayaran di email ini dan selesaikan pembayaran sebelum: <b>{{date("YMd H:i",strtotime(transdata->expired_at))}}</b></p>
+									<p style="margin:0;font-size:16px;line-height:24px">Silahkan ikuti instruksi pembayaran di email ini dan selesaikan pembayaran sebelum: <b>{{date("YMd H:i",transdata->expired_at)}}</b></p><!-- date("Y-m-d h:i:sa", $d) -->
 								</td>
 							</tr>
 						</tbody>

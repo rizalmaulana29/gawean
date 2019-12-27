@@ -237,8 +237,8 @@ class CartController extends Controller
       $payMethod      = sprintf("%02d", $payMeth);
       $code           = $paymeth['code'];
 
-      $ValidDt   = date('Ymd', $payment['expired_at']);
-      $ValidTm   = date("His", $payment['expired_at']);
+      $ValidDt   = date('Ymd',strtotime($payment['expired_at']));
+      $ValidTm   = date('His',strtotime($payment['expired_at']));
       
       $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey);
 

@@ -31,11 +31,18 @@ class CartController extends Controller
     
     public function cart(Request $request){
       $req = $request->all();
-      $now = Carbon::now()->addHour(7);
- 
+      $now = Carbon::now();
+      $expired_at = Carbon::now()->addHour(24);
+
       $this->passed = $req;
 
       $total = 0;
+      // $ini_now = Carbon::now();
+      // $dateNow = date("Y-m-d H:i:s");
+      // var_dump($dateNow);
+      // var_dump($ini_now);
+      // var_dump($now);
+      // dd(date_format(Carbon::now()->addHour(24),'d M Y H:i'));
 
       #Create C'Babeh
         $tempat_lahir = (isset($req['tempat_lahir'][0]))?$req['tempat_lahir'][0]:"";
@@ -102,7 +109,8 @@ class CartController extends Controller
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),
-          'waktu_kirim' => $request->input('waktu_kirim')
+          'waktu_kirim' => $request->input('waktu_kirim'),
+          'expired_at' => $expired_at
       ]);
 //       var_dump($result[2]);
 // dd($request->input('id_payment'));
@@ -208,9 +216,9 @@ class CartController extends Controller
   private function npRegistration($id_trx){
       
       $nicepay = new Nicepay;
-      $vacctValidDt   = date("Ymd");
-      $ValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
-      $ValidTm   = date("His");
+      // $vacctValidDt   = date("Ymd");
+      // $ValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));
+      // $ValidTm   = date("His");
 
       $payment        = Payment::where('id_transaksi',$id_trx)->first();
       $detailOrder    = Order::where('id_order',$id_trx)->first();
@@ -229,6 +237,9 @@ class CartController extends Controller
       $payMethod      = sprintf("%02d", $payMeth);
       $code           = $paymeth['code'];
 
+      $ValidDt   = date('Ymd', $payment['expired_at']);
+      $ValidTm   = date("His", $payment['expired_at']);
+      
       $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey);
 
       #ASK. GIMANA MENDINAMIS KAN PARAMETERNYA?
@@ -241,35 +252,14 @@ class CartController extends Controller
       // $customerPostId     = "40331";
       // $customerCountry    = "Indonesia";
 
-      $deliveryNm         = "Nama Pengirim";
-      $deliveryPhone      = "No Penerima";
-      $deliveryAddr       = "Jalan Bukit Berbunga 22";
-      $deliveryCity       = "Jakarta";
-      $deliveryState      = "DKI Jakarta";
-      $deliveryPostCd     = "12345";
+      $deliveryNm         = "Rumah Aqiqah";
+      $deliveryPhone      = "0817 274 724 / 0813 7007 1330";
+      $deliveryAddr       = "Jl. Babakan Sari I No. 149";
+      $deliveryCity       = "Bandung";
+      $deliveryState      = "Jawa Barat";
+      $deliveryPostCd     = "40283";
       $deliveryCountry    = "Indonesia";
-      $description        = "Desctiption";
-
-      // var_dump(
-        //   $bankCd             = "BMRI",
-        //   $customerName       = $kontak['nama_kontak'],
-        //   $customerPhone      = $kontak['hp'],
-        //   $customerEmail      = $kontak['email'],
-        //   $customerAddress    = $kontak['alamat'],
-        //   $customerCity       = $kontak['kota'],
-        //   $customerProv       = "Jawa Barat",
-        //   $customerPostId     = "40331",
-        //   $customerCountry    = "Indonesia",
-    
-        //   $deliveryNm         = "Nama Pengirim",
-        //   $deliveryPhone      = "No Penerima",
-        //   $deliveryAddr       = "Jalan Bukit Berbunga 22",
-        //   $deliveryCity       = "Jakarta",
-        //   $deliveryState      = "DKI Jakarta",
-        //   $deliveryPostCd     = "12345",
-        //   $deliveryCountry    = "Indonesia",
-        //   $description        = "Desctiption",
-      // );
+      $description        = "Transaksi Rumah Aqiqah";
 
       #billing = detail customer
       #delivery = detail pengiriman
@@ -320,17 +310,16 @@ class CartController extends Controller
       $detailTrans = array_merge($detailTrans,$codeArray);
       $detailTrans = json_encode($detailTrans);
 
-
       $transaksiAPI = $nicepay->nicepayApi("nicepay/direct/v2/registration",$detailTrans); 
       
       $response     = json_decode($transaksiAPI);
       if($response->resultCd == '0000'){
         $tXid     = $response->tXid;
-        $vacctno  = $response->vacctNo;
         $msg      = $response->resultMsg;
+        $no_bayar = ($payMeth == 2)?$response->vacctNo:(($payMeth == 3)?$response->payNo:"");
       }else{
         $tXid     = "";
-        $vacctno  = "";
+        $no_bayar = "";
         $msg      = $response->resultMsg;
       }
 
@@ -339,21 +328,15 @@ class CartController extends Controller
       $nicepayLog->payment_method = $payMethod;
       $nicepayLog->code     = $code;
       $nicepayLog->txid     = $tXid;
-      $nicepayLog->virtual_account_no = $vacctno;
+      $nicepayLog->virtual_account_no = $no_bayar;
       $nicepayLog->update = Carbon::now();
       $nicepayLog->request  = addslashes($detailTrans);
       $nicepayLog->response = addslashes($transaksiAPI);
       $nicepayLog->status   = addslashes($msg);
       $nicepayLog->action   = "Registration";
-      
-      $t = strtotime($ValidDt.$ValidTm);
-      $t = date('Y-m-d H:i:s',$t);
-      
-      $nicepayLog->expired_at= $t;
+      $nicepayLog->expired_at= $payment['expired_at'];
       $nicepayLog->save();
       
-      $payment->expired_at =  $t;
-      $payment->save();
       return $transaksiAPI;
   }
 

@@ -47,8 +47,6 @@
 									@if($bankRek->keterangan == "cash")
 									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$bankRek->keterangan}}</td>
 									@else
-									<td>Bank </td>
-									<td>:</td>
 									<td>{{$bankRek->keterangan}}<br>{{$bankRek->id_rekening}}</td>
 									@endif
 
@@ -58,9 +56,9 @@
 									<td style="font-size:14px;padding:0 3px">
 										{{$number}}
 									</td>
-                                <!-- <td style="font-size:14px;padding:0 3px">
-                                    <img style="max-height:20px;max-width:100%" alt="Bank Mandiri" title="Bank Mandiri" src="https://ci6.googleusercontent.com/proxy/lFCdmnHSdvUt1rZ7bnBoolQ-f-Mjb5lVbo7gIx4rkal3HHtAfuh9tKVXDJQrVcsQ2Ghbu80tyzROsUzsWdMlhlI9=s0-d-e1-ft#https://www.tiket.com/images/ico_va_mandiri.png" class="CToWUd">
-                                </td> -->
+                                <td style="font-size:14px;padding:0 3px">
+                                    <img style="max-height:20px;max-width:100%" src="https://dev.rumahaqiqah.co.id/wp-content/{!!$bankRek->gambar!!}">
+                                </td>
                             </tr>
 
                             <tr>
@@ -90,6 +88,12 @@
         		<div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
         				<table style="width:100%" cellspacing="0" cellpadding="0">
         					<tbody>
+        						<tr>
+					                <th colspan="2" style="text-align: center;">Produk</th>
+					                <th style="text-align: center;">Harga</th>
+					                <th style="text-align: center;">Qty</th>
+					                <th colspan="2">Subtotal</th>
+					            </tr>
         						@foreach ($orderdata as $row)
         						<tr>
         							<td colspan="2">

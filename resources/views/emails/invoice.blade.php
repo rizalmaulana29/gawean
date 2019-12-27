@@ -24,7 +24,7 @@
 							<tr>
 								<td>
 									<h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
-									<p style="margin:0;font-size:16px;line-height:24px">Silahkan ikuti instruksi pembayaran di email ini dan selesaikan pembayaran sebelum: <b>{{date('YMd H:i',(transdata->expired_at))}}</b></p>
+									<p style="margin:0;font-size:16px;line-height:24px">Silahkan ikuti instruksi pembayaran di email ini dan selesaikan pembayaran sebelum: <b>{{date("YMd H:i",strtotime(transdata->expired_at))}}</b></p>
 								</td>
 							</tr>
 						</tbody>
@@ -88,8 +88,6 @@
         			Detail Pesanan
         		</h2>
         		<div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
-        			<p style="margin:0 0 16px;font-size:14px;line-height:21px">uluwatu backpackers (King Suite)
-        				<br>Tanggal Check-in : Wednesday ( 25 December 2019 ) </p>
         				<table style="width:100%" cellspacing="0" cellpadding="0">
         					<tbody>
         						@foreach ($orderdata as $row)

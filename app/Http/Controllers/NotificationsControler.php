@@ -12,6 +12,7 @@ use App\AdminEntitas;
 use App\Kontak;
 use App\Response;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Invoice;
@@ -131,9 +132,20 @@ class NotificationsController extends Controller
             $email      = trim($kontak['email']); 
             $hp         = $kontak['hp'];
             $parent_id  = $kontak['parent_id'];
-            // dd($instruksion);
+            
+            if ($paymeth['parent_id'] == 2 ) {
+                $title  = "Virtual Account :";
+                $number = $req['vacctNo'];;
+              } elseif ($paymeth['parent_id'] == 3) {
+                $title  = "Kode Pembayaran :";
+                $number = $req['payNo'];
+              } else{
+                $title = "No.Rekening :";
+                $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+              }
+
             $hasil = Mail::send(
-                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp))->build()
+                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp,$title,$number))->build()
                 );
         }
 

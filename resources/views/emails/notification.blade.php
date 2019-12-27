@@ -145,7 +145,8 @@
             <tr>
                 <td style="padding:8px 16px">
                 <div>
-                    <h3>Untuk Check pemesanan Anda, Anda bisa klik link berikut ini <a class="btn btn-success" href="https://dev.rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}">klik disini</a></h3>
+                    <h3>Untuk Check pemesanan Anda, Anda bisa klik tombol link dibawah ini <br><br>
+                    <a href="https://dev.rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}" rel="noopener" style="color:#fff;background-color:#3648e8;border-radius:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;padding:10px 30px" target="_blank">Check Transaksi</a></h3>
                 </div>
                 </td>
             </tr>

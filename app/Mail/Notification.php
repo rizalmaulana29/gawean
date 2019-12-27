@@ -14,7 +14,7 @@ class Notification extends Mailable
      * @return void
      */
     
-    public function __construct($to_address, $payment, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp)
+    public function __construct($to_address, $payment, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp,$title,$number)
     {
         $this->to_address  = $to_address;
         $this->payment   = $payment;
@@ -25,8 +25,8 @@ class Notification extends Mailable
         $this->email       = $email;
         $this->hp          = $hp;
         $this->parent_id   = $parent_id;
-        // $this->number      = $number;
-        // $this->title       = $title;
+        $this->title       = $title;
+        $this->number      = $number;
         
     }
 
@@ -60,9 +60,9 @@ class Notification extends Mailable
                     'kokec'         => $this->kokec,
                     'email'         => $this->email,
                     'hp'            => $this->hp,
-                    'parent_id'     => $this->parent_id
-                    // 'number'        => $this->number,
-                    // 'title'         => $this->title
+                    'parent_id'     => $this->parent_id,
+                    'title'         => $this->title,
+                    'number'        => $this->number,
                 ]
             );
     }

@@ -65,6 +65,18 @@ return [
             'strict' => env('DB_STRICT_MODE', false),
         ],
 
+        'mysql3' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', 3306),
+            'database' => env('DB_DATABASE', 'ra_dev'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'teuingatuhbro'),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'prefix' => env('DB_PREFIX', ''),
+            'strict' => env('DB_STRICT_MODE', false),
+        ],
+
         // 'dbzainlive' => [
         //     'driver' => 'mysql',
         //     'host' => env('DB_HOST', '127.0.0.1'),

@@ -50,14 +50,14 @@
 							<tbody>
 								<tr>
 									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$title}}</td>
-									<?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
+                                    <?php 
+                                        $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')->where('id', $transdata->id_payment_method)->first();
 									?>
 									@if($bankRek->keterangan == "cash")
 									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$bankRek->keterangan}}</td>
 									@else
 									<td>{{$bankRek->keterangan}}<br>{{$bankRek->id_rekening}}</td>
 									@endif
-
 								</tr>
 
 								<tr style="margin:0 0 10px">
@@ -65,7 +65,11 @@
 										{{$number}}
 									</td>
                                 <td style="font-size:14px;padding:0 3px">
-                                    <!-- <img style="max-height:20px;max-width:100%" src="https://dev-backend.rumahaqiqah.co.id/{--!!$bankRek->gambar!!--}"> -->
+                                    @if($bankRek->parent_id != 26)
+                                        <img style="max-height:20px;max-width:100%" src="https://dev-backend.rumahaqiqah.co.id/{{$bankRek->gambar}}">
+									@else
+                                        <img style="max-height:20px;max-width:100%" src="{{$bankRek->gambar}}">
+									@endif
                                 </td>
                             </tr>
 
@@ -129,8 +133,7 @@
         		<td style="padding:12px 16px">
         			<div style="border-bottom:1px dashed #dee2ee;padding:0 16px"><span class="im">
         				<?php 
-        				$instruksion = DB::table('ra_payment_instructions')->where('id_payment_method', $parent_id)->get();
-            // dd($instruksion);
+                            $instruksion = DB::table('ra_payment_instructions')->where('id_payment_method', $bankRek->id_payment_method)->get();
         				?>
         				@foreach ($instruksion as $wow)
         				<div>{!!$wow->nama!!}</div>

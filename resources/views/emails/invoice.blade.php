@@ -98,7 +98,7 @@
 					                <th colspan="2" style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Produk</th>
 					                <th style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Harga</th>
 					                <th style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Qty</th>
-					                <th colspan="2">Subtotal</th>
+					                <th colspan="2" style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Subtotal</th>
 					            </tr>
         						@foreach ($orderdata as $row)
         						<tr style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">

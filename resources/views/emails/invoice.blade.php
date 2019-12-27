@@ -94,28 +94,28 @@
         		<div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
         				<table style="width:100%" cellspacing="0" cellpadding="0">
         					<tbody>
-        						<tr style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">
-					                <th colspan="2" style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Produk</th>
-					                <th style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Harga</th>
-					                <th style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Qty</th>
-					                <th colspan="2" style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Subtotal</th>
+        						<tr style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">
+					                <th colspan="2" style="text-align: center; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Produk</th>
+					                <th style="text-align: center; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Harga</th>
+					                <th style="text-align: center; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Qty</th>
+					                <th colspan="2" style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Subtotal</th>
 					            </tr>
         						@foreach ($orderdata as $row)
-        						<tr style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">
-        							<td colspan="2" style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">
+        						<tr style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">
+        							<td colspan="2" style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">
         								<?php 
         								$label = DB::table('ra_produk_harga')->select('label')->where('id', $row->ra_produk_harga_id)->first();
         								echo $label->label;
         								?>
         							</td>
-        							<td style="text-align: right; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->harga) }}</td>
-        							<td style="text-align: center; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">{{ $row->quantity }}</td>
-        							<td colspan="2" style="text-align: right; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->total_transaksi) }}</td>
+        							<td style="text-align: right; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->harga) }}</td>
+        							<td style="text-align: center; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">{{ $row->quantity }}</td>
+        							<td colspan="2" style="text-align: right; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->total_transaksi) }}</td>
         						</tr>
         						@endforeach
-        						<tr style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">
-        							<th colspan="4" style="border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Total</th>
-        							<th colspan="2" style="text-align: right; border: 1px solid #333; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($transdata['nominal']) }}</th>
+        						<tr style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">
+        							<th colspan="4" style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Total</th>
+        							<th colspan="2" style="text-align: right; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($transdata['nominal']) }}</th>
         						</tr>
         					</tbody>
         				</table>

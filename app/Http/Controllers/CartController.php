@@ -37,13 +37,7 @@ class CartController extends Controller
       $this->passed = $req;
 
       $total = 0;
-      // $ini_now = Carbon::now();
-      // $dateNow = date("Y-m-d H:i:s");
-      // var_dump($dateNow);
-      // var_dump($ini_now);
-      // var_dump($now);
-      // dd(date_format(Carbon::now()->addHour(24),'d M Y H:i'));
-
+     
       #Create C'Babeh
         $tempat_lahir = (isset($req['tempat_lahir'][0]))?$req['tempat_lahir'][0]:"";
         $tgl_lahir    = (isset($req['tgl_lahir'][0]))?$req['tgl_lahir'][0]:"";
@@ -93,7 +87,7 @@ class CartController extends Controller
 
         }
       }
-// var_dump($request->input('id_payment'));
+
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
           'id_kantor' => $request->input('id_kantor'),
@@ -112,8 +106,7 @@ class CartController extends Controller
           'waktu_kirim' => $request->input('waktu_kirim'),
           'expired_at' => $expired_at
       ]);
-//       var_dump($result[2]);
-// dd($request->input('id_payment'));
+
       $total = 0;
       $id = [];
       $x = [];
@@ -163,25 +156,23 @@ class CartController extends Controller
         $number = $response->vacctNo;
       } elseif ($paymeth['parent_id'] == 3 && $response->resultCd == '0000') {
         $title = "Kode Pembayaran :";
-        $number = $response->mitraCd;
+        $number = $response->payNo;
       } else{
         $title = "No.Rekening :";
         $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
       }
-      // dd($title);
-      // $code = $number;
-      // $text = $title;
+
       $to_address = $request->input('email');
       $transdata = Payment::where('id',$result[2]->id)->first();
       $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();
-      // dd($transdata->id_transaksi);
+
       $nama = $req['nama'][0];
       $alamat = $req['alamat'];
       $kokec = $req['kota']; $req['kecamatan'];
       $email = $request->input('email'); 
       $hp = $request->input('hp');
       $parent_id = $request->input('parent_id');
-      // dd($instruksion);
+
       $hasil = Mail::send(
             (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp,$number,$title))->build()
         );
@@ -362,23 +353,4 @@ class CartController extends Controller
       Order::where('id_order',$id_trx)->delete();
   }
 
-  public function sendemail(Request $request){
-      // $req = $request->all();
-      // $to_address = $request->input('email');
-      // $transdata = ['id_transaksi' => 123,'tgl_transaksi' => '2019-12-20' ,'id_payment_method'=> 185 ,'jenis'=> 'online','status'=> 'lunas','tipe'=> 'transaksi','lunas'=>'y'];
-      // $orderdata = 1912180016137;
-     
-      // $nama = $req['nama'];
-      // $alamat = $req['alamat'];
-      // $kokec = $req['kota']; $req['kecamatan'];
-      // $email = $request->input('email'); $request->input('hp');
-      // $instruksion = DB::table('ra_payment_instruction')->select('keterangan')->where('id_payment_method',$request->input('id_payment'))->get();
-
-      // $hasil = Mail::send(
-      //       (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $instruksion))->build()
-      //   );
-
-      //   return response($hasil);
-
-    }
 }

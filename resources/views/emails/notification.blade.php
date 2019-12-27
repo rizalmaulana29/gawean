@@ -5,163 +5,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Paid Notification</title>
+    <title>Paid Notification - Rumah Aqiqah</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <style>
-        body{
-            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            text-align:left;
-            color:#333;
-            font-size:12px;
-            margin:0;
-        }
-        .container{
-            margin:0 auto;
-            margin-top:20px;
-            padding:30px;
-            /* width:750px; */
-            height:auto;
-            background-color:#fff;
-        }
-        caption{
-            font-size:20px;
-            margin-bottom:15px;
-        }
-        table{
-            border:1px solid #333;
-            border-collapse:collapse;
-            margin:0 auto;
-            /* width:740px; */
-        }
-        .noborder{
-            border:0;
-            margin:0 !important;
-            border-collapse:collapse;
-        }
-        table.produk td, tr, th{
-            padding:10px;
-            border:1px solid #333;
-            /* width:185px; */
-        }
-        th{
-            background-color: #f0f0f0;
-        }
-        h4, p{
-            margin:0px;
-        }
-    </style>
+    <?php 
+        use Illuminate\Support\Facades\DB;
+    ?>
 </head>
 <body>
-
-    <div class="container">
-        <div style="margin-bottom: 5px;">
-            <img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
-        </div>
-        <?php use Illuminate\Support\Facades\DB; 
-            $kantor = DB::table('ra_kantor')->select('alamat','kota','tlp')->where('id', $transdata->id_kantor)->first();
-        ?>
-        <div style="margin-bottom: 20px;">
-            <p>{{$kantor->alamat}} {{$kantor->kota}} {{$kantor->tlp}}</p>
-        </div>
-        <div>
-        </div>
-        <hr>
-
-        <div style="margin-bottom: 20px; margin-top: 20px; text-align: left;" >
-            <div>
-                <h2 style="color: blue;">NOTIFIKASI PEMBAYARAN</h2>
-            </div>
-            <table class="noborder" cellspacing="0" width="100%">
-                <tr class="noborder" >
-                    <td class="noborder">No. Invoice</td>
-                    <td class="noborder" style="width: 5px;">:</td>
-                    <td class="noborder">{{$transdata->id_transaksi}}</td>
-                    <td width="40%"></td>
-                    <td class="noborder">Tgl. Transaksi</td>
-                    <td class="noborder" style="width: 5px;">:</td>
-                    <td class="noborder">{{ date("Y-m-d",strtotime($transdata->tgl_transaksi)) }}</td>
-                </tr>
-                <tr>
-                    <td>Nama Customer</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{ $nama }}</td>
-                    <td></td> 
-                    <td class="noborder">Jenis</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{$transdata->jenis}}</td>             
-                </tr>
-                <tr>
-                    <td class="noborder">Alamat</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{ $alamat }} {{ $kokec }}</td>                
-                    <td></td>  
-                    <td class="noborder">Status</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{$transdata->status}}</td>            
-                </tr>
-                <tr>
-                    <td class="noborder">No. Handphone</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{ $hp }}</td>                
-                    <td></td> 
-                    <td class="noborder">Tipe</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{$transdata->tipe}}</td>             
-                </tr>
-                <tr>
-                    <td class="noborder">Email</td>
-                    <td class="noborder">:</td>
-                    <td class="noborder">{{ $email }}</td>                
-                    <td></td>  
-                    <?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
-                        if($bankRek->keterangan == "cash")
-                    
-                            {echo "<td>".$bankRek->keterangan."</td>";}
-                        else
-                            {echo "<td>Bank </td>
-                                   <td>:</td>
-                                   <td>".$bankRek->keterangan."<br>".$bankRek->id_rekening."</td>";}
-                    ?>                           
-            </table>
-        </div>
-        <table width="100%" class="produk">
+    <table style="border-collapse:collapse;width:100%">
+		<tbody>
             
-            <tbody>
-                
-                <tr>
-                    <th colspan="2" style="text-align: center;">Produk</th>
-                    <th style="text-align: center;">Harga</th>
-                    <th style="text-align: center;">Qty</th>
-                    <th colspan="2">Subtotal</th>
-                </tr>
-                @foreach ($orderdata as $row)
-                <tr>
-                    <td colspan="2">
-                        <?php 
-                            $label = DB::table('ra_produk_harga')->select('label')->where('id', $row->ra_produk_harga_id)->first();
-                            echo $label->label;
-                        ?>
-                    </td>
-                    <td style="text-align: right;">Rp {{ number_format($row->harga) }}</td>
-                    <td style="text-align: center;">{{ $row->quantity }}</td>
-                    <td colspan="2" style="text-align: right;">Rp {{ number_format($row->total_transaksi) }}</td>
-                </tr>
-                @endforeach
-                <tr>
-                    <th colspan="4">Total</th>
-                    <th colspan="2" style="text-align: right;">Rp {{ number_format($transdata['nominal']) }}</th>
-                </tr>
-                <tr>
-                    
-                </tr>
-            </tbody>
-            
-        </table>
-        <div style="margin-top: 30px">
-            <div style="text-align: left;">
-                <p>Terima Kasih atas pembayaran yg Anda lakukan. Untuk Check pemesanan Anda, Anda bisa klik link berikut ini<a class="btn btn-success" href="https://dev.rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}">klik disini</a></p>
-            </div>
-        </div>
-    </div>
+			<tr>
+				<td style="padding:15px 16px"><img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
+			</tr>
+            <tr>
+                <td style="padding:8px 16px">
+                    <div>
+                        <h2 style="color: blue;">NOTIFIKASI PEMBAYARAN</h2>
+                    </div>
+                </td>
+            </tr>
+			<tr>
+				<td style="padding:15px 16px">
+					<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%">
+						<tbody>
+							<tr>
+								<td>
+									<h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
+									<p style="margin:0;font-size:16px;line-height:24px">Terima kasih atas pembayaran transaksi Anda dengan Nomor Invoice: <b style="color: blue;">{{$transdata->id_transaksi}}</b></p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="padding:12px 16px">
+					<h2 style="background:#f5f6fa;font-size:16px;line-height:24px;margin:0;padding:8px 16px;border-color:#dee2ee;border-style:solid;border-width:1px 1px 0;border-radius:8px 8px 0 0">
+						Informasi Pembayaran
+					</h2>
+					<div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
+						<table style="width:100%;table-layout:fixed" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$title}}</td>
+									<?php $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening')->where('id', $transdata->id_payment_method)->first();
+									?>
+									@if($bankRek->keterangan == "cash")
+									<td style="font-size:14px;color:#8a93a7;padding:3px">{{$bankRek->keterangan}}</td>
+									@else
+									<td>{{$bankRek->keterangan}}<br>{{$bankRek->id_rekening}}</td>
+									@endif
+
+								</tr>
+
+								<tr style="margin:0 0 10px">
+									<td style="font-size:14px;padding:0 3px">
+										{{$number}}
+									</td>
+                                <td style="font-size:14px;padding:0 3px">
+                                    <!-- <img style="max-height:20px;max-width:100%" src="https://dev-backend.rumahaqiqah.co.id/{--!!$bankRek->gambar!!--}"> -->
+                                </td>
+                            </tr>
+
+                            <tr>
+                            	<td style="font-size:14px;color:#8a93a7;padding:15px 3px 3px">
+                            		Total Pembayaran
+                            	</td>
+                            	<td style="font-size:14px;color:#8a93a7;padding:15px 3px 3px">
+                            		Account Holder Name
+                            	</td>
+                            </tr>
+
+                            <tr>
+                            	<td style="font-size:16px;padding:0 3px;color:#0064d2;font-weight:bold">IDR {{ number_format($transdata['nominal']) }}</td>
+                            	<td style="font-size:14px;padding:0 3px"><a style="color:#000000;text-decoration:none">RUMAHAQIQAH.CO.ID</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+        	<td style="padding:12px 16px">
+        		<h2 style="background:#f5f6fa;font-size:16px;line-height:24px;margin:0;padding:8px 16px;border-color:#dee2ee;border-style:solid;border-width:1px 1px 0;border-radius:8px 8px 0 0">
+        			Detail Pesanan
+        		</h2>
+        		<div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
+        				<table style="width:100%" cellspacing="0" cellpadding="0">
+        					<tbody>
+        						<tr>
+					                <th colspan="2" style="text-align: center;">Produk</th>
+					                <th style="text-align: center;">Harga</th>
+					                <th style="text-align: center;">Qty</th>
+					                <th colspan="2">Subtotal</th>
+					            </tr>
+        						@foreach ($orderdata as $row)
+        						<tr>
+        							<td colspan="2">
+        								<?php 
+        								$label = DB::table('ra_produk_harga')->select('label')->where('id', $row->ra_produk_harga_id)->first();
+        								echo $label->label;
+        								?>
+        							</td>
+        							<td style="text-align: right;">Rp {{ number_format($row->harga) }}</td>
+        							<td style="text-align: center;">{{ $row->quantity }}</td>
+        							<td colspan="2" style="text-align: right;">Rp {{ number_format($row->total_transaksi) }}</td>
+        						</tr>
+        						@endforeach
+        						<tr>
+        							<th colspan="4">Total</th>
+        							<th colspan="2" style="text-align: right;">Rp {{ number_format($transdata['nominal']) }}</th>
+        						</tr>
+        					</tbody>
+        				</table>
+        			</div>
+        		</td>
+        	</tr>
+
+        	<tr>
+        		<td style="padding:12px 16px">
+        			<div style="border-bottom:1px dashed #dee2ee;padding:0 16px"><span class="im">
+        				<?php 
+        				$instruksion = DB::table('ra_payment_instructions')->where('id_payment_method', $parent_id)->get();
+            // dd($instruksion);
+        				?>
+        				@foreach ($instruksion as $wow)
+        				<div>{!!$wow->nama!!}</div>
+        				<div>{!!$wow->keterangan!!}</div>
+        				@endforeach
+        			</div>
+        		</td>
+        	</tr>
+            <tr>
+                <td style="padding:8px 16px">
+                <div>
+                    <h3>Untuk Check pemesanan Anda, Anda bisa klik link berikut ini <a class="btn btn-success" href="https://dev.rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}">klik disini</a></h3>
+                </div>
+                </td>
+            </tr>
+        	<tr>
+        		<td style="padding:12px 16px">
+        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">
+        				Butuh bantuan? Silahkan <a href="https://web.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini.</a>
+        				<br> Ingat Order ID: {{$transdata->id_transaksi}} Anda saat menghubungi Customer Care.
+        			</p>
+
+        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Terima kasih telah memilih <a href="https://rumahaqiqah.co.id">rumahaqiqah.co.id</a></p>
+
+        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Salam,
+        				<br><a href="https://rumahaqiqah.co.id">rumahaqiqah.co.id</a></p>
+        			</td>
+        		</tr>
+
+        		<tr style="background-color:#f7f7f7">
+        			<td>
+
+        			</td>
+        		</tr>
+
+        		<tr valign="top">
+        			<td style="padding-top:30px;padding-bottom:30px">
+        				<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="text-align:center">
+        					<tbody>
+        						<tr>
+        							<td>
+        							</td>
+        						</tr>
+        						<tr>
+        							<td>
+        								<p style="margin:0;padding-top:15px;font-size:16px;color:#222222;line-height:1.5;font-weight:bold;padding-bottom:5px">PT. Agro Surya Perkasa</p>
+        							</td>
+        						</tr>
+        						<tr>
+        							<td>
+        								<!-- <img title="tiket.com" alt="tiket.com" src="https://ci6.googleusercontent.com/proxy/CaFICBS7Fa5W5eXw27iM0NT3DIc2NXdXcGnQb4KtaVgeUAivjzL2KMtSfshvsWQdH9mAginSKdhKmXv_8ZX64y6jmyxB_9Unmt2LrV51lkJ7Lo6nyGzdFpl_DxqGP44T=s0-d-e1-ft#http://www.tiket.com/assets_version/cardamom/dist/images/a-blibli-company.png" width="130" class="CToWUd"> -->
+        							</td>
+        						</tr>
+        						<tr>
+        							<td>
+        								<p style="padding-top:5px;font-size:13px;line-height:1.22;margin:0">© 2019-2020 PT. Agro Surya Perkasa. All Rights Reserved.</p>
+        							</td>
+        						</tr>
+        					</tbody>
+        				</table>
+        			</td>
+        		</tr>
+
+        	</tbody>
+    </table>
+    
 </body>
 </html>

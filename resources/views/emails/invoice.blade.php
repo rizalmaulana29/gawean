@@ -116,6 +116,10 @@
         	<tr>
         		<td style="padding:12px 16px">
         			<div style="border-bottom:1px dashed #dee2ee;padding:0 16px"><span class="im">
+        				<?php 
+        				$instruksion = DB::table('ra_payment_instructions')->where('id_payment_method', $parent_id)->get();
+            // dd($instruksion);
+        				?>
         				@foreach ($instruksion as $wow)
         				<div>{!!$wow->nama!!}</div>
         				<div>{!!$wow->keterangan!!}</div>

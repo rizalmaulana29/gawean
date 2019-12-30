@@ -90,21 +90,21 @@ class NotificationsController extends Controller
             // $depositTm      = $req['depositTm'];
         }
 
-        // $nicepayLog    = new Nicepaylog;
+        $nicepayLog    = new Nicepaylog;
 
-        // $nicepayLog->id_order = $referenceNo;
-        // $nicepayLog->payment_method = $payMethod;
-        // $nicepayLog->code     = $code;
-        // $nicepayLog->txid     = $tXid;
-        // $nicepayLog->virtual_account_no = $code_bayar;
-        // $nicepayLog->update   = Carbon::now();
-        // $nicepayLog->request  = addslashes(json_encode($req));
-        // $nicepayLog->response = "";
-        // $nicepayLog->status   = addslashes($status);
-        // $nicepayLog->action   = "Notification";
+        $nicepayLog->id_order = $referenceNo;
+        $nicepayLog->payment_method = $payMethod;
+        $nicepayLog->code     = $code;
+        $nicepayLog->txid     = $tXid;
+        $nicepayLog->virtual_account_no = $code_bayar;
+        $nicepayLog->update   = Carbon::now();
+        $nicepayLog->request  = addslashes(json_encode($req));
+        $nicepayLog->response = "";
+        $nicepayLog->status   = addslashes($status);
+        $nicepayLog->action   = "Notification";
 
         // echo json_encode($req);
-        // $nicepayLog->save();
+        $nicepayLog->save();
 
         $status = ($status == 0)?"paid":(
                         ($status == 1)?"failed":(

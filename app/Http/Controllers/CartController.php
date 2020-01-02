@@ -184,14 +184,16 @@ class CartController extends Controller
                                       "status" => "true", 
                                       "message" => $response->resultMsg,
                                       "id_transaksi"=>$result[2]->id_transaksi,
-                                      "parent_id"=>$paymeth['parent_id']
+                                      "parent_id"=>$paymeth['parent_id'],
+                                      "expired_at"=>date('d M Y ,H:i',strtotime($transdata->expired_at))
                                     ],200);
           }else{
             return response()->json(["errCode" => $response->resultCd, 
                                       "status" => "false",
                                       "message" => $response->resultMsg,
                                       "id_transaksi"=>$result[2]->id_transaksi,
-                                      "parent_id"=>$paymeth['parent_id']
+                                      "parent_id"=>$paymeth['parent_id'],
+                                      "expired_at"=>date('d M Y ,H:i',strtotime($transdata->expired_at))
                                     ],200);
           }
       }
@@ -199,7 +201,8 @@ class CartController extends Controller
           return response()->json(["status" => "true", 
                                     "message" => $response,
                                     "id_transaksi"=>$result[2]->id_transaksi,
-                                    "parent_id"=>$paymeth['parent_id']
+                                    "parent_id"=>$paymeth['parent_id'],
+                                    "expired_at"=>date('d M Y ,H:i',strtotime($transdata->expired_at))
                                   ],200);
       }
   }

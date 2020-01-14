@@ -141,7 +141,7 @@
         	<tr>
         		<td style="padding:12px 16px">
         			<p style="font-size:14px;line-height:21px;margin:0 0 20px">
-        				Butuh bantuan? Silahkan <a href="https://api.whatsapp.com/send?phone=6281370071330&text=Assalam%27alaikum%20rumahaqiqah%20Saya%20Mau%20bertanya%20perihal%20aqiqah">klik disini.</a>
+        				Butuh bantuan? Silahkan <a href="https://api.whatsapp.com/send?phone=6281370071330&text=Assalamu%27alaikum%20Rumah%20Aqiqah">klik disini.</a>
         				<br> Ingat Order ID: {{$transdata->id_transaksi}} Anda saat menghubungi Customer Care.
         			</p>
 

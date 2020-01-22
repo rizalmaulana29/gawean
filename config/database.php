@@ -43,8 +43,8 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '210.210.165.250'),
-            'port' => env('DB_PORT', 8888),
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', 3306),
             'database' => env('DB_DATABASE', 'ra_dev'),
             'username' => env('DB_USERNAME', 'ra'),
             'password' => env('DB_PASSWORD', 'TeuingAtuhBro123!'),

@@ -26,3 +26,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('cancelVA', 			['uses' => 'NotificationsController@npCancelVA']);
 	$router->get('mail',  ['uses' => 'CartController@sendemail']);
 });
+
+$router->group(['prefix' => 'uploads'], function() use ($router){
+    $router->get('online/{imageName}', ['uses' => 'CartController@image']);
+});

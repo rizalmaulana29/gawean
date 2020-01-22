@@ -5,7 +5,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
-
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -26,12 +25,13 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('cors');
-
+$app->configure('image');
 
 $app->configure('mail');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+$app->alias('image', Intervention\Image\Facades\Image::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
-
+$app->register(Intervention\Image\ImageServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 
 /*

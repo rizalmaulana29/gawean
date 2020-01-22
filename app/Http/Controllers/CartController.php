@@ -9,12 +9,15 @@ use App\Order;
 use App\Payment;
 use App\Paymeth;
 use App\AdminEntitas;
-use App\Kontak;
+use App\Anak;
 use App\Instruction;
 use App\Mail\Invoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 use App\Nicepaylog;
 use App\Thirdparty\Nicepay\Nicepay;
@@ -37,65 +40,22 @@ class CartController extends Controller
       $this->passed = $req;
 
       $total = 0;
-     
-      #Create C'Babeh
-        $tempat_lahir = (isset($req['tempat_lahir'][0]))?$req['tempat_lahir'][0]:"";
-        $tgl_lahir    = (isset($req['tgl_lahir'][0]))?$req['tgl_lahir'][0]:"";
-        $jk    = (isset($req['jk'][0]))?$req['jk'][0]:"";
-
-        $kontakCus = new Kontak;
-        $kontakCus->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(0000,9999);
-        $kontakCus->nama_kontak = $req['nama'][0];
-        $kontakCus->tgl_lahir   = $tgl_lahir;
-        $kontakCus->tempat_lahir = $tempat_lahir;
-        $kontakCus->alamat      = $req['alamat'];
-        $kontakCus->kota        = $req['kota'];
-        $kontakCus->kecamatan   = $req['kecamatan'];
-        $kontakCus->status      = $req['status'][0];
-        $kontakCus->tgl_reg     = $now;
-        $kontakCus->telepon     = $request->input('telepon');
-        $kontakCus->hp          = $request->input('hp');
-        $kontakCus->email       = $request->input('email');
-        $kontakCus->jk          = $jk;
-        $kontakCus->id_kantor   = $request->input('id_kantor');
-        $kontakCus->save();
-
-      foreach ($req['status'] as $key => $status) {
-        if($key != 0){
-          
-          $tempat_lahir = (isset($req['tempat_lahir'][$key]))?$req['tempat_lahir'][$key]:"";
-          $tgl_lahir    = (isset($req['tgl_lahir'][$key]))?$req['tgl_lahir'][$key]:"";
-          $jk    = (isset($req['jk'][$key]))?$req['jk'][$key]:"";
-
-
-          $result[1] = new Kontak;
-          $result[1]->id_kontak   = date("ymd") . 00 . $request->input('id_kantor') . mt_rand(1000,9999);
-          $result[1]->nama_kontak = $req['nama'][$key];
-          $result[1]->tgl_lahir   = $tgl_lahir;
-          $result[1]->tempat_lahir = $tempat_lahir;
-          $result[1]->alamat      = $req['alamat'];
-          $result[1]->kota        = $req['kota'];
-          $result[1]->kecamatan   = $req['kecamatan'];
-          $result[1]->status      = $status;
-          $result[1]->tgl_reg     = $now;
-          $result[1]->telepon     = $request->input('telepon');
-          $result[1]->hp          = $request->input('hp');
-          $result[1]->email       = $request->input('email');
-          $result[1]->jk          = $jk;
-          $result[1]->id_kantor   = $request->input('id_kantor');
-          $result[1]->save();
-
-        }
-      }
+      $id = [];
+      $x = [];
+      $n = 0;
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
+          'nama_customer' => $request->input('nama'),
+          'alamat'      => $request->input('alamat'),
+          'hp'          => $request->input('hp'),
+          'email'       => $request->input('email'),
+          'jk'          => $request->input('jk'),
           'id_kantor' => $request->input('id_kantor'),
-          'id_kontak' => $kontakCus->id_kontak,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('nominal'),
           'nominal_total' => $request->input('total'),
-          'nominal_bayar' => $request->input('total'),
+          'nominal_diskon' => $request->input('diskon'),
           'coa_debit' => $request->input('coa'),
           'tgl_transaksi' => $now,
           'status' => 'Tunai',
@@ -107,19 +67,13 @@ class CartController extends Controller
           'expired_at' => $expired_at
       ]);
 
-      $total = 0;
-      $id = [];
-      $x = [];
-      $n = 0;
       foreach ($req['id_produk_harga'] as $key => $id_produk) {
   
           $order = new Order;
           $order->id_ra_payment = $result[2]->id;
           $order->id_order = $result[2]->id_transaksi;
           $order->id_kantor = $request->input('id_kantor');
-          $order->ra_produk_harga_id = $id_produk;
-          $order->id_pelanggan = Kontak::where('id',$kontakCus->id_kontak)->where('status','customer')->value('id');
-          $order->id_anak = Kontak::where('id',$result[1]->id_kontak)->where('status','anak')->value('id');
+          $order->ra_produk_harga_id = $id_produk; 
           // $order->id_via_bayar = 1;
           $order->id_agen = $request->input('agen');
           $order->coa_debit = $request->input('coa'); 
@@ -137,6 +91,31 @@ class CartController extends Controller
           $order->save();
           $n++;
       }
+
+
+      #ganti table kontak dengan hanay table anak
+      $url = "https://api.rumahaqiqah.co.id/uploads/online";
+      $result[1] = new Anak;
+        $result[1]->nama_anak      = $req['nama_anak'];
+        $result[1]->tgl_lahir      = $req['tgl_lahir'];
+        $result[1]->tempat_lahir   = $req['tempat_lahir'];
+        $result[1]->jk             = $req['jk_anak'];
+        $result[1]->ibu            = $req['ibu'];
+        $result[1]->ayah           = $req['ayah'];
+        $result[1]->ra_payment_id  = $result[2]->id;
+        $result[1]->id_order       = $result[2]->id_transaksi;
+
+        if ($request->hasFile('foto_anak')) {
+        $image = $request->file('foto_anak');
+        $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
+        $storeDatabase = $url. "/" .$imageName;
+        $path= "/uploads/online/";
+        $image->storeAs($path,$imageName);
+        $result[1]->foto = $storeDatabase;
+        } else {
+        return response()->json(["Status" => "Field Foto is Not file"]);
+        }
+        $result[1]->save();
 
       
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
@@ -166,15 +145,14 @@ class CartController extends Controller
       $transdata = Payment::where('id',$result[2]->id)->first();
       $orderdata = Order::where('id_order',$result[2]->id_transaksi)->get();
 
-      $nama = $req['nama'][0];
+      $nama = $req['nama'];
       $alamat = $req['alamat'];
-      $kokec = $req['kota']; $req['kecamatan'];
       $email = $request->input('email'); 
       $hp = $request->input('hp');
       $parent_id = $request->input('parent_id');
 
       $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $kokec, $email, $parent_id,$hp,$number,$title))->build()
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
         );
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
@@ -354,6 +332,16 @@ class CartController extends Controller
       }
       Payment::where('id_transaksi',$id_trx)->delete();
       Order::where('id_order',$id_trx)->delete();
+  }
+
+  public function image($imageName){
+    $path = '/usr/share/nginx/html/api.rumahaqikah.co.id/storage/app/uploads/online/'. $imageName;
+    $type = pathinfo($path, PATHINFO_EXTENSION);
+    $header = ['Content-Type' => pathinfo($path, PATHINFO_EXTENSION)];
+    $response = new BinaryFileResponse($path, 200 , $header);
+
+    return $response;
+    // return response()->download($path, $imageName, $header);
   }
 
 }

@@ -12,7 +12,7 @@ class Payment extends Model
      * @var array
      */
     protected $primaryKey = 'id';
-    protected $table = 'ra_payment';
+    protected $table = 'ra_payment_dua';
     protected $guarded = [];
     // protected $casts = [
     //     'id_bank' => 'string'

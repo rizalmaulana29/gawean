@@ -34,7 +34,6 @@ class CartController extends Controller
     
     public function cart(Request $request){
       $req = $request->all();
-      var_dump($req);
       $now = Carbon::now();
       $expired_at = Carbon::now()->addHour(24);
 
@@ -199,7 +198,7 @@ class CartController extends Controller
 
       $payment        = Payment::where('id_transaksi',$id_trx)->first();
       $detailOrder    = Order::where('id_order',$id_trx)->first();
-      $kontak         = Kontak::where('id',$payment['id_kontak'])->where('status','customer')->first();
+      // $kontak         = Kontak::where('id',$payment['id_kontak'])->where('status','customer')->first();
       $paymeth        = Paymeth::find($payment['id_payment_method']);
       $merData        = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
 
@@ -220,11 +219,11 @@ class CartController extends Controller
       $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey);
 
       #ASK. GIMANA MENDINAMIS KAN PARAMETERNYA?
-      $customerName       = $kontak['nama_kontak'];
-      $customerPhone      = $kontak['hp'];
-      $customerEmail      = $kontak['email'];
-      $customerAddress    = $kontak['alamat'];
-      $customerCity       = $kontak['kota'];
+      $customerName       = $payment['nama_customer'];
+      $customerPhone      = $payment['hp'];
+      $customerEmail      = $payment['email'];
+      $customerAddress    = $payment['alamat'];
+      // $customerCity       = $payment['kota'];
       // $customerProv       = "Jawa Barat";
       // $customerPostId     = "40331";
       // $customerCountry    = "Indonesia";

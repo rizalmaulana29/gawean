@@ -34,7 +34,7 @@ class CartController extends Controller
     
     public function cart(Request $request){
       $req = $request->all();
-      vardump($req);
+      var_dump($req);
       $now = Carbon::now();
       $expired_at = Carbon::now()->addHour(24);
 

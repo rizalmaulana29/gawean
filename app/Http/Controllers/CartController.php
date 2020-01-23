@@ -58,6 +58,7 @@ class CartController extends Controller
           'nominal_total' => $request->input('total'),
           'nominal_diskon' => $request->input('diskon'),
           'coa_debit' => $request->input('coa'),
+          'sumber_informasi' => $request->input('sumber_info'),
           'tgl_transaksi' => $now,
           'status' => 'Tunai',
           'jenis' => 'Online',
@@ -107,7 +108,7 @@ class CartController extends Controller
         $result[1]->ra_payment_id  = $result[2]->id;
         $result[1]->id_order       = $result[2]->id_transaksi;
 
-        // dd($request->file('foto_anak'));
+        // dd($request->file('foto_anak') );
         if ($request->file('foto_anak')[$key]) {
           $image = $request->file('foto_anak')[$key];
           $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();

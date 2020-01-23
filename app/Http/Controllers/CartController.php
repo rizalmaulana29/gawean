@@ -34,6 +34,7 @@ class CartController extends Controller
     
     public function cart(Request $request){
       $req = $request->all();
+      // dd($req);
       $now = Carbon::now();
       $expired_at = Carbon::now()->addHour(24);
 
@@ -95,27 +96,30 @@ class CartController extends Controller
 
       #ganti table kontak dengan hanay table anak
       $url = "https://api.rumahaqiqah.co.id/uploads/online";
-      $result[1] = new Anak;
-        $result[1]->nama_anak      = $req['nama_anak'];
-        $result[1]->tgl_lahir      = $req['tgl_lahir'];
-        $result[1]->tempat_lahir   = $req['tempat_lahir'];
-        $result[1]->jk             = $req['jk_anak'];
-        $result[1]->ibu            = $req['ibu'];
-        $result[1]->ayah           = $req['ayah'];
+      foreach ($req['nama_anak'] as $key => $anak) {
+        $result[1] = new Anak;
+        $result[1]->nama_anak      = $anak;
+        $result[1]->tgl_lahir      = $req['tgl_lahir'][$key];
+        $result[1]->tempat_lahir   = $req['tempat_lahir'][$key];
+        $result[1]->jk             = $req['jk_anak'][$key];
+        $result[1]->ibu            = $req['ibu'][$key];
+        $result[1]->ayah           = $req['ayah'][$key];
         $result[1]->ra_payment_id  = $result[2]->id;
         $result[1]->id_order       = $result[2]->id_transaksi;
 
-        if ($request->hasFile('foto_anak')) {
-        $image = $request->file('foto_anak');
-        $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
-        $storeDatabase = $url. "/" .$imageName;
-        $path= "/uploads/online/";
-        $image->storeAs($path,$imageName);
-        $result[1]->foto = $storeDatabase;
+        // dd($request->file('foto_anak')[$key]);
+        if ($request->file('foto_anak')[$key]) {
+          $image = $request->file('foto_anak')[$key];
+          $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
+          $storeDatabase = $url. "/" .$imageName;
+          $path= "/uploads/online/";
+          $image->storeAs($path,$imageName);
+          $result[1]->foto = $storeDatabase;
         } else {
-        return response()->json(["Status" => "Field Foto is Not file"]);
+          return response()->json(["Status" => "Field Foto is Not file"]);
         }
         $result[1]->save();
+      }
 
       
       #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT

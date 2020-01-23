@@ -251,7 +251,7 @@ class CartController extends Controller
               "billingPhone"  =>$customerPhone,
               "billingEmail"  =>$customerEmail,
               "billingAddr"   =>$customerAddress,
-              "billingCity"   =>$customerCity,
+              // "billingCity"   =>$customerCity,
               // "billingState"  =>$customerProv,
               // "billingPostCd" =>$customerPostId,
               // "billingCountry"=>$customerCountry,

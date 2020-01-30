@@ -347,7 +347,7 @@ class CartController extends Controller
       'Access-Control-Allow-Credentials' => 'true',
       'Access-Control-Max-Age'           => '86400',
       'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With',
-      'Content-Type' => pathinfo($path, PATHINFO_EXTENSION),
+      'Content-Type' => 'image/' . pathinfo($path, PATHINFO_EXTENSION),
   ];
     $response = new BinaryFileResponse($path, 200 , $headers);
 

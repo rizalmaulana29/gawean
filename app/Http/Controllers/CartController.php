@@ -341,8 +341,15 @@ class CartController extends Controller
   public function image($imageName){
     $path = '/usr/share/nginx/html/api.rumahaqikah.co.id/storage/app/uploads/online/'. $imageName;
     $type = pathinfo($path, PATHINFO_EXTENSION);
-    $header = ['Content-Type' => pathinfo($path, PATHINFO_EXTENSION)];
-    $response = new BinaryFileResponse($path, 200 , $header);
+    $headers = [
+      'Access-Control-Allow-Origin'      => '*',
+      'Access-Control-Allow-Methods'     => 'POST, GET',
+      'Access-Control-Allow-Credentials' => 'true',
+      'Access-Control-Max-Age'           => '86400',
+      'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With',
+      'Content-Type' => pathinfo($path, PATHINFO_EXTENSION),
+  ];
+    $response = new BinaryFileResponse($path, 200 , $headers);
 
     return $response;
     // return response()->download($path, $imageName, $header);

@@ -24,7 +24,7 @@ $app->withFacades();
 
 $app->withEloquent();
 
-$app->configure('cors');
+// $app->configure('cors');
 $app->configure('image');
 
 $app->configure('mail');
@@ -90,7 +90,7 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(Barryvdh\Cors\ServiceProvider::class);
+// $app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);

@@ -15,7 +15,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api','middleware' => 'cors'], function () use ($router) {
+$router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('harga', 	['uses' =>'HargaController@show']);
 	$router->get('code',	['uses' =>'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);

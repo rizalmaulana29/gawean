@@ -342,7 +342,7 @@ class CartController extends Controller
     $path = '/usr/share/nginx/html/api.rumahaqikah.co.id/storage/app/uploads/online/'. $imageName;
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $headers = [
-      'Content-Type' => 'image/jpeg',
+      'Content-Type' => 'image/'. $type,
   ];
     $response = new BinaryFileResponse($path, 200 , $headers);
 

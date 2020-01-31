@@ -12,7 +12,7 @@ class Order extends Model
      * @var array
      */
     protected $primaryKey = 'id';
-    protected $table = 'ra_order';
+    protected $table = 'ra_order_dua';
     protected $guarded = [];
     // protected $casts = [
     //     'id_order' => 'string'

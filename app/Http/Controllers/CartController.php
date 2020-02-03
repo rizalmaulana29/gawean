@@ -104,6 +104,7 @@ class CartController extends Controller
         $result[1]->jk             = $req['jk_anak'][$key];
         $result[1]->ibu            = $req['ibu'][$key];
         $result[1]->ayah           = $req['ayah'][$key];
+        $result[1]->keterangan     = $req['keterangan'][$key];
         $result[1]->ra_payment_id  = $result[2]->id;
         $result[1]->id_order       = $result[2]->id_transaksi;
 

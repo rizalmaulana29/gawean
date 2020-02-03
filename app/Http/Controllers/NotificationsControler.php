@@ -102,7 +102,7 @@ class NotificationsController extends Controller
         $nicepayLog->response = "";
         $nicepayLog->status   = addslashes($status);
         $nicepayLog->action   = "Notification";
-
+        $nicepayLog->id_entitas = $paymeth['id_entitas'];
         // echo json_encode($req);
         $nicepayLog->save();
 
@@ -204,6 +204,7 @@ class NotificationsController extends Controller
         $nicepayLog->response = addslashes($transaksiAPI);
         $nicepayLog->status   = addslashes($msg);
         $nicepayLog->action   = "Inquiry";
+        $nicepayLog->id_entitas = $paymeth['id_entitas'];
         $nicepayLog->save();
 
         return $transaksiAPI;
@@ -261,6 +262,7 @@ class NotificationsController extends Controller
         $nicepayLog->response = addslashes($transaksiAPI);
         $nicepayLog->status   = addslashes($msg);
         $nicepayLog->action   = "CancelVA";
+        $nicepayLog->id_entitas = $paymeth['id_entitas'];
         
         $nicepayLog->save();
 

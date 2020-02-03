@@ -61,6 +61,7 @@ class CartController extends Controller
           'tgl_transaksi' => $now,
           'status' => 'Tunai',
           'jenis' => 'Online',
+          'lunas' => 'y',
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),

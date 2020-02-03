@@ -123,7 +123,7 @@ class CartController extends Controller
       }
 
       
-      #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA? BACOT
+      #ASK. GIMANA PENENTUAN JENIS PAYMENT METHODNYA?
       $paymeth = Paymeth::find($result[2]->id_payment_method);
       if($paymeth['parent_id'] <= 5){
           $npRegister = $this->npRegistration($result[2]->id_transaksi);
@@ -311,6 +311,7 @@ class CartController extends Controller
       $nicepayLog->response = addslashes($transaksiAPI);
       $nicepayLog->status   = addslashes($msg);
       $nicepayLog->action   = "Registration";
+      $nicepayLog->id_entitas = $paymeth['id_entitas'];
       $nicepayLog->expired_at= $payment['expired_at'];
       $nicepayLog->save();
       
@@ -328,15 +329,6 @@ class CartController extends Controller
       } 
     
       return $randomString; 
-  }
-
-  private function deleteTestPayment($id_trx){
-      $payment = Payment::select('id_kontak')->where('id_transaksi',$id_trx)->get();
-      foreach($payment as $key => $val){
-        Kontak::where('id',$val)->delete();
-      }
-      Payment::where('id_transaksi',$id_trx)->delete();
-      Order::where('id_order',$id_trx)->delete();
   }
 
   public function image($imageName){

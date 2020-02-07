@@ -90,10 +90,10 @@ class CartController extends Controller
           $order->nik_input = $request->input('nik_input');
           $order->cur = "IDR";
           $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
-          if($id_produk_parent == 20){
-            $order->disaksikan = $request->input('disaksikan');
-          }
-          else{$order->disaksikan = 'N';}
+          // if($id_produk_parent == 89){
+          //   $order->disaksikan = $request->input('disaksikan');
+          // }
+          // else{$order->disaksikan = 'N';}
           $order->note = $request['note'][$key];
 
           $order->save();

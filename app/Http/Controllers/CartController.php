@@ -61,7 +61,7 @@ class CartController extends Controller
           'tgl_transaksi' => $now,
           'status' => 'Tunai',
           'jenis' => 'Online',
-          'lunas' => 'y',
+          'lunas' => 'Y',
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),
@@ -84,12 +84,18 @@ class CartController extends Controller
           $order->tgl_transaksi = $now;
           $order->total_transaksi = $req['qty'][$key] * $req['harga'][$key];
           $order->id_payment_method = $request->input('id_payment');
-          // $order->id_produk_parent = $request->input('id_produk_parent');
           $order->lunas = 'y';
           $order->approve = 'y';
           $order->keterangan = 'Tunai';
           $order->nik_input = $request->input('nik_input');
           $order->cur = "IDR";
+          $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
+          if($id_produk_parent == 20){
+            $order->disaksikan = $request->input('disaksikan');
+          }
+          else{$order->disaksikan = 'N';}
+          $order->note = $request['note'][$key];
+
           $order->save();
           $n++;
       }

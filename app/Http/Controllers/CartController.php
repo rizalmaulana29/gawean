@@ -89,17 +89,16 @@ class CartController extends Controller
           $order->keterangan = 'Tunai';
           $order->nik_input = $request->input('nik_input');
           $order->cur = "IDR";
-          $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
-          // if($id_produk_parent == 89){
-          //   $order->disaksikan = $request->input('disaksikan');
-          // }
-          // else{$order->disaksikan = 'N';}
+          // $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
+          if($request['id_produk_parent'][$key] == 89 || $request['id_produk_parent'][$key] == 20){
+            $order->disaksikan = $request['note'][$key];
+          }
+          else{$order->disaksikan = 'N';}
           $order->note = $request['note'][$key];
 
           $order->save();
           $n++;
       }
-
 
       #ganti table kontak dengan hanay table anak
       $url = "https://api.rumahaqiqah.co.id/uploads/online";

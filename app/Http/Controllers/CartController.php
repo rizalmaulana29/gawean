@@ -91,7 +91,7 @@ class CartController extends Controller
           $order->cur = "IDR";
           // $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
           if($request['id_produk_parent'][$key] == 89 || $request['id_produk_parent'][$key] == 20){
-            $order->disaksikan = $request['note'][$key];
+            $order->disaksikan = $request['id_produk_parent'][$key];
           }
           else{$order->disaksikan = 'N';}
           $order->note = $request['note'][$key];

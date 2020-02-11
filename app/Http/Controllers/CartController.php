@@ -338,7 +338,7 @@ class CartController extends Controller
   }
 
   public function image($imageName){
-    $path = '/usr/share/nginx/html/api.rumahaqikah.co.id/storage/app/uploads/online/'. $imageName;
+    $path = '/code/storage/app/uploads/online/'. $imageName;
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $headers = [
       'Content-Type' => 'image/'. $type,

@@ -43,7 +43,7 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
+            'host' => env('DB_HOST', '128.199.218.8'),
             'port' => env('DB_PORT', 3306),
             'database' => env('DB_DATABASE', 'ra_dev'),
             'username' => env('DB_USERNAME', 'ra'),
@@ -55,7 +55,7 @@ return [
 
         'mysql2' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '60.253.107.84'),
+            'host' => env('DB_HOST', '128.199.218.8'),
             'port' => env('DB_PORT', 8888),
             'database' => env('DB_DATABASE', 'ra_dev'),
             'username' => env('DB_USERNAME', 'ra'),
@@ -67,7 +67,7 @@ return [
 
         'mysql3' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', '128.199.218.8'),
             'port' => env('DB_PORT', 3306),
             'database' => env('DB_DATABASE', 'ra_dev'),
             'username' => env('DB_USERNAME', 'root'),

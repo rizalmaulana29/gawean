@@ -27,6 +27,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('mail',  ['uses' => 'CartController@sendemail']);
 });
 
-$router->group(['prefix' => 'uploads','middleware' => 'cors'], function() use ($router){
+$router->group(['prefix' => 'uploads'], function() use ($router){
     $router->get('online/{imageName}', ['uses' => 'CartController@image']);
 });

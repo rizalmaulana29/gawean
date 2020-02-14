@@ -91,7 +91,7 @@ class CartController extends Controller
           $order->cur = "IDR";
           // $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
           if($request['id_produk_parent'][$key] == 89 || $request['id_produk_parent'][$key] == 20){
-            $order->disaksikan = $request['id_produk_parent'][$key];
+            $order->disaksikan = $request['disaksikan'][$key];
           }
           else{$order->disaksikan = 'N';}
           $order->note = $request['note'][$key];
@@ -115,14 +115,17 @@ class CartController extends Controller
         $result[1]->id_order       = $result[2]->id_transaksi;
 
         // dd($request->file('foto_anak') );
-        if ($request->file('foto_anak')[$key]) {
+        if ($request->file('foto_anak')[$key] != null) {
           $image = $request->file('foto_anak')[$key];
           $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
           $storeDatabase = $url. "/" .$imageName;
           $path= "/uploads/online/";
           $image->storeAs($path,$imageName);
           $result[1]->foto = $storeDatabase;
-        } else {
+        }elseif ($request->file('foto_anak')[$key] = null) {
+          $result[1]->foto = 'https://dev-backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
+        } 
+        else {
           return response()->json(["Status" => "Field Foto is Not file"]);
         }
         $result[1]->save();

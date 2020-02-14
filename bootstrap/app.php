@@ -69,10 +69,10 @@ $app->singleton(
 //     // ...
 //     // 'cors'=>\Barryvdh\Cors\HandleCors::class,
 // ]);
-$app->middleware([
-    // ...
-    \Fruitcake\Cors\HandleCors::class,
-]);
+// $app->middleware([
+//     // ...
+//     \Fruitcake\Cors\HandleCors::class,
+// ]);
 
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class

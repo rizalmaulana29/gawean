@@ -115,15 +115,15 @@ class CartController extends Controller
         $result[1]->id_order       = $result[2]->id_transaksi;
 
         // dd($request->file('foto_anak') );
-        if($request->file('foto_anak') != null || '') {
-          $image = $request->file('foto_anak');
+        if(isset($request->file('foto_anak')[$key])) {
+          $image = $request->file('foto_anak')[$key];
           $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
           $storeDatabase = $url. "/" .$imageName;
           $path= "/uploads/online/";
           $image->storeAs($path,$imageName);
           $result[1]->foto = $storeDatabase;
 
-        }elseif ($request->file('foto_anak') == null || '') {
+        }elseif ($request->file('foto_anak') == null) {
           $result[1]->foto = 'https://dev-backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
         } else {
           return response()->json(["Status" => "Field Foto is Not file"]);

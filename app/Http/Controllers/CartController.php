@@ -116,7 +116,7 @@ class CartController extends Controller
 
         // dd($request->file('foto_anak') );
         if($request->file('foto_anak') != null || '') {
-          $image = $request->file('foto_anak')[$key];
+          $image = $request->file('foto_anak');
           $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
           $storeDatabase = $url. "/" .$imageName;
           $path= "/uploads/online/";

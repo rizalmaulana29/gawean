@@ -1,0 +1,27 @@
+version: "2"
+services:
+    apirumahaqiqahcoidweb:
+        image: nginx:latest
+        ports:
+            - "9482:443"
+        volumes:
+            - ./:/code
+            - ./nginx-site.conf:/etc/nginx/conf.d/default.conf
+            - /etc/letsencrypt:/etc/letsencrypt
+        networks:
+            - apirumahaqiqahcoid-network
+        depends_on:
+            - apirumahaqiqahcoidphp
+        restart: always
+    apirumahaqiqahcoidphp:
+        image: nanoninja/php-fpm:7.2.15
+        volumes:
+            - ./:/code
+            - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+        restart: always
+        networks:
+            - apirumahaqiqahcoid-network
+
+networks:
+     apirumahaqiqahcoid-network:
+        driver: bridge

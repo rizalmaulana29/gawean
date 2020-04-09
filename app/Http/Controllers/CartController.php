@@ -124,7 +124,7 @@ class CartController extends Controller
           $result[1]->foto = $storeDatabase;
 
         }elseif (!isset($request->file('foto_anak')[$key])) {
-          $result[1]->foto = 'https://dev-backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
+          $result[1]->foto = 'https://backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
         } else {
           return response()->json(["Status" => "Field Foto is Not file"]);
         }

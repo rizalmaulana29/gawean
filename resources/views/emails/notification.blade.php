@@ -16,7 +16,7 @@
 		<tbody>
             
 			<tr>
-				<td style="padding:15px 16px"><img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
+				<td style="padding:15px 16px"><img src="https://rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
 			</tr>
             <tr>
                 <td style="padding:8px 16px">
@@ -66,7 +66,7 @@
 									</td>
                                 <td style="font-size:14px;padding:0 3px">
                                     @if($bankRek->parent_id != 26)
-                                        <img style="max-height:20px;max-width:100%" src="https://dev-backend.rumahaqiqah.co.id/{{$bankRek->gambar}}">
+                                        <img style="max-height:20px;max-width:100%" src="https://backend.rumahaqiqah.co.id/{{$bankRek->gambar}}">
 									@else
                                         <img style="max-height:20px;max-width:100%" src="{{$bankRek->gambar}}">
 									@endif
@@ -134,7 +134,7 @@
                 <td style="padding:8px 16px">
                 <div>
                     <h3>Untuk Check pemesanan Anda, Anda bisa klik tombol link dibawah ini <br><br>
-                    <a href="https://dev.rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}" rel="noopener" style="color:#fff;background-color:#3648e8;border-radius:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;padding:10px 30px" target="_blank">Check Transaksi</a></h3>
+                    <a href="https://rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}" rel="noopener" style="color:#fff;background-color:#3648e8;border-radius:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;padding:10px 30px" target="_blank">Check Transaksi</a></h3>
                 </div>
                 </td>
             </tr>

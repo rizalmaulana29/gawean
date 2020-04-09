@@ -55,7 +55,7 @@
 
     <div class="container">
         <div style="margin-bottom: 5px;">
-            <img src="https://dev.rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+            <img src="https://rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
         </div>
         <?php use Illuminate\Support\Facades\DB; 
             $kantor = DB::table('ra_kantor')->select('alamat','kota','tlp')->where('id', $transdata->id_kantor)->first();
@@ -159,7 +159,7 @@
         </table>
         <div style="margin-top: 30px">
             <div style="text-align: left;">
-                <p>Terima Kasih atas pembayaran yg Anda lakukan. Untuk Check pemesanan Anda, Anda bisa klik link berikut ini<a class="btn btn-success" href="https://dev.rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}">klik disini</a></p>
+                <p>Terima Kasih atas pembayaran yg Anda lakukan. Untuk Check pemesanan Anda, Anda bisa klik link berikut ini<a class="btn btn-success" href="https://rumahaqiqah.co.id/tracking-order/?id={{$transdata->id_transaksi}}">klik disini</a></p>
             </div>
         </div>
     </div>

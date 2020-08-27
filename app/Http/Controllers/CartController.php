@@ -33,7 +33,7 @@ class CartController extends Controller
     }
     
     public function cart(Request $request){
-      return response()->json(['status' => true]);
+      // return response()->json(['status' => true]);
       //test
       $req = $request->all();
       $now = Carbon::now();

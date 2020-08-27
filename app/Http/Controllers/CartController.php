@@ -33,9 +33,12 @@ class CartController extends Controller
     }
     
     public function cart(Request $request){
+      return response()->json(['status' => true]);
+      
       $req = $request->all();
       $now = Carbon::now();
       $expired_at = Carbon::now()->addHour(24);
+
 
       $this->passed = $req;
 
@@ -50,7 +53,7 @@ class CartController extends Controller
           'alamat'      => $request->input('alamat'),
           'hp'          => $request->input('hp'),
           'email'       => $request->input('email'),
-          'jk'          => $request->input('jk'),
+          // 'jk'          => $request->input('jk'),
           'id_kantor' => $request->input('id_kantor'),
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('nominal'),

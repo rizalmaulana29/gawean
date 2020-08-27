@@ -53,7 +53,7 @@ class CartController extends Controller
           'alamat'      => $request->input('alamat'),
           'hp'          => $request->input('hp'),
           'email'       => $request->input('email'),
-          // 'jk'          => $request->input('jk'),
+          'varian'      => 'Aqiqah',
           'id_kantor' => $request->input('id_kantor'),
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('nominal'),

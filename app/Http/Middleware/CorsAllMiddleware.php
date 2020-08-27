@@ -15,6 +15,9 @@ class CorsAllMiddleware
      */
     public function handle($request, Closure $next)
     {
+
+        $http_origin = (isset($_SERVER['HTTP_ORIGIN']))?$_SERVER['HTTP_ORIGIN']:"";
+        
         $headers = [
             'Access-Control-Allow-Origin'      => 'https://order.rumahaqiqah.co.id',
             'Access-Control-Allow-Methods'     => 'POST, GET',

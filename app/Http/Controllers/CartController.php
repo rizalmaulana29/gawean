@@ -214,7 +214,7 @@ class CartController extends Controller
       $paymeth        = Paymeth::find($payment['id_payment_method']);
       $merData        = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
 
-      dd($merData);
+      // dd($merData);
       $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
       $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 

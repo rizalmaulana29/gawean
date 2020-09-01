@@ -203,7 +203,6 @@ class CartController extends Controller
   }
   
   private function npRegistration($id_trx){
-      
       $nicepay = new Nicepay;
       // $vacctValidDt   = date("Ymd");
       // $ValidDt   = date('Ymd', strtotime($vacctValidDt . ' +1 day'));

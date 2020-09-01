@@ -215,8 +215,8 @@ class CartController extends Controller
       $merData        = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
 
       dd($merData);
-      $iMid       = Nicepay::$isProduction ? $merData['mid']:$merData['mid_sand'];
-      $merKey     = Nicepay::$isProduction ? $merData['merkey']:$merData['merkey_sand'];
+      $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
+      $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;

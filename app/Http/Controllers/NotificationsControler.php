@@ -27,23 +27,23 @@ class NotificationsController extends Controller
 
         date_default_timezone_set("Asia/Jakarta");
     }
-    
+
     public function dbProcess(Request $request){
         $req = $request->all();
         $nicepay = new Nicepay;
 
-        $amt            = $req['amt'];
-        $billingNm      = $req['billingNm'];
-        $currency	    = $req['currency'];
-        $goodsNm	    = $req['goodsNm'];
-        $matchCl	    = $req['matchCl'];
-        $merchantToken	= $req['merchantToken'];
-        $payMethod	    = $req['payMethod'];
-        $referenceNo	= $req['referenceNo'];
-        $status	        = $req['status'];
-        $tXid	        = $req['tXid'];
-        $transDt	    = $req['transDt'];
-        $transTm	    = $req['transTm'];
+        $amt            = (isset($req['amt']))?$req['amt']:"";
+        $billingNm      = (isset($req['billingNm']))?$req['billingNm']:"";
+        $currency	    = (isset($req['currency']))?$req['currency']:"";
+        $goodsNm	    = (isset($req['goodsNm']))?$req['goodsNm']:"";
+        $matchCl	    = (isset($req['matchCl']))?$req['matchCl']:"";
+        $merchantToken	= (isset($req['merchantToken']))?$req['merchantToken']:"";
+        $payMethod	    = (isset($req['payMethod']))?$req['payMethod']:"";
+        $referenceNo	= (isset($req['referenceNo']))?$req['referenceNo']:"";
+        $status	        = (isset($req['status']))?$req['status']:"";
+        $tXid	        = (isset($req['tXid']))?$req['tXid']:"";
+        $transDt	    = (isset($req['transDt']))?$req['transDt']:"";
+        $transTm	    = (isset($req['transTm']))?$req['transTm']:"";
 
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
@@ -57,37 +57,37 @@ class NotificationsController extends Controller
         // }
 
         if($payMethod == "01"){
-            $authNo         = $req['authNo'];
-            $IssueBankCd    = $req['IssueBankCd'];
-            $IssueBankNm    = $req['IssueBankNm'];
-            $acquBankCd     = $req['acquBankCd'];
-            $acquBankNm     = $req['acquBankNm'];
-            $cardNo         = $req['cardNo'];
-            $cardExpYymm    = $req['cardExpYymm'];
-            $instmntMon     = $req['instmntMon'];
-            $instmntType    = $req['instmntType'];
-            $preauthToken   = $req['preauthToken'];
-            $recurringToken = $req['recurringToken'];
-            $ccTransType    = $req['ccTransType'];
-            $vat            = $req['vat'];
-            $fee	        = $req['fee'];
-            $notaxAmt       = $req['notaxAmt'];
+            $authNo         = (isset($req['authNo']))?$req['authNo']:"";
+            $IssueBankCd    = (isset($req['IssueBankCd']))?$req['IssueBankCd']:"";
+            $IssueBankNm    = (isset($req['IssueBankNm']))?$req['IssueBankNm']:"";
+            $acquBankCd     = (isset($req['acquBankCd']))?$req['acquBankCd']:"";
+            $acquBankNm     = (isset($req['acquBankNm']))?$req['acquBankNm']:"";
+            $cardNo         = (isset($req['cardNo']))?$req['cardNo']:"";
+            $cardExpYymm    = (isset($req['cardExpYymm']))?$req['cardExpYymm']:"";
+            $instmntMon     = (isset($req['instmntMon']))?$req['instmntMon']:"";
+            $instmntType    = (isset($req['instmntType']))?$req['instmntType']:"";
+            $preauthToken   = (isset($req['preauthToken']))?$req['preauthToken']:"";
+            $recurringToken = (isset($req['recurringToken']))?$req['recurringToken']:"";
+            $ccTransType    = (isset($req['ccTransType']))?$req['ccTransType']:"";
+            $vat            = (isset($req['vat']))?$req['vat']:"";
+            $fee	        = (isset($req['fee']))?$req['fee']:"";
+            $notaxAmt       = (isset($req['notaxAmt']))?$req['notaxAmt']:"";
         }
         else if($payMethod == "02"){
-            $code       = $req['bankCd'];
-            $code_bayar = $req['vacctNo'];
-            $ValidDt    = $req['vacctValidDt'];
-            $ValidTm    = $req['vacctValidTm'];
+            $code       = (isset($req['bankCd']))?$req['bankCd']:"";
+            $code_bayar = (isset($req['vacctNo']))?$req['vacctNo']:"";
+            $ValidDt    = (isset($req['vacctValidDt']))?$req['vacctValidDt']:"";
+            $ValidTm    = (isset($req['vacctValidTm']))?$req['vacctValidTm']:"";
         }
         else if($payMethod == "03"){
-            $code           = $req['mitraCd'];
-            $code_bayar     = $req['payNo'];
-            $ValidDt        = $req['payValidDt'];
-            $ValidTm        = $req['payValidTm'];
-            // $receiptCode    = $req['receiptCode'];
-            // $mRefNo         = $req['mRefNo'];
-            // $depositDt      = $req['depositDt'];
-            // $depositTm      = $req['depositTm'];
+            $code           = (isset($req['mitraCd']))?$req['mitraCd']:"";
+            $code_bayar     = (isset($req['payNo']))?$req['payNo']:"";
+            $ValidDt        = (isset($req['payValidDt']))?$req['payValidDt']:"";
+            $ValidTm        = (isset($req['payValidTm']))?$req['payValidTm']:"";
+            // $receiptCode    = (isset($req['receiptCode']))?$req['amt']:"";
+            // $mRefNo         = (isset($req['mRefNo']))?$req['amt']:"";
+            // $depositDt      = (isset($req['depositDt']))?$req['amt']:"";
+            // $depositTm      = (isset($req['depositTm']))?$req['amt']:"";
         }
 
         $nicepayLog    = new Nicepaylog;
@@ -98,8 +98,8 @@ class NotificationsController extends Controller
         $nicepayLog->txid     = $tXid;
         $nicepayLog->virtual_account_no = $code_bayar;
         $nicepayLog->update   = Carbon::now();
-        $nicepayLog->request  = addslashes(json_encode($req));
-        $nicepayLog->response = "";
+        $nicepayLog->request  = "";
+        $nicepayLog->response = addslashes(json_encode($req));
         $nicepayLog->status   = addslashes($status);
         $nicepayLog->action   = "Notification";
         $nicepayLog->id_entitas = $paymeth['id_entitas'];
@@ -134,10 +134,10 @@ class NotificationsController extends Controller
             
             if ($parent_id == 2 ) {
                 $title  = "Virtual Account :";
-                $number = $req['vacctNo'];;
+                $number = (isset($req['vacctNo']))?$req['vacctNo']:"";
               } elseif ($parent_id == 3) {
                 $title  = "Kode Pembayaran :";
-                $number = $req['payNo'];
+                $number = (isset($req['payNo']))?$req['payNo']:"";
               } else{
                 $title = "No.Rekening :";
                 $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');

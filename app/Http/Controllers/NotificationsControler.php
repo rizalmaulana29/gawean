@@ -29,8 +29,19 @@ class NotificationsController extends Controller
     }
 
     public function dbProcess(Request $request){
+        $this->validate($request, [
+            'payMethod' => 'required',
+            'referenceNo' => 'required',
+            'status' => 'required',
+            'payMethod' => 'required',
+            'merchantToken' => 'required',
+            'tXid' => 'required'
+        ]);
+
         $req = $request->all();
         $nicepay = new Nicepay;
+        $code = "";
+        $code_bayar = "";
 
         $amt            = (isset($req['amt']))?$req['amt']:"";
         $billingNm      = (isset($req['billingNm']))?$req['billingNm']:"";

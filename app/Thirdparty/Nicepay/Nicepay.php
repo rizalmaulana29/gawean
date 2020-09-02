@@ -22,8 +22,8 @@ Class Nicepay
     // const NICEPAY_IMID          = "IONPAYTEST";
     // const NICEPAY_MERCHANT_KEY  = "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A==";
     const NICEPAY_CALLBACK_URL  = "http://localhost/nicepay-sdk/result.html";
-    const NICEPAY_DBPROCESS_URL_SAND = "https://api.rumahaqiqah.co.id/api/notifications";#"http://ptsv2.com/t/kwurx-1575983336/post";   
-    const NICEPAY_DBPROCESS_URL_PROD = "https://api.rumahaqiqah.co.id/api/notifications";   
+    const NICEPAY_DBPROCESS_URL_SAND = "http://ptsv2.com/t/kwurx-1575983336/post";#"http://ptsv2.com/t/kwurx-1575983336/post";   
+    const NICEPAY_DBPROCESS_URL_PROD = "http://ptsv2.com/t/kwurx-1575983336/post";#https://api.rumahaqiqah.co.id/api/notifications   
     
 
     public function config($params)

@@ -69,16 +69,16 @@ class NotificationsController extends Controller
 
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
 
-        echo "referenceNo : ".$referenceNo."<br>";
-        echo "id_payment_method : ".$payment['id_payment_method']."<br>";
-        echo "id_entitas : ".$paymeth['id_entitas']."<br>";
-        echo "IMID : ".$iMid."<br>";
-        echo "referenceNo : ".$referenceNo."<br>";
-        echo "amt : ".$amt."<br>";
-        echo "merKey : ".$merKey."<br>";
+        // echo "referenceNo : ".$referenceNo."<br>";
+        // echo "id_payment_method : ".$payment['id_payment_method']."<br>";
+        // echo "id_entitas : ".$paymeth['id_entitas']."<br>";
+        // echo "IMID : ".$iMid."<br>";
+        // echo "referenceNo : ".$referenceNo."<br>";
+        // echo "amt : ".$amt."<br>";
+        // echo "merKey : ".$merKey."<br>";
         
-        echo "<br>merchantToken : <br>".$merchantToken."<br>";
-        echo "merchantTokenComparator : <br>".$merchantTokenComparator."<br>";
+        // echo "<br>merchantToken : <br>".$merchantToken."<br>";
+        // echo "merchantTokenComparator : <br>".$merchantTokenComparator."<br>";
         
         if($merchantTokenComparator != $merchantToken){
             return response()->json([

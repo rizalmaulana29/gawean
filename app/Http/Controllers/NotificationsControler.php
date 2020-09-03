@@ -37,9 +37,12 @@ class NotificationsController extends Controller
             'merchantToken' => 'required',
             'tXid' => 'required'
         ]);
-
+        
+        
         $req = $request->all();
         $nicepay = new Nicepay;
+            
+
         $code = "";
         $code_bayar = "";
 
@@ -56,16 +59,21 @@ class NotificationsController extends Controller
         $transDt	    = (isset($req['transDt']))?$req['transDt']:"";
         $transTm	    = (isset($req['transTm']))?$req['transTm']:"";
 
+
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
         $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
-        // $mtNotif    = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
-        // if($merchantToken != $mtNotif) {
-        //     die("Antum Dilarang Masuk Euy!! Beda Data na ge.");exit();
-        // }
+
+        $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$referenceNo,$amt,$merKey);
+        if($merchantTokenComparator != $merchantToken){
+            return response()->json([
+                'status'=>false,
+                "message" => "Missmatch Merchant Token!!!",
+            ],422);
+        }
 
         if($payMethod == "01"){
             $authNo         = (isset($req['authNo']))?$req['authNo']:"";
@@ -114,7 +122,7 @@ class NotificationsController extends Controller
         $nicepayLog->status   = addslashes($status);
         $nicepayLog->action   = "Notification";
         $nicepayLog->id_entitas = $paymeth['id_entitas'];
-        // echo json_encode($req);
+
         $nicepayLog->save();
 
         $status = ($status == 0)?"paid":(

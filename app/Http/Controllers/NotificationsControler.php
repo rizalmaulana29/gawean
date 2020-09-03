@@ -207,8 +207,8 @@ class NotificationsController extends Controller
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
         $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
-        $iMid       = Nicepay::$isProduction ? $merData['mid']:$merData['mid_sand'];
-        $merKey     = Nicepay::$isProduction ? $merData['merkey']:$merData['merkey_sand'];
+        $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
+        $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
         $nicepay = new Nicepay;
 

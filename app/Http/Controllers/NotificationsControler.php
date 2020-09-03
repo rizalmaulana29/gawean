@@ -66,8 +66,16 @@ class NotificationsController extends Controller
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
-
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$referenceNo,$amt,$merKey);
+
+        echo "IMID : ".$iMid."<br>";
+        echo "referenceNo : ".$referenceNo."<br>";
+        echo "amt : ".$amt."<br>";
+        echo "merKey : ".$merKey."<br>";
+        
+        echo "<br>merchantToken : ".$merchantToken."<br>";
+        echo "merchantTokenComparator : ".$merchantTokenComparator."<br>";
+        
         if($merchantTokenComparator != $merchantToken){
             return response()->json([
                 'status'=>false,

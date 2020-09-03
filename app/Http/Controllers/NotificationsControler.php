@@ -69,6 +69,7 @@ class NotificationsController extends Controller
 
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$referenceNo,$amt,$merKey);
 
+        echo "referenceNo : ".$referenceNo."<br>";
         echo "id_payment_method : ".$payment['id_payment_method']."<br>";
         echo "id_entitas : ".$paymeth['id_entitas']."<br>";
         echo "IMID : ".$iMid."<br>";

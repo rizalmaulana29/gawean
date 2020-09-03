@@ -55,7 +55,7 @@
 
     <div class="container">
         <div style="margin-bottom: 5px;">
-            <img src="https://rumahaqiqah.co.id/wp-content/uploads/2018/11/rumahaqiqah-logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+            <img src="https://order.rumahaqiqah.co.id/images/logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
         </div>
         <?php use Illuminate\Support\Facades\DB; 
             $kantor = DB::table('ra_kantor')->select('alamat','kota','tlp')->where('id', $transdata->id_kantor)->first();

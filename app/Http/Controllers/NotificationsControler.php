@@ -67,7 +67,7 @@ class NotificationsController extends Controller
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
-        $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$referenceNo,$amt,$merKey);
+        $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
 
         echo "referenceNo : ".$referenceNo."<br>";
         echo "id_payment_method : ".$payment['id_payment_method']."<br>";

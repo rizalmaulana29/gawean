@@ -62,19 +62,22 @@ class NotificationsController extends Controller
 
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
+
         $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$referenceNo,$amt,$merKey);
 
+        echo "id_payment_method : ".$payment['id_payment_method']."<br>";
+        echo "id_entitas : ".$paymeth['id_entitas']."<br>";
         echo "IMID : ".$iMid."<br>";
         echo "referenceNo : ".$referenceNo."<br>";
         echo "amt : ".$amt."<br>";
         echo "merKey : ".$merKey."<br>";
         
-        echo "<br>merchantToken : ".$merchantToken."<br>";
-        echo "merchantTokenComparator : ".$merchantTokenComparator."<br>";
+        echo "<br>merchantToken : <br>".$merchantToken."<br>";
+        echo "merchantTokenComparator : <br>".$merchantTokenComparator."<br>";
         
         if($merchantTokenComparator != $merchantToken){
             return response()->json([

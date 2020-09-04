@@ -26,7 +26,7 @@ return [
                         "61.94.89.125", //IP InsMUl di IC
                         "112.215.238.160", //hp sandi
                         "36.72.0.142",//Insan Mulia
-                        "36.79.250.18",//Insan Mulia 5G
+                        "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan
                 ]
         ) ? true : false)

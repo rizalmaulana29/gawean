@@ -55,11 +55,11 @@ class NotificationsController extends Controller
             ->limit(150)
             ->toSql();
 
-        if(count($listTransaksi) > 0){
-            foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
-                var_dump($dataTransaksi);
-            }
-        }
+        // if(count($listTransaksi) > 0){
+        //     foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
+        //         var_dump($dataTransaksi);
+        //     }
+        // }
 
         dd($listTransaksi);
         // $tot = count($listTransaksi);

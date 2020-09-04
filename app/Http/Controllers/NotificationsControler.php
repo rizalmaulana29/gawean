@@ -44,13 +44,13 @@ class NotificationsController extends Controller
 
 
         // $payment    = Payment::where('id_transaksi',$referenceNo)->first();
-        $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id');
+        $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id')->toArray();
         #Get DATA Transaksi yg belum kirim Email
         // var_dump($paymeth);
         $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','email','id','id_parent')
             ->where('status','!=','paid')
             ->where('tgl_transaksi','<', $dateNow)
-            ->whereIn('id_payment_method',[4,9,15])
+            ->whereIn('id_payment_method',$paymeth)
             ->orderBy('tgl_transaksi','ASC')
             ->limit(150)
             ->get();

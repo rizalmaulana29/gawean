@@ -60,21 +60,21 @@ class NotificationsController extends Controller
         if($tot > 0){
             foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
                 if($dataTransaksi->id_parent == "" || $dataTransaksi->id_parent == null){
-                    echo "<i><b>NULL PARENT";
+                    echo "<i>NULL PARENT";
                     echo "<br>";
-                    echo "ID  : ".$dataTransaksi->id."</b>";
+                    echo "ID  : ".$dataTransaksi->id."";
                     echo "<br>";
                     echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
                     echo "<br><br></i>";    
                 }
-                echo "<b>ID  : ".$dataTransaksi->id."</b>";
+                echo "<b>ID  : ".$dataTransaksi->id."";
                 echo "<br>";
                 echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
                 echo "<br>";
                 echo "Tgl Transaksi : ".$dataTransaksi->tgl_transaksi;
                 echo "<br>";
                 echo "ID Parent : ".$dataTransaksi->id_parent;
-                echo "<br><br>";
+                echo "<br><br></b>";
             }
         }
 

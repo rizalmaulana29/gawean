@@ -224,10 +224,9 @@ class NotificationsController extends Controller
         //   echo "<br>ENDs";
     }
 
-    private function testData(Request $request){
-        $req = $request->all();
-        var_dump($req['id_transaksi']);
-        dd($req);
+    private function testData($transaksi){
+        var_dump($transaksi['id_transaksi']);
+        dd($transaksi);
     }
 
     public function dbProcess(Request $request){

@@ -59,7 +59,14 @@ class NotificationsController extends Controller
         echo "Total Trans : ".$tot."<br><br>";
         if($tot > 0){
             foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
-                var_dump($dataTransaksi);
+                echo "ID  : ".$dataTransaksi->id;
+                echo "<br>";
+                echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
+                echo "<br>";
+                echo "Tgl Transaksi : ".$dataTransaksi->tgl_transaksi;
+                echo "<br>";
+                echo "ID Parent : ".$dataTransaksi->id_parent;
+                echo "<br>";
             }
         }
 

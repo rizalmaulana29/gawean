@@ -48,11 +48,11 @@ class NotificationsController extends Controller
         #Get DATA Transaksi yg belum kirim Email
         $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','email','id','id_parent')
             ->where('status','!=','paid')
-            // ->where('tgl_transaksi','<', $dateNow)
+            ->where('tgl_transaksi','<', $dateNow)
             ->whereIn('id_payment_method',$paymeth)
             ->orderBy('tgl_transaksi','ASC')
             ->limit(150)
-            ->get();
+            ->toSql();
 
         dd($listTransaksi);
             

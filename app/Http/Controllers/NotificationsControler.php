@@ -49,7 +49,7 @@ class NotificationsController extends Controller
         $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','email','id','id_parent')
             ->where('status','!=','paid')
             ->where('tgl_transaksi','<', $dateNow)
-            ->whereIn('id_payment_method',$paymeth)
+            // ->whereIn('id_payment_method',$paymeth)
             ->orderBy('tgl_transaksi','ASC')
             ->limit(150)
             ->get();

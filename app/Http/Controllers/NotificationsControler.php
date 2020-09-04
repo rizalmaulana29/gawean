@@ -41,12 +41,12 @@ class NotificationsController extends Controller
         $dateNow = Carbon::now()->toDateTimeString();
         $dateOld = "2020-08-25 00:00:00";
       
-
-
-        // $payment    = Payment::where('id_transaksi',$referenceNo)->first();
-        $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id')->toArray();
+        #Nicepay
+        // $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id')->toArray();
+        #Not Nicepay
+        $paymeth    = Paymeth::where('parent_id','>=','5')->pluck('id')->toArray();
+        
         #Get DATA Transaksi yg belum kirim Email
-        // var_dump($paymeth);
         $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','email','id','id_parent')
             ->where('status','!=','paid')
             ->where('tgl_transaksi','<', $dateNow)
@@ -55,16 +55,16 @@ class NotificationsController extends Controller
             ->limit(150)
             ->get();
 
-        // if(count($listTransaksi) > 0){
-        //     foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
-        //         var_dump($dataTransaksi);
-        //     }
-        // }
+        $tot = count($listTransaksi);
+        echo "Total Trans : ".$tot."<br><br>";
+        if($tot > 0){
+            foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
+                var_dump($dataTransaksi);
+            }
+        }
 
-        dd($listTransaksi);
-        // $tot = count($listTransaksi);
-        // echo "Total Trans : ".$tot."<br><br>";
-  
+        
+        dd('stop');
         //   # Loop Data list Email yg akan dikirimkan.
         //   foreach ($listTransaksi as $key => $value) {
         //       $transaksi = CorezTransaksi::select('corez_transaksi.*', 'corez_donatur.donatur', 'corez_donatur.email', 'corez_donatur.alamat', 'corez_donatur.npwp', 'corez_donatur.hp', 'setting_program.program', 'hcm_kantor.kantor', 'hcm_karyawan.karyawan', 'hcm_karyawan.hp as hpKaryawan')

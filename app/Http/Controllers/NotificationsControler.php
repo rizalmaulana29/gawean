@@ -66,6 +66,8 @@ class NotificationsController extends Controller
                     echo "<br>";
                     echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
                     echo "<br><br></i>";    
+
+                    $this->testData($dataTransaksi);
                 }else{
                     echo "<b>ID  : ".$dataTransaksi->id."";
                     echo "<br>";
@@ -220,6 +222,12 @@ class NotificationsController extends Controller
               
         //   }
         //   echo "<br>ENDs";
+    }
+
+    private function testData(Request $request){
+        $req = $request->all();
+        var_dump($req['id_transaksi']);
+        dd($req);
     }
 
     public function dbProcess(Request $request){

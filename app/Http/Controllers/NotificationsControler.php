@@ -52,10 +52,15 @@ class NotificationsController extends Controller
             ->whereIn('id_payment_method',$paymeth)
             ->orderBy('tgl_transaksi','ASC')
             ->limit(150)
-            ->toSql();
+            ->get();
 
-        dd($listTransaksi);
-            
+        if(count($listTransaksi) > 0){
+            foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
+                var_dump($dataTransaksi);
+            }
+        }
+
+        dd('Stop');
         // $tot = count($listTransaksi);
         // echo "Total Trans : ".$tot."<br><br>";
   

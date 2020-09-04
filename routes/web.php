@@ -21,11 +21,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 	
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);
-	$router->get('notifications', 		['uses' => 'NotificationsController@dbProcess']);
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);
 	$router->post('inquiry', 			['uses' => 'NotificationsController@npInuqiry']);
 	$router->post('cancelVA', 			['uses' => 'NotificationsController@npCancelVA']);
 	$router->get('mail',  ['uses' => 'CartController@sendemail']);
+	
+	$router->post('cronChecker', 		['uses' => 'NotificationsController@cronNPCheker']);
 });
 
 $router->group(['prefix' => 'uploads'], function() use ($router){

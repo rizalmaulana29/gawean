@@ -28,6 +28,179 @@ class NotificationsController extends Controller
         date_default_timezone_set("Asia/Jakarta");
     }
 
+    public function cronNPCheker(Request $request){
+        if($request->header('Authorization') != "hUI8fd0u2j3X9z2qja7d98"){
+            return response()->json([
+              'status'=>false,
+              "message" => "Missmatch Token"
+            ],422);
+        }
+        
+        #START
+        echo date("Y-m-d H:i:s.U")."<br>START PAYMENT CHECKER<br><br>";
+        $dateNow = Carbon::now()->toDateTimeString();
+        $dateOld = "2020-08-25 00:00:00";
+      
+
+
+        // $payment    = Payment::where('id_transaksi',$referenceNo)->first();
+        $paymeth    = Paymeth::where('parent_id','<=',5)->value('id');
+        var_dump($paymeth);
+        #Get DATA Transaksi yg belum kirim Email
+        $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','id_donatur')
+            ->where('status','!=','paid')
+            ->where('tgl_transaksi','<', $dateNow)
+            ->whereIn('id_payment_method',$paymeth)
+            ->orderBy('tgl_transaksi','ASC')
+            ->limit(150)
+            ->get();
+
+        dd($listTransaksi);
+            
+        // $tot = count($listTransaksi);
+        // echo "Total Trans : ".$tot."<br><br>";
+  
+        //   # Loop Data list Email yg akan dikirimkan.
+        //   foreach ($listTransaksi as $key => $value) {
+        //       $transaksi = CorezTransaksi::select('corez_transaksi.*', 'corez_donatur.donatur', 'corez_donatur.email', 'corez_donatur.alamat', 'corez_donatur.npwp', 'corez_donatur.hp', 'setting_program.program', 'hcm_kantor.kantor', 'hcm_karyawan.karyawan', 'hcm_karyawan.hp as hpKaryawan')
+        //           ->join('corez_donatur', 'corez_donatur.id_donatur', '=', 'corez_transaksi.id_donatur')
+        //           ->join('setting_program', 'setting_program.id_program', '=', 'corez_transaksi.id_program')
+        //           ->leftJoin('hcm_kantor', 'hcm_kantor.id_kantor', '=', 'corez_transaksi.id_kantor_transaksi')
+        //           ->leftJoin('hcm_karyawan', 'hcm_karyawan.id_karyawan', '=', 'corez_transaksi.id_crm')
+        //           ->where(function($q) {
+        //                   $q->where('send_email', '=', '')
+        //                   ->orWhereNull('send_email');
+        //               })
+        //           ->where('corez_transaksi.id_donatur', $value->id_donatur)
+        //           ->where('corez_donatur.id_donatur', $value->id_donatur)
+        //           ->where('corez_transaksi.tgl_transaksi', $value->tgl_transaksi)
+        //           ->where('corez_transaksi.approved_transaksi','y')
+        //           ->get();
+              
+        //       echo "<h><b>".$value->id_donatur."</b></h4><br>";
+        //       echo "<h><b>".$value->tgl_transaksi."</b></h4><br>";
+  
+        //       if($value->id_donatur == '9999999999999'){
+        //           echo "Why Pandularas <br><br>";
+        //           foreach($transaksi as $keyUTransaksi => $valueUTransaksi){
+        //               echo "Id Donatur :".$valueUTransaksi->id_donatur."<br> On Date : ".$valueUTransaksi->tgl_transaksi."<br> Id Transaksi : ".$valueUTransaksi->id_transaksi."<br>";
+        //               CorezTransaksi::where('corez_transaksi.id_transaksi', $valueUTransaksi->id_transaksi)->where('corez_transaksi.detailid', $valueUTransaksi->detailid)->update(['send_email' => "off"]);
+        //           }
+        //       }
+        //       else{
+        //           if(count($transaksi)>0){
+        //               if($transaksi[0]->email){
+        //                   $total_transaksi = 0;
+        //                   $list_transaksi  = "";
+        //                   $listProgram = "";
+        //                   $listSumberDana = "";
+        //                   $programTransaksi = "";
+        //                   $listTglTransaksi = "";
+        //                   foreach($transaksi as $keyTransaksi => $valueTransaksi){
+        //                       $program = SettingProgram::select("id_program", "program","sumber_dana","setting_program.id_sumber_dana")
+        //                           ->leftJoin("setting_sumber_dana","setting_program.id_sumber_dana","=","setting_sumber_dana.id_sumber_dana")
+        //                           // ->where('aktif','y')
+        //                           ->where('id_program',$valueTransaksi->id_program)
+        //                           ->first();
+        //                       $ending = (count($transaksi) == $keyTransaksi+1)?"":"<br>";
+  
+        //                       $total_transaksi += $valueTransaksi->transaksi;
+        //                       $list_transaksi .= "Rp ".number_format($valueTransaksi->transaksi,2,",",".").$ending;
+        //                       $listProgram .= $program->program.$ending;
+        //                       $listSumberDana .= $program->sumber_dana.$ending;
+        //                       $programTransaksi .= $program->program." ".number_format($valueTransaksi->transaksi,2,",",".").'\n';
+        //                       $listTglTransaksi .= $valueTransaksi->tgl_transaksi.'\n';
+        //                   }
+  
+        //                   # URL to Download PDF
+        //                   $did = openssl_encrypt($value->id_donatur, "aes128", "JKH21315akdB7sdsI9",0,"xf8f78uZ9xH4S0Jn");
+        //                   $savePdf = "https://seuneu.rumahzakat.org/service/cetakTransaksi?id_donatur=".urlencode($did)."&tgl_transaksi=".$value->tgl_transaksi;
+                          
+        //                   # Data Notifikasi
+        //                   $data_notif = Array(
+        //                       "savePdf" => $savePdf,
+        //                       "email" => $transaksi[0]->email,
+        //                       "hp" => $transaksi[0]->hp,
+        //                       "donatur" => $transaksi[0]->donatur,
+        //                       "id_donatur" => $transaksi[0]->id_donatur,
+        //                       "transaksi" => number_format($total_transaksi,2,",","."),
+        //                       "list_transaksi" => $list_transaksi,
+        //                       "id_transaksi" => $transaksi[0]->id_transaksi,
+        //                       "program" => $listProgram,
+        //                       "programtransaksi" => $programTransaksi,
+        //                       "sumber_dana" => $listSumberDana,
+        //                       "tgl_donasi" => $transaksi[0]->tgl_donasi,
+        //                       "tgl_donasi_concat" => $listTglTransaksi,
+        //                       "tgl_transaksi" => $transaksi[0]->tgl_transaksi,
+        //                       "kantor"=> $transaksi[0]->kantor,
+        //                       "alamat"=> $transaksi[0]->alamat,
+        //                       // "nama_outlet"=> $this->GetViaHimpunDetail($dgTransaksiDetail[0]),
+        //                       // "data" =>$dgTransaksiDetail
+        //                   );
+  
+        //                   # Parameter untuk Queue Email
+        //                   $dataMsg = array(
+        //                       'token' => 'df9kXa8Hu2fa04p0z34LpH1FPHof',
+        //                       'email' => $transaksi[0]->email,
+        //                       // 'email' => "mrivan7799@gmail.com",
+        //                       'tipe'  => 'email',
+        //                       'jenis' => 'Notifikasi Transaksi',
+        //                       'i'     => 'id_EmailTrans',
+        //                       // "attachment"=> $pdf,
+        //                       'data'  => json_encode($data_notif)
+        //                   );
+  
+        //                   # CURL Send ke Queue
+        //                   $curl = curl_init();
+                  
+        //                   curl_setopt_array($curl, array(
+        //                       CURLOPT_SSL_VERIFYPEER => false,
+        //                       CURLOPT_URL => "https://api.rumahzakat.org/service/sent-email",
+        //                       CURLOPT_RETURNTRANSFER => true,
+        //                       CURLOPT_ENCODING => "",
+        //                       CURLOPT_MAXREDIRS => 10,
+        //                       CURLOPT_TIMEOUT => 100000,
+        //                       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //                       CURLOPT_CUSTOMREQUEST => "POST",
+        //                       CURLOPT_POSTFIELDS => $dataMsg,
+        //                       CURLOPT_HTTPHEADER => array(
+        //                           "Content-Type: multipart/form-data" 
+        //                       ),
+        //                   ));
+        //                   $response = curl_exec($curl);
+        //                   $err = curl_error($curl);
+                  
+        //                   curl_close($curl);
+                  
+        //                   if ($err) {
+        //                           echo "cURL Error #:" . $err;
+        //                   } 
+        //                   else {
+        //                       foreach($transaksi as $keyUTransaksi => $valueUTransaksi){
+        //                           echo "Id Donatur :".$valueUTransaksi->id_donatur."<br> On Date : ".$valueUTransaksi->tgl_transaksi."<br> Id Transaksi : ".$valueUTransaksi->id_transaksi."<br>";
+        //                           echo $transaksi[0]->email." - ".$response;
+        //                           CorezTransaksi::where('corez_transaksi.id_transaksi', $valueUTransaksi->id_transaksi)->where('corez_transaksi.detailid', $valueUTransaksi->detailid)->update(['send_email' => $valueUTransaksi->email]);
+        //                       }
+        //                   }
+        //               }
+        //               else{
+        //                   foreach($transaksi as $keyUTransaksi => $valueUTransaksi){
+        //                       echo "Id Donatur :".$valueUTransaksi->id_donatur."<br> On Date : ".$valueUTransaksi->tgl_transaksi."<br> Id Transaksi : ".$valueUTransaksi->id_transaksi."<br>";
+        //                       CorezTransaksi::where('corez_transaksi.id_transaksi', $valueUTransaksi->id_transaksi)->where('corez_transaksi.detailid', $valueUTransaksi->detailid)->update(['send_email' => "no email"]);
+        //                   }
+        //                   echo "No EMAIL for Id Donatur :".$value->id_donatur."<br> On Date : ".$value->tgl_transaksi;
+        //               }
+        //           }
+        //           else{
+        //               echo "No Transaksi Found for Id Donatur :".$value->id_donatur."<br> On Date : ".$value->tgl_transaksi;
+        //           }
+        //           echo "<br><br>";
+        //       }
+              
+        //   }
+        //   echo "<br>ENDs";
+    }
+
     public function dbProcess(Request $request){
         $this->validate($request, [
             'payMethod' => 'required',

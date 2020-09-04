@@ -46,13 +46,14 @@ class NotificationsController extends Controller
         // $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id');
         #Get DATA Transaksi yg belum kirim Email
+        dd($paymeth);
         $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','email','id','id_parent')
             ->where('status','!=','paid')
             ->where('tgl_transaksi','<', $dateNow)
-            // ->whereIn('id_payment_method',$paymeth)
+            ->whereIn('id_payment_method',$paymeth)
             ->orderBy('tgl_transaksi','ASC')
             ->limit(150)
-            ->get();
+            ->toSql();
 
         if(count($listTransaksi) > 0){
             foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
@@ -60,7 +61,7 @@ class NotificationsController extends Controller
             }
         }
 
-        dd('Stop');
+        dd($listTransaksi);
         // $tot = count($listTransaksi);
         // echo "Total Trans : ".$tot."<br><br>";
   

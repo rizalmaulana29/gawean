@@ -66,15 +66,16 @@ class NotificationsController extends Controller
                     echo "<br>";
                     echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
                     echo "<br><br></i>";    
+                }else{
+                    echo "<b>ID  : ".$dataTransaksi->id."";
+                    echo "<br>";
+                    echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
+                    echo "<br>";
+                    echo "Tgl Transaksi : ".$dataTransaksi->tgl_transaksi;
+                    echo "<br>";
+                    echo "ID Parent : ".$dataTransaksi->id_parent;
+                    echo "<br><br></b>";
                 }
-                echo "<b>ID  : ".$dataTransaksi->id."";
-                echo "<br>";
-                echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
-                echo "<br>";
-                echo "Tgl Transaksi : ".$dataTransaksi->tgl_transaksi;
-                echo "<br>";
-                echo "ID Parent : ".$dataTransaksi->id_parent;
-                echo "<br><br></b>";
             }
         }
 

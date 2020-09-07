@@ -50,7 +50,7 @@ class NotificationsController extends Controller
         $listTransaksi = Payment::select('ra_payment_dua.id_transaksi','ra_payment_dua.tgl_transaksi','ra_payment_dua.email','ra_payment_dua.id','ra_payment_dua.id_parent','ra_payment_dua.nominal_bayar','np.txid','np.id_entitas')
             ->join('ra_nicepaylog as np', 'np.id_order', '=', 'ra_payment_dua.id_transaksi')
             ->where('np.action','Registration')
-            ->where('ra_payment_dua.status','!=','paid')
+            ->where('ra_payment_dua.status','=','checkout')
             ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)
             ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
             ->orderBy('ra_payment_dua.tgl_transaksi','DESC')
@@ -246,14 +246,14 @@ class NotificationsController extends Controller
         $referenceNo    = $transaksi['id_transaksi'];
         $tXid           = $transaksi['txid'];
         $amt            = $transaksi['nominal_bayar'];
-        $id_parent      = $transaksi['id_parent'];
 
-        echo " ".$referenceNo." ".$tXid ." ".$amt." ";
-        echo "<br>";
+        // echo " ".$referenceNo." ".$tXid ." ".$amt." ";
+        // echo "<br>";
         
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
-        $paymeth    = Paymeth::find($payment['id_payment_method']);
-        $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        // $paymeth    = Paymeth::find($payment['id_payment_method']);
+        // $paymeth['id_entitas']
+        $merData    = AdminEntitas::where('id_entitas',$transaksi['id_entitas'])->first();
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
@@ -273,11 +273,12 @@ class NotificationsController extends Controller
         
         $transaksiAPI   = $nicepay->nicepayApi("nicepay/direct/v2/inquiry",$detailTrans); 
         $response       = json_decode($transaksiAPI);
-        $msg            = $response->resultMsg;
-        
+        $msgTrx         = $response->resultMsg;
+        $msg    = "";
+
         $status	        = (isset($response->status))?$response->status:"";
-        echo "#1 Status : ".$status;
-        echo "<br>";
+        // echo "#1 Status : ".$status;
+        // echo "<br>";
         $status = ($status == 0)?"paid":(
             ($status == 1)?"failed":(
                 ($status == 2)?"void":(
@@ -292,36 +293,39 @@ class NotificationsController extends Controller
             )
         );
 
-        echo "Message : ".$msg;
-        echo "<br>";
-        echo "Status : ".$status;
-        echo "<br>";
+        if($status == "paid" || $status == "failed" || $status == "expired"){
+            $nicepayLog    = new Nicepaylog;
+            $nicepayLog->id_order = $referenceNo;
+            $nicepayLog->txid     = $tXid;
+            $nicepayLog->request  = addslashes($detailTrans);
+            $nicepayLog->response = addslashes($transaksiAPI);
+            $nicepayLog->status   = addslashes($msgTrx);
+            $nicepayLog->action   = "Inquiry";
+            $nicepayLog->id_entitas = $transaksi['id_entitas'];
+            $nicepayLog->source_data = "fe";
+            $nicepayLog->save();
 
-        // if($payment->id_parent && $status == "paid"){
-            // $paymentParent    = Payment::where('id',$payment->id_parent)->first();
-            // $lunasState = "y";
-
-            // $paymentParent->lunas = $lunasState;
-            // $paymentParent->sisa_pembayaran = $sisaParent;
-            // $paymentParent->save();    
-
-            // $nicepayLog    = new Nicepaylog;
-            // $nicepayLog->id_order = $referenceNo;
-            // $nicepayLog->txid     = $tXid;
-            // $nicepayLog->request  = addslashes($detailTrans);
-            // $nicepayLog->response = addslashes($transaksiAPI);
-            // $nicepayLog->status   = addslashes($msg);
-            // $nicepayLog->action   = "Inquiry";
-            // $nicepayLog->id_entitas = $paymeth['id_entitas'];
-            // $nicepayLog->save();
-        // }else{
-
-        // }
-        // $payment->status = $status;
-        // $payment->save();
-        // $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
-
-        return $transaksiAPI;
+            if($payment->id_parent){
+                $paymentParent  = Payment::where('id',$payment->id_parent)->first();
+                $lunasState     = "y";
+                $paymentParent->lunas = $lunasState;
+                $paymentParent->save();   
+                
+                $payment->status = $status;
+                $payment->save();
+                $msg .= "Status Pembayaran : ".$status."<br>";
+                return $msg;
+            }
+            else{
+                $payment->status = $status;
+                $payment->save();
+                $msg .= "Status Pembayaran : ".$status."<br>";
+                return $msg;
+            }
+        }else{
+            return "Status : Belum dibayar";
+        }
+        
     }
 
     public function dbProcess(Request $request){
@@ -337,8 +341,7 @@ class NotificationsController extends Controller
         
         $req = $request->all();
         $nicepay = new Nicepay;
-            
-
+        
         $code = "";
         $code_bayar = "";
 
@@ -416,7 +419,8 @@ class NotificationsController extends Controller
             // $depositDt      = (isset($req['depositDt']))?$req['amt']:"";
             // $depositTm      = (isset($req['depositTm']))?$req['amt']:"";
         }
-
+        $source_data = Nicepaylog::where('id_transaksi',$referenceNo)->where('action','Registration')->value('source_data');
+        $source_data = ($source_data)?$source_data:"be";
         $nicepayLog    = new Nicepaylog;
 
         $nicepayLog->id_order = $referenceNo;
@@ -430,7 +434,7 @@ class NotificationsController extends Controller
         $nicepayLog->status   = addslashes($status);
         $nicepayLog->action   = "Notification";
         $nicepayLog->id_entitas = $paymeth['id_entitas'];
-
+        $nicepayLog->source_data = $source_data;
         $nicepayLog->save();
 
         $status = ($status == 0)?"paid":(

@@ -8,7 +8,7 @@ class Nicepaylog extends Model
     protected $primaryKey = 'id';
     protected $table = 'ra_nicepaylog';
     protected $fillable = [
-        'id_order','txid','no_reference','id_merchant','virtual_account_no','update','request','response','status','action','expired_at'
+        'id_order','txid','no_reference','id_merchant','virtual_account_no','update','request','response','status','action','expired_at','source_data'
     ];
 
     public $timestamps = false;

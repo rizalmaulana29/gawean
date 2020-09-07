@@ -62,6 +62,7 @@ class NotificationsController extends Controller
         if($tot > 0){
             foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
                 if(!$dataTransaksi->txid){continue;}
+
                 if($dataTransaksi->id_parent == "" || $dataTransaksi->id_parent == null){
                     echo "<i>NULL PARENT";
                     echo "<br>";
@@ -72,9 +73,10 @@ class NotificationsController extends Controller
                     echo "TXid : ".$dataTransaksi->txid;
                     echo "<br>";
                     echo "Amount : ".$dataTransaksi->nominal_bayar;
+                    
+                    $result = $this->CheckInquiry($dataTransaksi);
+                    echo $result;
                     echo "<br><br></i>";    
-
-                    $this->CheckInquiry($dataTransaksi);
                 }else{
                     echo "<b>ID  : ".$dataTransaksi->id."";
                     echo "<br>";
@@ -87,6 +89,9 @@ class NotificationsController extends Controller
                     echo "TXid : ".$dataTransaksi->txid;
                     echo "<br>";
                     echo "Amount : ".$dataTransaksi->nominal_bayar;
+                    
+                    $result = $this->CheckInquiry($dataTransaksi);
+                    echo $result;
                     echo "<br><br></b>";
                 }
             }
@@ -241,6 +246,9 @@ class NotificationsController extends Controller
         $referenceNo    = $transaksi['id_transaksi'];
         $tXid           = $transaksi['tXid'];
         $amt            = $transaksi['nominal_bayar'];
+        $id_parent      = $transaksi['id_parent'];
+
+        
 
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
@@ -266,15 +274,44 @@ class NotificationsController extends Controller
         $response       = json_decode($transaksiAPI);
         $msg            = $response->resultMsg;
         
-        $nicepayLog    = new Nicepaylog;
-        $nicepayLog->id_order = $referenceNo;
-        $nicepayLog->txid     = $tXid;
-        $nicepayLog->request  = addslashes($detailTrans);
-        $nicepayLog->response = addslashes($transaksiAPI);
-        $nicepayLog->status   = addslashes($msg);
-        $nicepayLog->action   = "Inquiry";
-        $nicepayLog->id_entitas = $paymeth['id_entitas'];
-        $nicepayLog->save();
+        $status	        = (isset($req['status']))?$req['status']:"";
+        $status = ($status == 0)?"paid":(
+            ($status == 1)?"failed":(
+                ($status == 2)?"void":(
+                    ($status == 3)?"unpaid":(
+                        ($status == 4)?"expired":(
+                            ($status == 5)?"readyToPaid":(
+                                ($status == 9)?"Initialization / Reversal":"What method?"
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        if($payment->id_parent && $status == "paid"){
+            // $paymentParent    = Payment::where('id',$payment->id_parent)->first();
+            // $lunasState = "y";
+
+            // $paymentParent->lunas = $lunasState;
+            // $paymentParent->sisa_pembayaran = $sisaParent;
+            // $paymentParent->save();    
+
+            // $nicepayLog    = new Nicepaylog;
+            // $nicepayLog->id_order = $referenceNo;
+            // $nicepayLog->txid     = $tXid;
+            // $nicepayLog->request  = addslashes($detailTrans);
+            // $nicepayLog->response = addslashes($transaksiAPI);
+            // $nicepayLog->status   = addslashes($msg);
+            // $nicepayLog->action   = "Inquiry";
+            // $nicepayLog->id_entitas = $paymeth['id_entitas'];
+            // $nicepayLog->save();
+        }else{
+
+        }
+        // $payment->status = $status;
+        // $payment->save();
+        $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
 
         return $transaksiAPI;
     }

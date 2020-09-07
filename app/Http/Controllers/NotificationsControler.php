@@ -70,7 +70,7 @@ class NotificationsController extends Controller
                     echo "<br>";
                     echo "TXid : ".$dataTransaksi->txid;
                     echo "<br>";
-                    echo "ID Transaksi : ".$dataTransaksi->nominal_bayar;
+                    echo "Amount : ".$dataTransaksi->nominal_bayar;
                     echo "<br><br></i>";    
 
                     // $this->CheckInquiry($dataTransaksi);
@@ -85,7 +85,7 @@ class NotificationsController extends Controller
                     echo "<br>";
                     echo "TXid : ".$dataTransaksi->txid;
                     echo "<br>";
-                    echo "ID Transaksi : ".$dataTransaksi->nominal_bayar;
+                    echo "Amount : ".$dataTransaksi->nominal_bayar;
                     echo "<br><br></b>";
                 }
             }
@@ -430,18 +430,24 @@ class NotificationsController extends Controller
         }
 
         if($payment){
+            echo $payment->id_parent;
             if($payment->id_parent && $status == "paid"){
+                echo "Parent ID : ".$payment->id_parent;
                 $paymentParent    = Payment::where('id',$payment->id_parent)->first();
-                $sisaParent = eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
 
-                $lunasState = ($sisaParent == 0)?'y':'n';
+                echo "Sisa Bayar Awal : ".$payment->sisa_pembayaran;
+                echo "Pembayaran : ".$paymentParent->nominal_bayar;
+                echo "Sisa Bayar Akhir: ".eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
+                // $sisaParent = eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
 
-                $paymentParent->lunas = $lunasState;
-                $paymentParent->sisa_pembayaran = $sisaParent;
-                $paymentParent->save();    
+                // $lunasState = ($sisaParent == 0)?'y':'n';
+
+                // $paymentParent->lunas = $lunasState;
+                // $paymentParent->sisa_pembayaran = $sisaParent;
+                // $paymentParent->save();    
             }
-            $payment->status = $status;
-            $payment->save();
+            // $payment->status = $status;
+            // $payment->save();
             $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
         }else{
             $msg = array("status"=>"false","msg"=>"No Transaction Available");

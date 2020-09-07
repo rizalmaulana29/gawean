@@ -419,7 +419,7 @@ class NotificationsController extends Controller
             // $depositDt      = (isset($req['depositDt']))?$req['amt']:"";
             // $depositTm      = (isset($req['depositTm']))?$req['amt']:"";
         }
-        $source_data = Nicepaylog::where('id_transaksi',$referenceNo)->where('action','Registration')->value('source_data');
+        $source_data = Nicepaylog::where('id_order',$referenceNo)->where('action','Registration')->value('source_data');
         $source_data = ($source_data)?$source_data:"be";
         $nicepayLog    = new Nicepaylog;
 

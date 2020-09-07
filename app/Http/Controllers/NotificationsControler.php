@@ -275,7 +275,7 @@ class NotificationsController extends Controller
         $response       = json_decode($transaksiAPI);
         $msg            = $response->resultMsg;
         
-        $status	        = (isset($req['status']))?$req['status']:"";
+        $status	        = (isset($response->status))?$response->status:"";
         echo "#1 Status : ".$status;
         echo "<br>";
         $status = ($status == 0)?"paid":(

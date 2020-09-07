@@ -42,16 +42,18 @@ class NotificationsController extends Controller
         $dateOld = "2020-08-25 00:00:00";
       
         #Nicepay
-        // $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id')->toArray();
+        $paymeth    = Paymeth::where('parent_id','<=','5')->pluck('id')->toArray();
         #Not Nicepay
-        $paymeth    = Paymeth::where('parent_id','>=','5')->pluck('id')->toArray();
+        // $paymeth    = Paymeth::where('parent_id','>=','5')->pluck('id')->toArray();
         
         #Get DATA Transaksi yg belum kirim Email
-        $listTransaksi = Payment::select('id_transaksi','tgl_transaksi','email','id','id_parent')
-            ->where('status','!=','paid')
-            ->where('tgl_transaksi','<', $dateNow)
-            ->whereIn('id_payment_method',$paymeth)
-            ->orderBy('tgl_transaksi','ASC')
+        $listTransaksi = Payment::select('ra_payment_dua.id_transaksi','ra_payment_dua.tgl_transaksi','ra_payment_dua.email','ra_payment_dua.id','ra_payment_dua.id_parent','ra_payment_dua.nominal_bayar','np.txid','np.id_entitas')
+            ->join('ra_nicepaylog as np', 'np.id_transaksi', '=', 'ra_payment_dua.id_transaksi')
+            ->where('np.action','Registration')
+            ->where('ra_payment_dua.status','!=','paid')
+            ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)
+            ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
+            ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
             ->limit(150)
             ->get();
 
@@ -67,7 +69,7 @@ class NotificationsController extends Controller
                     echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
                     echo "<br><br></i>";    
 
-                    $this->testData($dataTransaksi);
+                    $this->CheckInquiry($dataTransaksi);
                 }else{
                     echo "<b>ID  : ".$dataTransaksi->id."";
                     echo "<br>";
@@ -224,9 +226,48 @@ class NotificationsController extends Controller
         //   echo "<br>ENDs";
     }
 
-    private function testData($transaksi){
+    private function CheckInquiry($transaksi){
         var_dump($transaksi['id_transaksi']);
-        dd($transaksi);
+        $timestamp      = date("YmdHis");
+        $referenceNo    = $transaksi['id_transaksi'];
+        $tXid           = $transaksi['tXid'];
+        $amt            = $transaksi['nominal_bayar'];
+
+        $payment    = Payment::where('id_transaksi',$referenceNo)->first();
+        $paymeth    = Paymeth::find($payment['id_payment_method']);
+        $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
+        $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
+
+        $nicepay = new Nicepay;
+
+        $merchantToken  = $nicepay->merchantToken($timestamp,$iMid,$referenceNo,$amt,$merKey);
+
+        $detailTrans = array(
+                "timeStamp"     =>$timestamp,
+                "tXid"          =>$tXid,
+                "iMid"          =>$iMid,
+                "referenceNo"   =>$referenceNo,
+                "amt"           =>$amt,
+                "merchantToken" =>$merchantToken
+            );
+        $detailTrans =json_encode($detailTrans);
+        
+        $transaksiAPI   = $nicepay->nicepayApi("nicepay/direct/v2/inquiry",$detailTrans); 
+        $response       = json_decode($transaksiAPI);
+        $msg            = $response->resultMsg;
+        
+        $nicepayLog    = new Nicepaylog;
+        $nicepayLog->id_order = $referenceNo;
+        $nicepayLog->txid     = $tXid;
+        $nicepayLog->request  = addslashes($detailTrans);
+        $nicepayLog->response = addslashes($transaksiAPI);
+        $nicepayLog->status   = addslashes($msg);
+        $nicepayLog->action   = "Inquiry";
+        $nicepayLog->id_entitas = $paymeth['id_entitas'];
+        $nicepayLog->save();
+
+        return $transaksiAPI;
     }
 
     public function dbProcess(Request $request){
@@ -367,20 +408,30 @@ class NotificationsController extends Controller
             if ($parent_id == 2 ) {
                 $title  = "Virtual Account :";
                 $number = (isset($req['vacctNo']))?$req['vacctNo']:"";
-              } elseif ($parent_id == 3) {
+            } elseif ($parent_id == 3) {
                 $title  = "Kode Pembayaran :";
                 $number = (isset($req['payNo']))?$req['payNo']:"";
-              } else{
+            } else{
                 $title = "No.Rekening :";
                 $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
-              }
+            }
 
             $hasil = Mail::send(
-                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
-                );
+                (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
+            );
         }
 
         if($payment){
+            if($payment->id_parent && $status == "paid"){
+                $paymentParent    = Payment::where('id',$payment->id_parent)->first();
+                $sisaParent = eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
+
+                $lunasState = ($sisaParent == 0)?'y':'n';
+                
+                $paymentParent->lunas = $lunasState;
+                $paymentParent->sisa_pembayaran = $sisaParent;
+                $paymentParent->save();    
+            }
             $payment->status = $status;
             $payment->save();
             $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");

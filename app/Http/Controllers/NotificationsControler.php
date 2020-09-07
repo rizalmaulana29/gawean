@@ -67,9 +67,13 @@ class NotificationsController extends Controller
                     echo "ID  : ".$dataTransaksi->id."";
                     echo "<br>";
                     echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
+                    echo "<br>";
+                    echo "TXid : ".$dataTransaksi->txid;
+                    echo "<br>";
+                    echo "ID Transaksi : ".$dataTransaksi->nominal_bayar;
                     echo "<br><br></i>";    
 
-                    $this->CheckInquiry($dataTransaksi);
+                    // $this->CheckInquiry($dataTransaksi);
                 }else{
                     echo "<b>ID  : ".$dataTransaksi->id."";
                     echo "<br>";
@@ -78,6 +82,10 @@ class NotificationsController extends Controller
                     echo "Tgl Transaksi : ".$dataTransaksi->tgl_transaksi;
                     echo "<br>";
                     echo "ID Parent : ".$dataTransaksi->id_parent;
+                    echo "<br>";
+                    echo "TXid : ".$dataTransaksi->txid;
+                    echo "<br>";
+                    echo "ID Transaksi : ".$dataTransaksi->nominal_bayar;
                     echo "<br><br></b>";
                 }
             }
@@ -227,7 +235,7 @@ class NotificationsController extends Controller
     }
 
     private function CheckInquiry($transaksi){
-        var_dump($transaksi['id_transaksi']);
+        // var_dump($transaksi['id_transaksi']);
         $timestamp      = date("YmdHis");
         $referenceNo    = $transaksi['id_transaksi'];
         $tXid           = $transaksi['tXid'];
@@ -427,7 +435,7 @@ class NotificationsController extends Controller
                 $sisaParent = eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
 
                 $lunasState = ($sisaParent == 0)?'y':'n';
-                
+
                 $paymentParent->lunas = $lunasState;
                 $paymentParent->sisa_pembayaran = $sisaParent;
                 $paymentParent->save();    

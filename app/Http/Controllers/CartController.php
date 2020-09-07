@@ -325,6 +325,7 @@ class CartController extends Controller
       $nicepayLog->action   = "Registration";
       $nicepayLog->id_entitas = $paymeth['id_entitas'];
       $nicepayLog->expired_at= $payment['expired_at'];
+      $nicepayLog->source_data= "fe";
       $nicepayLog->save();
       
       return $transaksiAPI;

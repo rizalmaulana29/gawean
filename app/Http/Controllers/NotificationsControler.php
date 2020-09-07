@@ -53,7 +53,7 @@ class NotificationsController extends Controller
             ->where('ra_payment_dua.status','=','checkout')
             ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)
             ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
-            ->orderBy('ra_payment_dua.tgl_transaksi','DESC')
+            ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
             ->limit(150)
             ->get();
 
@@ -62,197 +62,32 @@ class NotificationsController extends Controller
         if($tot > 0){
             foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
                 if(!$dataTransaksi->txid){continue;}
-
-                if($dataTransaksi->id_parent == "" || $dataTransaksi->id_parent == null){
-                    echo "<i>NULL PARENT";
-                    echo "<br>";
-                    echo "ID  : ".$dataTransaksi->id."";
-                    echo "<br>";
-                    echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
-                    echo "<br>";
-                    echo "TXid : ".$dataTransaksi->txid;
-                    echo "<br>";
-                    echo "Amount : ".$dataTransaksi->nominal_bayar;
-                    
-                    $result = $this->CheckInquiry($dataTransaksi);
-                    echo $result;
-                    echo "<br><br></i>";    
-                }else{
-                    echo "<b>ID  : ".$dataTransaksi->id."";
-                    echo "<br>";
-                    echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
-                    echo "<br>";
-                    echo "Tgl Transaksi : ".$dataTransaksi->tgl_transaksi;
-                    echo "<br>";
-                    echo "ID Parent : ".$dataTransaksi->id_parent;
-                    echo "<br>";
-                    echo "TXid : ".$dataTransaksi->txid;
-                    echo "<br>";
-                    echo "Amount : ".$dataTransaksi->nominal_bayar;
-                    
-                    $result = $this->CheckInquiry($dataTransaksi);
-                    echo $result;
-                    echo "<br><br></b>";
-                }
+                echo "ID  : ".$dataTransaksi->id."";
+                echo "<br>";
+                echo "ID Transaksi : ".$dataTransaksi->id_transaksi;
+                echo "<br>";
+                echo "TXid : ".$dataTransaksi->txid;
+                echo "<br>";
+                echo "Amount : ".$dataTransaksi->nominal_bayar;
+                
+                $result = $this->CheckInquiry($dataTransaksi);
+                echo $result;
+                echo "<br><br>";
             }
         }
+        echo "<br>ENDs";
 
-        
-        dd('stop');
-        //   # Loop Data list Email yg akan dikirimkan.
-        //   foreach ($listTransaksi as $key => $value) {
-        //       $transaksi = CorezTransaksi::select('corez_transaksi.*', 'corez_donatur.donatur', 'corez_donatur.email', 'corez_donatur.alamat', 'corez_donatur.npwp', 'corez_donatur.hp', 'setting_program.program', 'hcm_kantor.kantor', 'hcm_karyawan.karyawan', 'hcm_karyawan.hp as hpKaryawan')
-        //           ->join('corez_donatur', 'corez_donatur.id_donatur', '=', 'corez_transaksi.id_donatur')
-        //           ->join('setting_program', 'setting_program.id_program', '=', 'corez_transaksi.id_program')
-        //           ->leftJoin('hcm_kantor', 'hcm_kantor.id_kantor', '=', 'corez_transaksi.id_kantor_transaksi')
-        //           ->leftJoin('hcm_karyawan', 'hcm_karyawan.id_karyawan', '=', 'corez_transaksi.id_crm')
-        //           ->where(function($q) {
-        //                   $q->where('send_email', '=', '')
-        //                   ->orWhereNull('send_email');
-        //               })
-        //           ->where('corez_transaksi.id_donatur', $value->id_donatur)
-        //           ->where('corez_donatur.id_donatur', $value->id_donatur)
-        //           ->where('corez_transaksi.tgl_transaksi', $value->tgl_transaksi)
-        //           ->where('corez_transaksi.approved_transaksi','y')
-        //           ->get();
-              
-        //       echo "<h><b>".$value->id_donatur."</b></h4><br>";
-        //       echo "<h><b>".$value->tgl_transaksi."</b></h4><br>";
-  
-        //       if($value->id_donatur == '9999999999999'){
-        //           echo "Why Pandularas <br><br>";
-        //           foreach($transaksi as $keyUTransaksi => $valueUTransaksi){
-        //               echo "Id Donatur :".$valueUTransaksi->id_donatur."<br> On Date : ".$valueUTransaksi->tgl_transaksi."<br> Id Transaksi : ".$valueUTransaksi->id_transaksi."<br>";
-        //               CorezTransaksi::where('corez_transaksi.id_transaksi', $valueUTransaksi->id_transaksi)->where('corez_transaksi.detailid', $valueUTransaksi->detailid)->update(['send_email' => "off"]);
-        //           }
-        //       }
-        //       else{
-        //           if(count($transaksi)>0){
-        //               if($transaksi[0]->email){
-        //                   $total_transaksi = 0;
-        //                   $list_transaksi  = "";
-        //                   $listProgram = "";
-        //                   $listSumberDana = "";
-        //                   $programTransaksi = "";
-        //                   $listTglTransaksi = "";
-        //                   foreach($transaksi as $keyTransaksi => $valueTransaksi){
-        //                       $program = SettingProgram::select("id_program", "program","sumber_dana","setting_program.id_sumber_dana")
-        //                           ->leftJoin("setting_sumber_dana","setting_program.id_sumber_dana","=","setting_sumber_dana.id_sumber_dana")
-        //                           // ->where('aktif','y')
-        //                           ->where('id_program',$valueTransaksi->id_program)
-        //                           ->first();
-        //                       $ending = (count($transaksi) == $keyTransaksi+1)?"":"<br>";
-  
-        //                       $total_transaksi += $valueTransaksi->transaksi;
-        //                       $list_transaksi .= "Rp ".number_format($valueTransaksi->transaksi,2,",",".").$ending;
-        //                       $listProgram .= $program->program.$ending;
-        //                       $listSumberDana .= $program->sumber_dana.$ending;
-        //                       $programTransaksi .= $program->program." ".number_format($valueTransaksi->transaksi,2,",",".").'\n';
-        //                       $listTglTransaksi .= $valueTransaksi->tgl_transaksi.'\n';
-        //                   }
-  
-        //                   # URL to Download PDF
-        //                   $did = openssl_encrypt($value->id_donatur, "aes128", "JKH21315akdB7sdsI9",0,"xf8f78uZ9xH4S0Jn");
-        //                   $savePdf = "https://seuneu.rumahzakat.org/service/cetakTransaksi?id_donatur=".urlencode($did)."&tgl_transaksi=".$value->tgl_transaksi;
-                          
-        //                   # Data Notifikasi
-        //                   $data_notif = Array(
-        //                       "savePdf" => $savePdf,
-        //                       "email" => $transaksi[0]->email,
-        //                       "hp" => $transaksi[0]->hp,
-        //                       "donatur" => $transaksi[0]->donatur,
-        //                       "id_donatur" => $transaksi[0]->id_donatur,
-        //                       "transaksi" => number_format($total_transaksi,2,",","."),
-        //                       "list_transaksi" => $list_transaksi,
-        //                       "id_transaksi" => $transaksi[0]->id_transaksi,
-        //                       "program" => $listProgram,
-        //                       "programtransaksi" => $programTransaksi,
-        //                       "sumber_dana" => $listSumberDana,
-        //                       "tgl_donasi" => $transaksi[0]->tgl_donasi,
-        //                       "tgl_donasi_concat" => $listTglTransaksi,
-        //                       "tgl_transaksi" => $transaksi[0]->tgl_transaksi,
-        //                       "kantor"=> $transaksi[0]->kantor,
-        //                       "alamat"=> $transaksi[0]->alamat,
-        //                       // "nama_outlet"=> $this->GetViaHimpunDetail($dgTransaksiDetail[0]),
-        //                       // "data" =>$dgTransaksiDetail
-        //                   );
-  
-        //                   # Parameter untuk Queue Email
-        //                   $dataMsg = array(
-        //                       'token' => 'df9kXa8Hu2fa04p0z34LpH1FPHof',
-        //                       'email' => $transaksi[0]->email,
-        //                       // 'email' => "mrivan7799@gmail.com",
-        //                       'tipe'  => 'email',
-        //                       'jenis' => 'Notifikasi Transaksi',
-        //                       'i'     => 'id_EmailTrans',
-        //                       // "attachment"=> $pdf,
-        //                       'data'  => json_encode($data_notif)
-        //                   );
-  
-        //                   # CURL Send ke Queue
-        //                   $curl = curl_init();
-                  
-        //                   curl_setopt_array($curl, array(
-        //                       CURLOPT_SSL_VERIFYPEER => false,
-        //                       CURLOPT_URL => "https://api.rumahzakat.org/service/sent-email",
-        //                       CURLOPT_RETURNTRANSFER => true,
-        //                       CURLOPT_ENCODING => "",
-        //                       CURLOPT_MAXREDIRS => 10,
-        //                       CURLOPT_TIMEOUT => 100000,
-        //                       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //                       CURLOPT_CUSTOMREQUEST => "POST",
-        //                       CURLOPT_POSTFIELDS => $dataMsg,
-        //                       CURLOPT_HTTPHEADER => array(
-        //                           "Content-Type: multipart/form-data" 
-        //                       ),
-        //                   ));
-        //                   $response = curl_exec($curl);
-        //                   $err = curl_error($curl);
-                  
-        //                   curl_close($curl);
-                  
-        //                   if ($err) {
-        //                           echo "cURL Error #:" . $err;
-        //                   } 
-        //                   else {
-        //                       foreach($transaksi as $keyUTransaksi => $valueUTransaksi){
-        //                           echo "Id Donatur :".$valueUTransaksi->id_donatur."<br> On Date : ".$valueUTransaksi->tgl_transaksi."<br> Id Transaksi : ".$valueUTransaksi->id_transaksi."<br>";
-        //                           echo $transaksi[0]->email." - ".$response;
-        //                           CorezTransaksi::where('corez_transaksi.id_transaksi', $valueUTransaksi->id_transaksi)->where('corez_transaksi.detailid', $valueUTransaksi->detailid)->update(['send_email' => $valueUTransaksi->email]);
-        //                       }
-        //                   }
-        //               }
-        //               else{
-        //                   foreach($transaksi as $keyUTransaksi => $valueUTransaksi){
-        //                       echo "Id Donatur :".$valueUTransaksi->id_donatur."<br> On Date : ".$valueUTransaksi->tgl_transaksi."<br> Id Transaksi : ".$valueUTransaksi->id_transaksi."<br>";
-        //                       CorezTransaksi::where('corez_transaksi.id_transaksi', $valueUTransaksi->id_transaksi)->where('corez_transaksi.detailid', $valueUTransaksi->detailid)->update(['send_email' => "no email"]);
-        //                   }
-        //                   echo "No EMAIL for Id Donatur :".$value->id_donatur."<br> On Date : ".$value->tgl_transaksi;
-        //               }
-        //           }
-        //           else{
-        //               echo "No Transaksi Found for Id Donatur :".$value->id_donatur."<br> On Date : ".$value->tgl_transaksi;
-        //           }
-        //           echo "<br><br>";
-        //       }
-              
-        //   }
-        //   echo "<br>ENDs";
     }
 
     private function CheckInquiry($transaksi){
-        // var_dump($transaksi['id_transaksi']);
         $timestamp      = date("YmdHis");
         $referenceNo    = $transaksi['id_transaksi'];
         $tXid           = $transaksi['txid'];
         $amt            = $transaksi['nominal_bayar'];
 
-        // echo " ".$referenceNo." ".$tXid ." ".$amt." ";
-        // echo "<br>";
         
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
-        // $paymeth    = Paymeth::find($payment['id_payment_method']);
-        // $paymeth['id_entitas']
+        
         $merData    = AdminEntitas::where('id_entitas',$transaksi['id_entitas'])->first();
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
@@ -277,8 +112,6 @@ class NotificationsController extends Controller
         $msg    = "";
 
         $status	        = (isset($response->status))?$response->status:"";
-        // echo "#1 Status : ".$status;
-        // echo "<br>";
         $status = ($status == 0)?"paid":(
             ($status == 1)?"failed":(
                 ($status == 2)?"void":(
@@ -309,17 +142,18 @@ class NotificationsController extends Controller
                 $paymentParent  = Payment::where('id',$payment->id_parent)->first();
                 $lunasState     = "y";
                 $paymentParent->lunas = $lunasState;
+                $paymentParent->nominal_bayar = $paymentParent->nominal_total;
                 $paymentParent->save();   
                 
                 $payment->status = $status;
                 $payment->save();
-                $msg .= "Status Pembayaran : ".$status."<br>";
+                $msg .= "Status Pembayaran : ".$status."<br><b>ID PARENT : ".$payment->id_parent."</b> <br>";
                 return $msg;
             }
             else{
                 $payment->status = $status;
                 $payment->save();
-                $msg .= "Status Pembayaran : ".$status."<br>";
+                $msg .= "Status Pembayaran : ".$status."<br><b>NULL PARENT</b> <br>";
                 return $msg;
             }
         }else{
@@ -367,17 +201,6 @@ class NotificationsController extends Controller
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
-
-        // echo "referenceNo : ".$referenceNo."<br>";
-        // echo "id_payment_method : ".$payment['id_payment_method']."<br>";
-        // echo "id_entitas : ".$paymeth['id_entitas']."<br>";
-        // echo "IMID : ".$iMid."<br>";
-        // echo "referenceNo : ".$referenceNo."<br>";
-        // echo "amt : ".$amt."<br>";
-        // echo "merKey : ".$merKey."<br>";
-        
-        // echo "<br>merchantToken : <br>".$merchantToken."<br>";
-        // echo "merchantTokenComparator : <br>".$merchantTokenComparator."<br>";
         
         if($merchantTokenComparator != $merchantToken){
             return response()->json([

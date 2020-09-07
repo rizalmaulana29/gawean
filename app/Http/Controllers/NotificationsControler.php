@@ -48,7 +48,7 @@ class NotificationsController extends Controller
         
         #Get DATA Transaksi yg belum kirim Email
         $listTransaksi = Payment::select('ra_payment_dua.id_transaksi','ra_payment_dua.tgl_transaksi','ra_payment_dua.email','ra_payment_dua.id','ra_payment_dua.id_parent','ra_payment_dua.nominal_bayar','np.txid','np.id_entitas')
-            ->join('ra_nicepaylog as np', 'np.id_transaksi', '=', 'ra_payment_dua.id_transaksi')
+            ->join('ra_nicepaylog as np', 'np.id_order', '=', 'ra_payment_dua.id_transaksi')
             ->where('np.action','Registration')
             ->where('ra_payment_dua.status','!=','paid')
             ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)

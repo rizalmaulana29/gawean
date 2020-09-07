@@ -430,15 +430,19 @@ class NotificationsController extends Controller
         }
 
         if($payment){
-            echo $payment->id_parent;
+
             if($payment->id_parent && $status == "paid"){
                 echo "Parent ID : ".$payment->id_parent;
+                echo "<br>";
                 $paymentParent    = Payment::where('id',$payment->id_parent)->first();
 
                 echo "Sisa Bayar Awal : ".$payment->sisa_pembayaran;
+                echo "<br>";
                 echo "Pembayaran : ".$paymentParent->nominal_bayar;
-                echo "Sisa Bayar Akhir: ".eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
-                // $sisaParent = eval($payment->sisa_pembayaran - $paymentParent->nominal_bayar);
+                echo "<br>";
+                $sisaParent = $payment->sisa_pembayaran - $paymentParent->nominal_bayar;
+                echo "Sisa Bayar Akhir: ".$sisaParent;
+                echo "<br>";
 
                 // $lunasState = ($sisaParent == 0)?'y':'n';
 

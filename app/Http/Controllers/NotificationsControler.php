@@ -53,7 +53,7 @@ class NotificationsController extends Controller
             ->where('ra_payment_dua.status','!=','paid')
             ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)
             ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
-            ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
+            ->orderBy('ra_payment_dua.tgl_transaksi','DESC')
             ->limit(150)
             ->get();
 
@@ -61,6 +61,7 @@ class NotificationsController extends Controller
         echo "Total Trans : ".$tot."<br><br>";
         if($tot > 0){
             foreach($listTransaksi as $keyTransaksi => $dataTransaksi){
+                if(!$dataTransaksi->txid){continue;}
                 if($dataTransaksi->id_parent == "" || $dataTransaksi->id_parent == null){
                     echo "<i>NULL PARENT";
                     echo "<br>";
@@ -73,7 +74,7 @@ class NotificationsController extends Controller
                     echo "Amount : ".$dataTransaksi->nominal_bayar;
                     echo "<br><br></i>";    
 
-                    // $this->CheckInquiry($dataTransaksi);
+                    $this->CheckInquiry($dataTransaksi);
                 }else{
                     echo "<b>ID  : ".$dataTransaksi->id."";
                     echo "<br>";

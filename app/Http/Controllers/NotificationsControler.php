@@ -69,6 +69,7 @@ class NotificationsController extends Controller
                 echo "TXid : ".$dataTransaksi->txid;
                 echo "<br>";
                 echo "Amount : ".$dataTransaksi->nominal_bayar;
+                echo "<br>";
                 
                 $result = $this->CheckInquiry($dataTransaksi);
                 echo $result;

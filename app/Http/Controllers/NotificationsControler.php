@@ -244,11 +244,12 @@ class NotificationsController extends Controller
         // var_dump($transaksi['id_transaksi']);
         $timestamp      = date("YmdHis");
         $referenceNo    = $transaksi['id_transaksi'];
-        $tXid           = $transaksi['tXid'];
+        $tXid           = $transaksi['txid'];
         $amt            = $transaksi['nominal_bayar'];
         $id_parent      = $transaksi['id_parent'];
 
-        echo $referenceNo." ".$tXid ." ".$amt." ";
+        echo " ".$referenceNo." ".$tXid ." ".$amt." ";
+        echo "<br>";
         
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
@@ -274,20 +275,27 @@ class NotificationsController extends Controller
         $response       = json_decode($transaksiAPI);
         $msg            = $response->resultMsg;
         
-        // $status	        = (isset($req['status']))?$req['status']:"";
-        // $status = ($status == 0)?"paid":(
-        //     ($status == 1)?"failed":(
-        //         ($status == 2)?"void":(
-        //             ($status == 3)?"unpaid":(
-        //                 ($status == 4)?"expired":(
-        //                     ($status == 5)?"readyToPaid":(
-        //                         ($status == 9)?"Initialization / Reversal":"What method?"
-        //                     )
-        //                 )
-        //             )
-        //         )
-        //     )
-        // );
+        $status	        = (isset($req['status']))?$req['status']:"";
+        echo "#1 Status : ".$status;
+        echo "<br>";
+        $status = ($status == 0)?"paid":(
+            ($status == 1)?"failed":(
+                ($status == 2)?"void":(
+                    ($status == 3)?"unpaid":(
+                        ($status == 4)?"expired":(
+                            ($status == 5)?"readyToPaid":(
+                                ($status == 9)?"Initialization / Reversal":"What method?"
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        echo "Message : ".$msg;
+        echo "<br>";
+        echo "Status : ".$status;
+        echo "<br>";
 
         // if($payment->id_parent && $status == "paid"){
             // $paymentParent    = Payment::where('id',$payment->id_parent)->first();

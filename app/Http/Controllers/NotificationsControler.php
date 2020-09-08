@@ -53,8 +53,7 @@ class NotificationsController extends Controller
             ->where('ra_payment_dua.status','=','checkout')
             ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)
             ->where(function($q) {
-                $q->where('np.txid', '!=', '')
-                ->orWhereNotNull('np.txid');
+                $q->where('np.txid', '!=', '');
             })
             ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
             ->orderBy('ra_payment_dua.tgl_transaksi','ASC')

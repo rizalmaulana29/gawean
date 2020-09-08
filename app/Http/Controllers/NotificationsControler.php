@@ -52,6 +52,10 @@ class NotificationsController extends Controller
             ->where('np.action','Registration')
             ->where('ra_payment_dua.status','=','checkout')
             ->where('ra_payment_dua.tgl_transaksi','<', $dateNow)
+            ->where(function($q) {
+                $q->where('np.txid', '!=', '')
+                ->orWhereNotNull('np.txid');
+            })
             ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
             ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
             ->limit(150)
@@ -70,7 +74,7 @@ class NotificationsController extends Controller
                 echo "<br>";
                 echo "Amount : ".$dataTransaksi->nominal_bayar;
                 echo "<br>";
-                
+
                 $result = $this->CheckInquiry($dataTransaksi);
                 echo $result;
                 echo "<br><br>";

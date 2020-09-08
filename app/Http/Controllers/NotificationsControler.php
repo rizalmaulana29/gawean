@@ -59,9 +59,9 @@ class NotificationsController extends Controller
             ->whereIn('ra_payment_dua.id_payment_method',$paymeth)
             ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
             ->limit(150)
-            ->toSql();
+            ->get();
 
-        dd($listTransaksi);
+        // dd($listTransaksi);
 
         $tot = count($listTransaksi);
         echo "Total Trans : ".$tot."<br><br>";

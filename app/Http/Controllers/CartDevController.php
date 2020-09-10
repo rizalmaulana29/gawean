@@ -367,7 +367,7 @@ class CartDevController extends Controller
     }
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
-    $url='http://116.203.92.59/api/async_send_message';
+    $url='http://116.203.92.59/api/send_message';
     $data = array(
                   "phone_no"=> $nohp,
                   "key"   =>$key,

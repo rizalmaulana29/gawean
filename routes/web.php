@@ -21,6 +21,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
+	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
 	
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);

@@ -19,6 +19,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('harga', 	['uses' =>'HargaController@show']);
 	$router->get('code',	['uses' =>'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
+
+	$router->post('cart', 	['uses' => 'CartDevController@cart']);
 	
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);

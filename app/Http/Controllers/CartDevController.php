@@ -372,7 +372,7 @@ class CartDevController extends Controller
                   "phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-                                "Assalamu'alaikum".' '. $nama', 🌟😍
+                                "Assalamu'alaikum".' '.$nama.', 🌟😍
                                 Ini adalah tagihan transaksi anda
                                 ----------------------
 

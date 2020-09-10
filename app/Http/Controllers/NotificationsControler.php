@@ -469,7 +469,7 @@ class NotificationsController extends Controller
     }
 
     else {
-        $nohp = $request->input('hp');
+        $nohp = $hp;
     }
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
@@ -489,7 +489,7 @@ class NotificationsController extends Controller
                                 Total Pembayaran : IDR '.number_format($transdata['nominal_total']).'
 
                                 Pembayaran dilakukan :
-                                
+
                                 - Via : '.$title.'
                                 - Account Number : '.$number.'
 

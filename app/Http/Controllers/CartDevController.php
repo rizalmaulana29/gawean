@@ -357,13 +357,13 @@ class CartDevController extends Controller
     // return response()->download($path, $imageName, $header);
   }
 
-  public function sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title){
+  private function sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title){
     if (substr($hp),0,1) == 0) {
       $nohp = str_replace('0','+62',$hp);
     }
 
     else {
-        $nohp = $request->input('hp');
+        $nohp = $hp;
     }
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';

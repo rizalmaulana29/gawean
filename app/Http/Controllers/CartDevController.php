@@ -168,10 +168,10 @@ class CartDevController extends Controller
       $hp = $request->input('hp');
       $parent_id = $request->input('parent_id');
 
-      // $hasil = Mail::send(
-      //       (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
-      //   );
-      $hasil = $this->sendWa($transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title);
+      $hasil = Mail::send(
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
+        );
+      $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title);
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
       if($np){
@@ -357,9 +357,9 @@ class CartDevController extends Controller
     // return response()->download($path, $imageName, $header);
   }
 
-  public function sendWa(Request $request){
-    if (substr($request->input('hp'),0,1) == 0) {
-      $nohp = str_replace('0','+62',$request->input('hp'));
+  public function sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title){
+    if (substr($hp),0,1) == 0) {
+      $nohp = str_replace('0','+62',$hp);
     }
 
     else {
@@ -371,7 +371,32 @@ class CartDevController extends Controller
     $data = array(
                   "phone_no"=> $nohp,
                   "key"   =>$key,
-                  "message" =>'test WA RA'.$request->input('nama').' '.$request->input('alamat').' '.$request->input('email')
+                  "message" =>
+                                "Assalamu'alaikum".' '. $nama', 🌟😍
+                                Ini adalah tagihan transaksi anda
+                                ----------------------
+
+                                🔔Berikut adalah tagihan anda untuk order yang anda lakukan di Rumah aqiqah pada tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).' .
+
+                                Dengan detail order sebagai berikut:
+                                Order ID : '.$transdata->id_transaksi.'
+                                Nama : '.$nama.'
+                                No. Hp : '.$hp.'
+                                Total Tagihan : IDR '.number_format($transdata['nominal_total']).'
+
+                                Silahkan melakukan pembayaran paling lambat 24 jam dari sekarang, atau transaksi akan di anggap gagal.
+
+                                Lakukan Pembayaran ke:
+                                - Via : '.$title.'
+                                - Account Number : '.$number.'
+
+                                Butuh bantuan? Silahkan klik wa.me/6281370071330
+                                Ingat Order ID Anda saat menghubungi Customer Care.
+
+                                Terima kasih telah memilih rumahaqiqah.co.id
+
+                                Salam,
+                                rumahaqiqah.co.id'
                 );
     $data_string = json_encode($data);
 

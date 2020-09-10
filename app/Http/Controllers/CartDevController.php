@@ -368,35 +368,38 @@ class CartDevController extends Controller
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
     $url='http://116.203.92.59/api/async_send_message';
-    $data = array(
-                  "phone_no"=> $nohp,
+
+    $data = array("phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-                                "Assalamu'alaikum".' '.$nama.', 🌟😍
-                                Ini adalah tagihan transaksi anda
-                                ----------------------
+"Assalamu'alaikum".' '.$nama.', 🌟😍
+Ini adalah tagihan transaksi anda
+----------------------
 
-                                🔔Berikut adalah tagihan anda untuk order yang anda lakukan di Rumah aqiqah pada tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).' .
+🔔Berikut adalah tagihan anda untuk order yang anda lakukan di Rumah aqiqah
+pada tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).' .
 
-                                Dengan detail order sebagai berikut:
-                                Order ID : '.$transdata->id_transaksi.'
-                                Nama : '.$nama.'
-                                No. Hp : '.$hp.'
-                                Total Tagihan : IDR '.number_format($transdata['nominal_total']).'
+Dengan detail order sebagai berikut:
+ Order ID      : '.$transdata->id_transaksi.'
+ Nama          : '.$nama.'
+ No. Hp        : '.$hp.'
+ Total Tagihan : IDR '.number_format($transdata['nominal_total']).'
 
-                                Silahkan melakukan pembayaran paling lambat 24 jam dari sekarang, atau transaksi akan di anggap gagal.
+Silahkan melakukan pembayaran paling lambat 24 jam dari sekarang,
+atau transaksi anda akan di anggap gagal.
 
-                                Lakukan Pembayaran ke:
-                                - Via : '.$title.'
-                                - Account Number : '.$number.'
+Lakukan Pembayaran ke:
+ - Via : '.$title.'
+ - Account Number : '.$number.'
 
-                                Butuh bantuan? Silahkan klik wa.me/6281370071330
-                                Ingat Order ID Anda saat menghubungi Customer Care.
+Butuh bantuan? Silahkan klik wa.me/6281370071330
+Ingat Order ID Anda saat menghubungi Customer Care.
 
-                                Terima kasih telah memilih rumahaqiqah.co.id
+Terima kasih telah memilih rumahaqiqah.co.id
 
-                                Salam,
-                                rumahaqiqah.co.id'
+Salam,
+rumahaqiqah.co.id'
+
                 );
     $data_string = json_encode($data);
 
@@ -413,7 +416,7 @@ class CartDevController extends Controller
       'Content-Type: application/json',
       'Content-Length: ' . strlen($data_string))
     );
-    echo $res=curl_exec($ch);
+    // echo $res=curl_exec($ch);
     curl_close($ch);
   }
 

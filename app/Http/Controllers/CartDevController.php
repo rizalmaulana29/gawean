@@ -372,33 +372,33 @@ class CartDevController extends Controller
     $data = array("phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-"Assalamu'alaikum".' '.$nama.', 🌟😍
-Ini adalah tagihan transaksi anda
-----------------------
+                  "Assalamu'alaikum".' '.$nama.', 🌟😍'
+                  .'\\n'.' Ini adalah tagihan transaksi anda'
+                  .'\\n'.'----------------------'
+                  .'\\n'
+                  .'\\n'.'🔔Berikut adalah tagihan anda untuk order yang anda lakukan di Rumah aqiqah'
+                  .'\\n'.'pada tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
 
-🔔Berikut adalah tagihan anda untuk order yang anda lakukan di Rumah aqiqah
-pada tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).' .
-
-Dengan detail order sebagai berikut:
- Order ID      : '.$transdata->id_transaksi.'
- Nama          : '.$nama.'
- No. Hp        : '.$hp.'
- Total Tagihan : IDR '.number_format($transdata['nominal_total']).'
-
-Silahkan melakukan pembayaran paling lambat 24 jam dari sekarang,
-atau transaksi anda akan di anggap gagal.
-
-Lakukan Pembayaran ke:
- - Via : '.$title.'
- - Account Number : '.$number.'
-
-Butuh bantuan? Silahkan klik wa.me/6281370071330
-Ingat Order ID Anda saat menghubungi Customer Care.
-
-Terima kasih telah memilih rumahaqiqah.co.id
-
-Salam,
-rumahaqiqah.co.id'
+                  \\n'.'Dengan detail order sebagai berikut:'
+                  .'\\n'.' Order ID      : '.$transdata->id_transaksi.'
+                  \\n'.' Nama          : '.$nama.'
+                  \\n'.' No. Hp        : '.$hp.'
+                  \\n'.'Total Tagihan : IDR '.number_format($transdata['nominal_total']).'
+                  \\n'
+                  .'\\n'.'Silahkan melakukan pembayaran paling lambat 24 jam dari sekarang,'
+                  .'\\n'.'atau transaksi anda akan di anggap gagal.'
+                  .'\\n'.'
+                  \\n'.'Lakukan Pembayaran ke:'
+                   .'\\n'.'- Via : '.$title.'
+                   \\n'.'- Account Number : '.$number.'
+                   \\n'.'
+                  \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330'
+                  .'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'
+                  .'\\n'.'
+                  \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'
+                  .'\\n'.'
+                  \\n'.'Salam,
+                  \\n'.'rumahaqiqah.co.id'
 
                 );
     $data_string = json_encode($data);

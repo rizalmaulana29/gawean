@@ -392,4 +392,32 @@ class CartDevController extends Controller
     curl_close($ch);
   }
 
+  public function checkNumber(Request $request){
+
+    $phone_no = $request->input('hp');
+    $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
+    $url='http://116.203.92.59/api/check_number';
+    $data = array(
+      "phone_no" =>$phone_no,
+      "key"    =>$key
+    );
+    $data_string = json_encode($data);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data_string))
+    );
+    echo $res=curl_exec($ch);
+    curl_close($ch);
+  }
+
 }

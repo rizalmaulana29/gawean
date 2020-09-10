@@ -359,7 +359,7 @@ class CartDevController extends Controller
 
   public function sendWa(Request $request){
     if (substr($request->input('hp'),0,1) == 0) {
-      $nohp = str_replace('0','+62',$hp);
+      $nohp = str_replace('0','+62',$request->input('hp'));
     }
 
     else {

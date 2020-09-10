@@ -306,6 +306,8 @@ class NotificationsController extends Controller
             $hasil = Mail::send(
                 (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
             );
+
+            $hasil = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
         }
 
         if($payment){
@@ -459,5 +461,63 @@ class NotificationsController extends Controller
       
         return $randomString; 
     }
+
+
+    public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title){
+    if (substr($hp),0,1) == 0) {
+      $nohp = str_replace('0','+62',$hp);
+    }
+
+    else {
+        $nohp = $request->input('hp');
+    }
+
+    $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
+    $url='http://116.203.92.59/api/async_send_message';
+    $data = array(
+                  "phone_no"=> $nohp,
+                  "key"   =>$key,
+                  "message" =>
+                                "Assalamu'alaikum".' '. $nama', 🌟😍
+                                Terima kasih atas pembayaran anda 😍😍😍
+                                ----------------------
+
+                                Dengan detail pembayaran order sebagai berikut:
+                                Order ID : '.$transdata->id_transaksi.'
+                                Nama : '.$nama.'
+                                No. Hp : '.$hp.'
+                                Total Pembayaran : IDR '.number_format($transdata['nominal_total']).'
+
+                                Pembayaran dilakukan :
+                                
+                                - Via : '.$title.'
+                                - Account Number : '.$number.'
+
+                                Butuh bantuan? Silahkan klik wa.me/6281370071330
+                                Ingat Order ID Anda saat menghubungi Customer Care.
+
+                                Terima kasih telah memilih rumahaqiqah.co.id
+
+                                Salam,
+                                rumahaqiqah.co.id'
+                );
+    $data_string = json_encode($data);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($data_string))
+    );
+    echo $res=curl_exec($ch);
+    curl_close($ch);
+  }
 
 }

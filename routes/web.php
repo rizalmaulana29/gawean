@@ -22,7 +22,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
-	$router->get('check/number', 	['uses' => 'CartDevController@checkNumber']);
+	$router->post('check/number', 	['uses' => 'CartDevController@checkNumber']);
 	
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);

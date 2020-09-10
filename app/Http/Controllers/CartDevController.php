@@ -395,6 +395,7 @@ class CartDevController extends Controller
   public function checkNumber(Request $request){
 
     $phone_no = $request->input('hp');
+    dd($phone_no);
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
     $url='http://116.203.92.59/api/check_number';
     $data = array(

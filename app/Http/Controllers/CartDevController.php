@@ -357,13 +357,13 @@ class CartDevController extends Controller
     // return response()->download($path, $imageName, $header);
   }
 
-  private function sendWa($nama, $alamat, $email,$hp){
-    if (substr($hp,0,1) == 0) {
+  private function sendWa(Request $request){
+    if (substr($request->input('hp'),0,1) == 0) {
       $nohp = str_replace('0','+62',$hp);
     }
 
     else {
-        $nohp = $hp;
+        $nohp = $request->input('hp');
     }
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
@@ -371,7 +371,7 @@ class CartDevController extends Controller
     $data = array(
                   "phone_no"=> $nohp,
                   "key"   =>$key,
-                  "message" =>'test WA RA'.$nama.' '.$alamat.' '.$email
+                  "message" =>'test WA RA'.$request->input('nama').' '.$request->input('alamat').' '.$request->input('email')
                 );
     $data_string = json_encode($data);
 

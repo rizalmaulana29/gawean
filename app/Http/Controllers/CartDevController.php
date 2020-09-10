@@ -358,7 +358,7 @@ class CartDevController extends Controller
   }
 
   private function sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title){
-    if (substr($hp),0,1) == 0) {
+    if (substr($hp,0,1) == 0) {
       $nohp = str_replace('0','+62',$hp);
     }
 

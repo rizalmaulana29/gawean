@@ -473,7 +473,7 @@ class NotificationsController extends Controller
     }
 
     $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
-                 ->where('id', $transdata->id_payment_method)
+                 ->where('id', $payment->id_payment_method)
                  ->first();
 
     if ($bankRek->keterangan == "cash") {
@@ -493,10 +493,10 @@ class NotificationsController extends Controller
                                 .'\\n'.'-----------------------------------------'
                                 .'\\n'
                                 .'\\n'.'Dengan detail pembayaran order sebagai berikut:'
-                                .'\\n'.'Order ID : '.$transdata->id_transaksi.'
+                                .'\\n'.'Order ID : '.$payment->id_transaksi.'
                                 \\n'.'Nama : '.$nama.'
                                 \\n'.'No. Hp : '.$hp.'
-                                \\n'.'Total Pembayaran : IDR '.number_format($transdata['nominal_total']).'
+                                \\n'.'Total Pembayaran : IDR '.number_format($payment['nominal_total']).'
                                 \\n'.'
                                 \\n'.'Pembayaran dilakukan :'
                                 .'\\n'.
@@ -504,7 +504,7 @@ class NotificationsController extends Controller
                                 \\n'.'- Kode Pembayaran : '.$number.'
                                 \\n'.'
                                 \\n'.'Untuk check pesanan anda silahkan klik link berikut :'.'
-                                \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$transdata->id_transaksi.'
+                                \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$payment->id_transaksi.'
                                 \\n'.'
                                 \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330
                                 '.'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.

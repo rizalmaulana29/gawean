@@ -307,7 +307,7 @@ class NotificationsController extends Controller
                 (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
             );
 
-            $hasil = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
+            $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
         }
 
         if($payment){

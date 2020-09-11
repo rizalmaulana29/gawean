@@ -498,9 +498,9 @@ class NotificationsController extends Controller
                                 \\n'.'No. Hp : '.$hp.'
                                 \\n'.'Total Pembayaran : IDR '.number_format($payment['nominal_total']).'
                                 \\n'.'
-                                \\n'.'Pembayaran dilakukan :'
+                                \\n'.'Pembayaran dilakukan melalui:'
                                 .'\\n'.
-                                '\\n'.'- '.$title.$rek.'
+                                '\\n'.'- '.$rek.'
                                 \\n'.'- Kode Pembayaran : '.$number.'
                                 \\n'.'
                                 \\n'.'Untuk check pesanan anda silahkan klik link berikut :'.'

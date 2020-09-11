@@ -411,7 +411,7 @@ class CartDevController extends Controller
                   .'\\n'.'atau transaksi anda akan di anggap gagal.'
                   .'\\n'.'
                   \\n'.'Lakukan Pembayaran ke:'
-                   .'\\n'.'- '.$title.$rek.'
+                   .'\\n'.'- '.$rek.'
                    \\n'.'- Kode pembayaran : '.$number.'
                    \\n'.'
                   \\n'.'Untuk Panduan Bayar Klik Link Berikut'.'

@@ -509,7 +509,7 @@ class NotificationsController extends Controller
                                 \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330
                                 '.'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.
                                 '.'\\n'.
-                                .'\\n'.'Terima kasih telah memilih rumahaqiqah.co.id
+                                '\\n'.'Terima kasih telah memilih rumahaqiqah.co.id
                                 '.'\\n'.
                                 '\\n'.'Salam,
                                 '.'\\n'.'rumahaqiqah.co.id'

@@ -91,7 +91,6 @@ class NotificationsController extends Controller
         $tXid           = $transaksi['txid'];
         $amt            = $transaksi['nominal_bayar'];
 
-        
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         $paymeth    = Paymeth::find($payment['id_payment_method']);
         
@@ -145,30 +144,33 @@ class NotificationsController extends Controller
             $nicepayLog->source_data = "fe";
             $nicepayLog->save();
 
-            $orderdata  = Order::where('id_order',$referenceNo)->get();
-            $to_address = trim($payment['email']);
-            $nama       = $payment['nama_customer'];
-            $alamat     = $payment['alamat'];
-            $email      = trim($payment['email']); 
-            $hp         = $payment['hp'];
-            $parent_id  = $paymeth['parent_id'];
-            
-            if ($parent_id == 2 ) {
-                $title  = "Virtual Account :";
-                $number = (isset($req['vacctNo']))?$req['vacctNo']:"";
-            } elseif ($parent_id == 3) {
-                $title  = "Kode Pembayaran :";
-                $number = (isset($req['payNo']))?$req['payNo']:"";
-            } else{
-                $title = "No.Rekening :";
-                $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+            if($status == "paid"){
+                $orderdata  = Order::where('id_order',$referenceNo)->get();
+                $to_address = trim($payment['email']);
+                $nama       = $payment['nama_customer'];
+                $alamat     = $payment['alamat'];
+                $email      = trim($payment['email']); 
+                $hp         = $payment['hp'];
+                $parent_id  = $paymeth['parent_id'];
+                
+                if ($parent_id == 2 ) {
+                    $title  = "Virtual Account :";
+                    $number = (isset($req['vacctNo']))?$req['vacctNo']:"";
+                } elseif ($parent_id == 3) {
+                    $title  = "Kode Pembayaran :";
+                    $number = (isset($req['payNo']))?$req['payNo']:"";
+                } else{
+                    $title = "No.Rekening :";
+                    // $number = DB::table('ra_bank_rek')->where('id_payment_method',$payment['id_payment_method'])->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+                    $number = $paymeth['id_rekening'];
+                }
+
+                $hasil = Mail::send(
+                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
+                );
+
+                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
             }
-
-            $hasil = Mail::send(
-                (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
-            );
-
-            $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
 
             if($payment->id_parent){
                 $paymentParent  = Payment::where('id',$payment->id_parent)->first();
@@ -326,7 +328,8 @@ class NotificationsController extends Controller
                 $number = (isset($req['payNo']))?$req['payNo']:"";
             } else{
                 $title = "No.Rekening :";
-                $number = DB::table('ra_bank_rek')->where('id_payment_method',$request->input('id_payment'))->where('id_kantor',$request->input('id_kantor'))->value('id_rekening');
+                // $number = DB::table('ra_bank_rek')->where('id_payment_method',$payment['id_payment_method'])->where('id_entitas',$request->input('id_kantor'))->value('id_rekening');
+                $number = $paymeth['id_rekening'];
             }
 
             $hasil = Mail::send(

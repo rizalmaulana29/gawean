@@ -370,7 +370,7 @@ class CartDevController extends Controller
                  ->where('id', $transdata->id_payment_method)
                  ->first();
 
-    $link = DB::table('ra_payment_methode')
+    $link = DB::table('ra_payment_method')
                  ->where('id', $bankRek->id_payment_method)
                  ->value('url_bayar');
 

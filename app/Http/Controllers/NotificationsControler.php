@@ -464,7 +464,7 @@ class NotificationsController extends Controller
 
 
     public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title){
-    if ((substr($hp),0,1) == 0) {
+    if (substr($hp,0,1) == 0) {
       $nohp = str_replace('0','+62',$hp);
     }
 

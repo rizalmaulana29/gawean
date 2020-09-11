@@ -488,7 +488,7 @@ class NotificationsController extends Controller
                   "phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-                                "Assalamu'alaikum".' '. $nama', 🌟😍'
+                                "Assalamu'alaikum".' '. $nama.', 🌟😍'
                                 .'\\n'.'Terima kasih atas pembayaran anda 😍😍😍'
                                 .'\\n'.'-----------------------------------------'
                                 .'\\n'

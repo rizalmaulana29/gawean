@@ -366,6 +366,28 @@ class CartDevController extends Controller
         $nohp = $hp;
     }
 
+    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
+                 ->where('id', $transdata->id_payment_method)
+                 ->first();
+
+    $link = DB::table('ra_payment_methode')
+                 ->where('id', $bankRek->id_payment_method)
+                 ->value('url_bayar');
+
+    if ($link == null || $link == ' ') {
+      $link = " ";
+    } else {
+      $link = $link;
+    }
+    
+
+    if ($bankRek->keterangan == "cash") {
+      $rek = $bankRek->keterangan;
+    } else {
+      $rek = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+    }
+    
+
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
     $url='http://116.203.92.59/api/async_send_message';
 
@@ -389,9 +411,12 @@ class CartDevController extends Controller
                   .'\\n'.'atau transaksi anda akan di anggap gagal.'
                   .'\\n'.'
                   \\n'.'Lakukan Pembayaran ke:'
-                   .'\\n'.'- Via : '.$title.'
-                   \\n'.'- Account Number : '.$number.'
+                   .'\\n'.'- '.$title.$rek.'
+                   \\n'.'- Kode pembayaran : '.$number.'
                    \\n'.'
+                  \\n'.'Untuk Panduan Bayar Klik Link Berikut'.'
+                  \\n'.$link.'
+                  \\n'.'
                   \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330'
                   .'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'
                   .'\\n'.'
@@ -445,7 +470,14 @@ class CartDevController extends Controller
       'Content-Type: application/json',
       'Content-Length: ' . strlen($data_string))
     );
-    echo $res=curl_exec($ch);
+    $res=curl_exec($ch);
+
+    if ($res == 'exist') {
+      echo "Valid";
+    } else {
+      echo "not Valid";
+    }
+    
     curl_close($ch);
   }
 

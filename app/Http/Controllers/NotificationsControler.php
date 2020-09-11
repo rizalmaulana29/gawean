@@ -472,34 +472,47 @@ class NotificationsController extends Controller
         $nohp = $hp;
     }
 
+    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
+                 ->where('id', $transdata->id_payment_method)
+                 ->first();
+
+    if ($bankRek->keterangan == "cash") {
+      $rek = $bankRek->keterangan;
+    } else {
+      $rek = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+    }
+
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
     $url='http://116.203.92.59/api/async_send_message';
     $data = array(
                   "phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-                                "Assalamu'alaikum".' '. $nama', 🌟😍
-                                Terima kasih atas pembayaran anda 😍😍😍
-                                ----------------------
-
-                                Dengan detail pembayaran order sebagai berikut:
-                                Order ID : '.$transdata->id_transaksi.'
-                                Nama : '.$nama.'
-                                No. Hp : '.$hp.'
-                                Total Pembayaran : IDR '.number_format($transdata['nominal_total']).'
-
-                                Pembayaran dilakukan :
-
-                                - Via : '.$title.'
-                                - Account Number : '.$number.'
-
-                                Butuh bantuan? Silahkan klik wa.me/6281370071330
-                                Ingat Order ID Anda saat menghubungi Customer Care.
-
-                                Terima kasih telah memilih rumahaqiqah.co.id
-
-                                Salam,
-                                rumahaqiqah.co.id'
+                                "Assalamu'alaikum".' '. $nama', 🌟😍'
+                                .'\\n'.'Terima kasih atas pembayaran anda 😍😍😍'
+                                .'\\n'.'-----------------------------------------'
+                                .'\\n'
+                                .'\\n'.'Dengan detail pembayaran order sebagai berikut:'
+                                .'\\n'.'Order ID : '.$transdata->id_transaksi.'
+                                \\n'.'Nama : '.$nama.'
+                                \\n'.'No. Hp : '.$hp.'
+                                \\n'.'Total Pembayaran : IDR '.number_format($transdata['nominal_total']).'
+                                \\n'.'
+                                \\n'.'Pembayaran dilakukan :'
+                                .'\\n'.
+                                '\\n'.'- '.$title.$rek.'
+                                \\n'.'- Kode Pembayaran : '.$number.'
+                                \\n'.'
+                                \\n'.'Untuk check pesanan anda silahkan klik link berikut :'.'
+                                \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$transdata->id_transaksi.'
+                                \\n'.'
+                                \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330
+                                '.'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.
+                                '.'\\n'.
+                                .'\\n'.'Terima kasih telah memilih rumahaqiqah.co.id
+                                '.'\\n'.
+                                '\\n'.'Salam,
+                                '.'\\n'.'rumahaqiqah.co.id'
                 );
     $data_string = json_encode($data);
 

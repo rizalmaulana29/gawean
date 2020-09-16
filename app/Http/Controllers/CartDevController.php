@@ -374,6 +374,8 @@ class CartDevController extends Controller
                  ->where('id', $bankRek->id_payment_method)
                  ->value('url_bayar');
 
+    $order = Order::where('id_order', $transdata->id_transaksi)->get();
+
     if ($link == null || $link == ' ') {
       $link = " ";
     } else {
@@ -386,6 +388,15 @@ class CartDevController extends Controller
     } else {
       $rek = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
     }
+
+    $produk = "";
+    $i = 0;
+    foreach ($order as $key) {
+      $label = DB::table('ra_produk_harga')->select('nama_produk')->where('id', $key->ra_produk_harga_id)->first();
+      $ending = (count($order) == $i)?"":" + ";
+      $produk .= $key->quantity.' '.$label->nama_produk .$ending;
+      $i++;
+    }
     
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
@@ -394,36 +405,35 @@ class CartDevController extends Controller
     $data = array("phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-                  "Assalamu'alaikum".' '.$nama.', 🌟😍'
-                  .'\\n'.' Ini adalah tagihan transaksi anda'
-                  .'\\n'.'----------------------'
-                  .'\\n'
-                  .'\\n'.'🔔Berikut adalah tagihan anda untuk order yang anda lakukan di Rumah aqiqah'
-                  .'\\n'.'pada tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
-
-                  \\n'.'Dengan detail order sebagai berikut:'
-                  .'\\n'.' Order ID      : '.$transdata->id_transaksi.'
-                  \\n'.' Nama          : '.$nama.'
-                  \\n'.' No. Hp        : '.$hp.'
-                  \\n'.'Total Tagihan : IDR '.number_format($transdata['nominal_total']).'
-                  \\n'
-                  .'\\n'.'Silahkan melakukan pembayaran paling lambat 24 jam dari sekarang,'
-                  .'\\n'.'atau transaksi anda akan di anggap gagal.'
-                  .'\\n'.'
-                  \\n'.'Lakukan Pembayaran ke:'
-                   .'\\n'.'- '.$rek.'
-                   \\n'.'- Kode pembayaran : '.$number.'
-                   \\n'.'
-                  \\n'.'Untuk Panduan Bayar Klik Link Berikut'.'
+                  "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
+                  \\n'.'Berikut adalah tagihan transaksi Ayah/Bunda di Rumah Aqiqah'.'
+                  \\n'.'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
+                  \\n'.'
+                  \\n'.'Dengan detail order sebagai berikut:'.'
+                  \\n'.' Order ID          : '.$transdata->id_transaksi.'
+                  \\n'.' Nama              : '.$nama.'
+                  \\n'.' No. Hp            : '.$hp.'
+                  \\n'.' Keterangan pesanan: '.$produk.'
+                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
+                  \\n'.'
+                  \\n'.'Silahkan melakukan pembayaran maksimal di H-3 tanggal pemesanan,'.'
+                  \\n'.'atau pemesananan Ayah/Bunda akan di anggap gagal.'.'
+                  \\n'.'
+                  \\n'.'Metode Pembayaran:'.'
+                  \\n'.'- '.$rek.'
+                  \\n'.'- Kode pembayaran : '.$number.'
+                  \\n'.'
+                  \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
                   \\n'.$link.'
                   \\n'.'
-                  \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330'
-                  .'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'
-                  .'\\n'.'
-                  \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'
-                  .'\\n'.'
-                  \\n'.'Salam,
-                  \\n'.'rumahaqiqah.co.id'
+                  \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
+                  \\n'.'wa.me/6281370071330'.'
+                  \\n'.'
+                  \\n'.'Ingat Order ID Ayah/Bunda saat menghubungi Customer Care.'.'
+                  \\n'.'
+                  \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
+                  \\n'.'
+                  \\n'.'Terima Kasih 😊🙏'
 
                 );
     $data_string = json_encode($data);

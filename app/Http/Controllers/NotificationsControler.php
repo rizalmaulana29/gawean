@@ -476,10 +476,21 @@ class NotificationsController extends Controller
                  ->where('id', $payment->id_payment_method)
                  ->first();
 
+    $order = Order::where('id_order', $payment->id_transaksi)->get();
+
     if ($bankRek->keterangan == "cash") {
       $rek = $bankRek->keterangan;
     } else {
       $rek = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+    }
+
+    $produk = "";
+    $i = 0;
+    foreach ($order as $key) {
+      $label = DB::table('ra_produk_harga')->select('nama_produk')->where('id', $key->ra_produk_harga_id)->first();
+      $ending = (count($order) == $i)?"":" + ";
+      $produk .= $key->quantity.' '.$label->nama_produk .$ending;
+      $i++;
     }
 
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
@@ -488,31 +499,31 @@ class NotificationsController extends Controller
                   "phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
-                                "Assalamu'alaikum".' '. $nama.', 🌟😍'
-                                .'\\n'.'Terima kasih atas pembayaran anda 😍😍😍'
-                                .'\\n'.'-----------------------------------------'
-                                .'\\n'
-                                .'\\n'.'Dengan detail pembayaran order sebagai berikut:'
-                                .'\\n'.'Order ID : '.$payment->id_transaksi.'
-                                \\n'.'Nama : '.$nama.'
-                                \\n'.'No. Hp : '.$hp.'
-                                \\n'.'Total Pembayaran : IDR '.number_format($payment['nominal_total']).'
+                                "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
+                                \\n'.'Terima kasih atas pembayaran Ayah/Bunda'.'
                                 \\n'.'
-                                \\n'.'Pembayaran dilakukan melalui:'
-                                .'\\n'.
-                                '\\n'.'- '.$rek.'
-                                \\n'.'- Kode Pembayaran : '.$number.'
+                                \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
+                                \\n'.' Order ID          : '.$payment->id_transaksi.'
+                                \\n'.' Nama              : '.$nama.'
+                                \\n'.' No. Hp            : '.$hp.'
+                                \\n'.' Keterangan pesanan: '.$produk.'
+                                \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_total']).'
                                 \\n'.'
-                                \\n'.'Untuk check pesanan anda silahkan klik link berikut :'.'
+                                \\n'.'Pembayaran dilakukan melalui:'.'
+                                \\n'.' - '.$rek.'
+                                \\n'.' - Kode Pembayaran : '.$number.'
+                                \\n'.'
+                                \\n'.'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :'.'
                                 \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$payment->id_transaksi.'
                                 \\n'.'
-                                \\n'.'Butuh bantuan? Silahkan klik wa.me/6281370071330
-                                '.'\\n'.'Ingat Order ID Anda saat menghubungi Customer Care.
-                                '.'\\n'.
-                                '\\n'.'Terima kasih telah memilih rumahaqiqah.co.id
-                                '.'\\n'.
-                                '\\n'.'Salam,
-                                '.'\\n'.'rumahaqiqah.co.id'
+                                \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
+                                \\n'.'wa.me/6281370071330'.'
+                                \\n'.'
+                                \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
+                                \\n'.'
+                                \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
+                                \\n'.'
+                                \\n'.'Terima Kasih 😊🙏'
                 );
     $data_string = json_encode($data);
 

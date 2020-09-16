@@ -514,7 +514,7 @@ class NotificationsController extends Controller
     }
 
     $produk = "";
-    $i = 0;
+    $i = 1;
     foreach ($order as $key) {
       $label = DB::table('ra_produk_harga')->select('nama_produk')->where('id', $key->ra_produk_harga_id)->first();
       $ending = (count($order) == $i)?"":" + ";

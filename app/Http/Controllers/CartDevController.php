@@ -416,7 +416,7 @@ class CartDevController extends Controller
                   \\n'.' Keterangan pesanan: '.$produk.'
                   \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
                   \\n'.'
-                  \\n'.'Silahkan melakukan pembayaran maksimal di H-3 tanggal pemesanan,'.'
+                  \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Ayah/Bunda menerima pesan ini,'.'
                   \\n'.'atau pemesananan Ayah/Bunda akan di anggap gagal.'.'
                   \\n'.'
                   \\n'.'Metode Pembayaran:'.'

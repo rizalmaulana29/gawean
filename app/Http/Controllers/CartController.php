@@ -483,7 +483,7 @@ class CartController extends Controller
       'Content-Length: ' . strlen($data_string))
     );
     $res=curl_exec($ch);
-
+ echo $res;
     if ($res == 'exist') {
       echo "Valid";
     } else {

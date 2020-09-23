@@ -460,7 +460,17 @@ class CartController extends Controller
   public function checkNumber(Request $request){
 
     $phone_no = $request->input('hp');
-    // dd($phone_no);
+    dd($phone_no);
+    if (substr($hp,0,1) == 0) {
+      $nohp = str_replace('0','62',$hp);
+    }
+    elseif (substr($hp,0,1) == '+') {
+      $nohp = str_replace('+','',$hp);
+    }
+    else {
+        $nohp = $hp;
+    }
+    
     $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
     $url='http://116.203.92.59/api/check_number';
     $data = array(
@@ -491,7 +501,7 @@ class CartController extends Controller
       echo "not Valid";
     }
     
-    curl_close($ch);
+    // curl_close($ch);
   }
 
 }

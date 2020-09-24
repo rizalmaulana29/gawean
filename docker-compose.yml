@@ -1,7 +1,9 @@
-version: "2"
+version: "2.4"
 services:
     apirumahaqiqahcoidweb:
         image: nginx:latest
+        mem_limit : 512m
+        cpus: "0.5"
         ports:
             - "9482:443"
         volumes:
@@ -15,6 +17,8 @@ services:
         restart: always
     apirumahaqiqahcoidphp:
         image: nanoninja/php-fpm:7.2.15
+        mem_limit : 512m
+        cpus: "0.5"
         volumes:
             - ./:/code
             - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini

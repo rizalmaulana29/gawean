@@ -236,12 +236,12 @@ class NotificationsController extends Controller
 
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
         
-        // if($merchantTokenComparator != $merchantToken){
-        //     return response()->json([
-        //         'status'=>false,
-        //         "message" => "Missmatch Merchant Token!!!",
-        //     ],422);
-        // }
+        if($merchantTokenComparator != $merchantToken){
+            return response()->json([
+                'status'=>false,
+                "message" => "Missmatch Merchant Token!!!",
+            ],422);
+        }
 
         if($payMethod == "01"){
             $authNo         = (isset($req['authNo']))?$req['authNo']:"";

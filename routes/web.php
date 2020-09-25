@@ -11,9 +11,9 @@
 |
 */
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
-header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
+// header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+// header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -28,7 +28,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
 
 	$router->group(['middleware' => 'all.cors'], function () use ($router) {
-		$router->post('check/number', 	['uses' => 'CartController@checkNumber']);
+		$router->any('check/number', 	['uses' => 'CartController@checkNumber']);
 	});
 
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);

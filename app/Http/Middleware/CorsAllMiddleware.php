@@ -15,9 +15,6 @@ class CorsAllMiddleware
      */
     public function handle($request, Closure $next)
     {
-
-        $http_origin = (isset($_SERVER['HTTP_ORIGIN']))?$_SERVER['HTTP_ORIGIN']:"";
-
         $headers = [
             'Access-Control-Allow-Origin'      => '*',
             'Access-Control-Allow-Methods'     => 'POST, GET',
@@ -25,11 +22,6 @@ class CorsAllMiddleware
             'Access-Control-Max-Age'           => '86400',
             'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'
         ];
-
-        // if ($http_origin == "https://order.rumahaqiqah.co.id/")
-        //     { $headers["Access-Control-Allow-Origin"] = $http_origin;}
-        // else
-        //     {$headers["Access-Control-Allow-Origin"] = "https://dev.rumahaqiqah.co.id";}
 
         if ($request->isMethod('OPTIONS')) {
             return response()->json('{"method":"OPTIONS"}', 200, $headers);
@@ -42,4 +34,5 @@ class CorsAllMiddleware
 
         return $response;
     }
+    
 }

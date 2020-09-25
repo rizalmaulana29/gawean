@@ -22,7 +22,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
-	$router->post('check/number', 	['uses' => 'CartController@checkNumber']);
+
+	$router->group(['middleware' => 'all.cors'], function () use ($router) {
+		$router->post('check/number', 	['uses' => 'CartController@checkNumber']);
+	});
 	
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);
 	$router->post('testRegistration', 	['uses' => 'NotificationsController@TestRegistration']);

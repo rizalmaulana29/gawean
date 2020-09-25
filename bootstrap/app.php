@@ -80,7 +80,7 @@ $app->singleton(
 
 $app->routeMiddleware([
     // 'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
-    'cors' => App\Http\Middleware\CorsAllMiddleware::class,
+    'all.cors' => App\Http\Middleware\CorsAllMiddleware::class,
 ]);
 
 /*

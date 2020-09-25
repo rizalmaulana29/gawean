@@ -16,7 +16,7 @@ class CorsAllMiddleware
     public function handle($request, Closure $next)
     {
 
-        // $http_origin = (isset($_SERVER['HTTP_ORIGIN']))?$_SERVER['HTTP_ORIGIN']:"";
+        $http_origin = (isset($_SERVER['HTTP_ORIGIN']))?$_SERVER['HTTP_ORIGIN']:"";
 
         $headers = [
             'Access-Control-Allow-Origin'      => '*',

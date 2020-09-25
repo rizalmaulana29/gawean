@@ -28,7 +28,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
 
 	$router->group(['middleware' => 'all.cors'], function () use ($router) {
-		$router->any('check/number', 	['uses' => 'CartController@checkNumber']);
+		$router->post('check/number', 	['uses' => 'CartController@checkNumber']);
+		$router->options('check/number', 	['uses' => 'CartController@checkNumber']);
 	});
 
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);

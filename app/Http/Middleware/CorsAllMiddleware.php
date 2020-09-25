@@ -23,7 +23,7 @@ class CorsAllMiddleware
         ];
 
         if ($request->isMethod('OPTIONS')) {
-            return response()->json('{"method":"OPTIONS"}', 200);
+            return response()->json('{"method":"OPTIONS"}', 200, $headers);
         }
 
         $response = $next($request);

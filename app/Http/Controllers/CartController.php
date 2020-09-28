@@ -484,7 +484,7 @@ class CartController extends Controller
     );
     $res=curl_exec($ch);
     curl_close($ch);
-    var_dump($res);
+    // var_dump($res);
     if ($res == "exists") {
       echo "Valid";
     } else {

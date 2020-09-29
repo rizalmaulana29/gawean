@@ -508,9 +508,15 @@ class NotificationsController extends Controller
     $order = Order::where('id_order', $payment->id_transaksi)->get();
 
     if ($bankRek->keterangan == "cash") {
-      $rek = $bankRek->keterangan;
+      $rek   = $bankRek->keterangan;
+     
+    }elseif ($bankRek->keterangan == "Bank Central Asia") {
+      $rek   = $bankRek->keterangan;
+      $bayar = '- '.'Transfer ke '.$bankRek->id_rekening.'\\n'.'a.n Agro Niaga Abadi PT';
+
     } else {
-      $rek = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+      $bayar = '- '.'Kode pembayaran : '.$number;
     }
 
     $produk = "";
@@ -540,7 +546,7 @@ class NotificationsController extends Controller
                                 \\n'.'
                                 \\n'.'Pembayaran dilakukan melalui:'.'
                                 \\n'.' - '.$rek.'
-                                \\n'.' - Kode Pembayaran : '.$number.'
+                                \\n'.$bayar.'
                                 \\n'.'
                                 \\n'.'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :'.'
                                 \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$payment->id_transaksi.'

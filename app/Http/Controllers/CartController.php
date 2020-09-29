@@ -386,9 +386,15 @@ class CartController extends Controller
     
 
     if ($bankRek->keterangan == "cash") {
-      $rek = $bankRek->keterangan;
+      $rek   = $bankRek->keterangan;
+     
+    }elseif ($bankRek->keterangan == "Bank Central Asia") {
+      $rek   = $bankRek->keterangan;
+      $bayar = '- '.'Transfer ke '.$bankRek->id_rekening.'\\n'.'a.n Agro Niaga Abadi PT';
+
     } else {
-      $rek = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+      $bayar = '- '.'Kode pembayaran : '.$number;
     }
 
     $produk = "";
@@ -423,7 +429,7 @@ class CartController extends Controller
                   \\n'.'
                   \\n'.'Metode Pembayaran:'.'
                   \\n'.'- '.$rek.'
-                  \\n'.'- Kode pembayaran : '.$number.'
+                  \\n'.$bayar.'
                   \\n'.'
                   \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
                   \\n'.$link.'

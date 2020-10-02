@@ -415,7 +415,7 @@ class CartController extends Controller
                   "message" =>
                   "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
                   \\n'.'Berikut adalah tagihan transaksi Ayah/Bunda di Rumah Aqiqah'.'
-                  \\n'.'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
+                  \\n'.'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->tgl_transaksi)).'
                   \\n'.'
                   \\n'.'Dengan detail order sebagai berikut:'.'
                   \\n'.' Order ID          : '.$transdata->id_transaksi.'

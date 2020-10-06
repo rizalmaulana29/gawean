@@ -221,7 +221,7 @@ class CartController extends Controller
 
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
-      $amt            = $payment['nominal'];
+      $amt            = $payment['nominal_total'];
       
       $payMeth        = $paymeth['parent_id'];
       $payMethod      = sprintf("%02d", $payMeth);

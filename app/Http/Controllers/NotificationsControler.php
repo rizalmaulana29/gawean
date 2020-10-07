@@ -542,7 +542,7 @@ class NotificationsController extends Controller
                                 \\n'.' Nama              : '.$nama.'
                                 \\n'.' No. Hp            : '.$hp.'
                                 \\n'.' Keterangan pesanan: '.$produk.'
-                                \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_total']).'
+                                \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
                                 \\n'.'
                                 \\n'.'Pembayaran dilakukan melalui:'.'
                                 \\n'.' - '.$rek.'

@@ -308,62 +308,79 @@ class NotificationsController extends Controller
                         )
                     );
 
-        // $payment = Payment::where('id_transaksi', $referenceNo)->first();
         if($status == "paid"){
-            $orderdata  = Order::where('id_order',$referenceNo)->get();
-            // $kontak     = Kontak::where('id', $payment['id_kontak'])->first();
-            
-            $to_address = trim($payment['email']);
-            $nama       = $payment['nama_customer'];
-            $alamat     = $payment['alamat'];
-            $email      = trim($payment['email']); 
-            $hp         = $payment['hp'];
-            $parent_id  = $paymeth['parent_id'];
-            
-            if ($parent_id == 2 ) {
-                $title  = "Virtual Account :";
-                $number = (isset($req['vacctNo']))?$req['vacctNo']:"";
-            } elseif ($parent_id == 3) {
-                $title  = "Kode Pembayaran :";
-                $number = (isset($req['payNo']))?$req['payNo']:"";
-            } else{
-                $title = "No.Rekening :";
-                // $number = DB::table('ra_bank_rek')->where('id_payment_method',$payment['id_payment_method'])->where('id_entitas',$request->input('id_kantor'))->value('id_rekening');
-                $number = $paymeth['id_rekening'];
+            if($payment){
+                $orderdata  = Order::where('id_order',$referenceNo)->get();
+                // $kontak     = Kontak::where('id', $payment['id_kontak'])->first();
+                
+                $to_address = trim($payment['email']);
+                $nama       = $payment['nama_customer'];
+                $alamat     = $payment['alamat'];
+                $email      = trim($payment['email']); 
+                $hp         = $payment['hp'];
+                $parent_id  = $paymeth['parent_id'];
+                
+                if ($parent_id == 2 ) {
+                    $title  = "Virtual Account :";
+                    $number = (isset($req['vacctNo']))?$req['vacctNo']:"";
+                } elseif ($parent_id == 3) {
+                    $title  = "Kode Pembayaran :";
+                    $number = (isset($req['payNo']))?$req['payNo']:"";
+                } else{
+                    $title = "No.Rekening :";
+                    // $number = DB::table('ra_bank_rek')->where('id_payment_method',$payment['id_payment_method'])->where('id_entitas',$request->input('id_kantor'))->value('id_rekening');
+                    $number = $paymeth['id_rekening'];
+                }
+
+                $hasil = Mail::send(
+                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
+                );
+
+                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
+
+                if($payment->id_parent && $payment->tipe == "pelunasan"){
+                    $paymentParent    = Payment::where('id',$payment->id_parent)->first();
+                    /*
+                        echo "Parent ID : ".$payment->id_parent;
+                        echo "<br>";
+                        echo "Sisa Bayar Awal : ".$payment->sisa_pembayaran;
+                        echo "<br>";
+                        echo "Pembayaran : ".$paymentParent->sisa_pembayaran;
+                        echo "<br>";
+                        $sisaParent = $payment->sisa_pembayaran - $paymentParent->sisa_pembayaran;
+                        echo "Sisa Bayar Akhir: ".$sisaParent;
+                        echo "<br>";
+                    */
+                    $paymentParent->lunas = "y";
+                    $paymentParent->sisa_pembayaran = 0;
+                    $paymentParent->nominal_bayar = $paymentParent->nominal_total;
+                    $paymentParent->save();   
+    
+                    $payment->lunas = "y";
+                    $payment->save();
+                }
+                else if($payment->tipe == "transaksi"){
+                    // if($payment->tunai == "Tunai"){
+                    $payment->lunas = "y";
+                    $payment->save();
+                    // }
+                }
+                $payment->status = $status;
+                $payment->save();
+                $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
             }
-
-            $hasil = Mail::send(
-                (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
-            );
-
-            $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
+            else{
+                $msg = array("status"=>"false","msg"=>"No Payment were Found");
+            }
         }
-
-        if($payment){
-            if($payment->id_parent && $status == "paid"){
-                $paymentParent    = Payment::where('id',$payment->id_parent)->first();
-                // echo "Parent ID : ".$payment->id_parent;
-                // echo "<br>";
-
-                // echo "Sisa Bayar Awal : ".$payment->sisa_pembayaran;
-                // echo "<br>";
-                // echo "Pembayaran : ".$paymentParent->sisa_pembayaran;
-                // echo "<br>";
-                // $sisaParent = $payment->sisa_pembayaran - $paymentParent->sisa_pembayaran;
-                // echo "Sisa Bayar Akhir: ".$sisaParent;
-                // echo "<br>";
-
-                $lunasState = "y";#($sisaParent == 0)?'y':'n';
-
-                $paymentParent->lunas = $lunasState;
-                // $paymentParent->sisa_pembayaran = $sisaParent;
-                $paymentParent->save();    
+        else{
+            if($payment){
+                $payment->status = $status;
+                $payment->save();
+                $msg = array("status"=>"false","msg"=>"No Transaction Available");
+            }else{
+                $msg = array("status"=>"false","msg"=>"No Payment were Found");
             }
-            $payment->status = $status;
-            $payment->save();
-            $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
-        }else{
-            $msg = array("status"=>"false","msg"=>"No Transaction Available");
         }
         echo json_encode($msg);
     }

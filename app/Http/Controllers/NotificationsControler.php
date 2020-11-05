@@ -234,14 +234,6 @@ class NotificationsController extends Controller
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
-        $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
-        
-        if($merchantTokenComparator != $merchantToken){
-            return response()->json([
-                'status'=>false,
-                "message" => "Missmatch Merchant Token!!!",
-            ],422);
-        }
 
         if($payMethod == "01"){
             $authNo         = (isset($req['authNo']))?$req['authNo']:"";
@@ -276,6 +268,31 @@ class NotificationsController extends Controller
             // $depositDt      = (isset($req['depositDt']))?$req['amt']:"";
             // $depositTm      = (isset($req['depositTm']))?$req['amt']:"";
         }
+
+        $niceCatcherLog    = new Nicepaylog;
+
+        $niceCatcherLog->id_order = $referenceNo;
+        $niceCatcherLog->payment_method = $payMethod;
+        $niceCatcherLog->code     = $code;
+        $niceCatcherLog->txid     = $tXid;
+        $niceCatcherLog->virtual_account_no = $code_bayar;
+        $niceCatcherLog->update   = Carbon::now();
+        $niceCatcherLog->request  = "";
+        $niceCatcherLog->response = addslashes(json_encode($req));
+        $niceCatcherLog->status   = addslashes($status);
+        $niceCatcherLog->action   = "Notification";
+        $niceCatcherLog->id_entitas = $paymeth['id_entitas'];
+        $niceCatcherLog->source_data = "catcher";
+        $niceCatcherLog->save();
+
+        $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
+        if($merchantTokenComparator != $merchantToken){
+            return response()->json([
+                'status'=>false,
+                "message" => "Missmatch Merchant Token!!!",
+            ],422);
+        }
+
         $source_data = Nicepaylog::where('id_order',$referenceNo)->where('action','Registration')->value('source_data');
         $source_data = ($source_data)?$source_data:"be";
         $nicepayLog    = new Nicepaylog;

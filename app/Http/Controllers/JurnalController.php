@@ -93,7 +93,7 @@ class JurnalController extends Controller
       else {
           if ($response != "Bad Request"){
               $dataResponse = json_decode($response);
-              dd($dataResponse->customer->id);
+              dd($dataResponse);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['custom_id' => $dataResponse->customer->id]);
               // $response = array("status"=>"- sending","message"=>"Sending Message Success");
           }

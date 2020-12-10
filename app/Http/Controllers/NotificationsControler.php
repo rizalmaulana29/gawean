@@ -286,6 +286,17 @@ class NotificationsController extends Controller
         $niceCatcherLog->save();
 
         $merchantTokenComparator = $nicepay->getMerTokNotif($iMid,$tXid,$amt,$merKey);
+        if(isset($req['ini_devel'])){
+            if($merchantTokenComparator != $merchantToken){
+                return response()->json([
+                    'status'=>false,
+                    "message" => "Missmatch Merchant Token!!!",
+                    "comparedToken" => $merchantTokenComparator,
+                    "requestedToken" => $merchantToken,
+                ],422);
+            }    
+        }
+
         if($merchantTokenComparator != $merchantToken){
             return response()->json([
                 'status'=>false,

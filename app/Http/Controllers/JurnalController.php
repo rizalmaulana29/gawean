@@ -43,40 +43,39 @@ class JurnalController extends Controller
 
       $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_URL => "https://api.jurnal.id/core/api/v1/customers",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $dataRaw,
-            CURLOPT_HTTPHEADER => $headers
-        ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        var_dump($response);
-        var_dump($err);
+      curl_setopt_array($curl, array(
+          CURLOPT_SSL_VERIFYPEER => false,
+          CURLOPT_URL => "https://api.jurnal.id/core/api/v1/customers",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => $dataRaw,
+          CURLOPT_HTTPHEADER => $headers
+      ));
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+      var_dump($response);
+      var_dump($err);
 
-        die;
-        curl_close($curl);
-        
-        if ($err) {
-            $response = array("status"=>"- fail","message"=>$err);
-        } 
-        else {
-            if ($response != "Bad Request"){
-                $response = array("status"=>"- sending","message"=>"Sending Message Success");
-            }
-            else{
-                $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
-            }
-        }
+      die;
+      curl_close($curl);
+      
+      if ($err) {
+          $response = array("status"=>"- fail","message"=>$err);
+      } 
+      else {
+          if ($response != "Bad Request"){
+              $response = array("status"=>"- sending","message"=>"Sending Message Success");
+          }
+          else{
+              $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+          }
+      }
     }
 
-    dd($response);
-    }
+    // dd($response);
 
 }

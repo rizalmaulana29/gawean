@@ -42,7 +42,7 @@ class JurnalController extends Controller
                                  // ->limit(50)
                                  // ->get();
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
-
+      dd($createCustomer);
       if ($createCustomer->status == "success") {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer);
       } else {
@@ -104,11 +104,11 @@ class JurnalController extends Controller
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['custom_id' => $dataResponse->customer->id]);
-              $response = array("status"=>"success","message"=> $dataResponse->customer->id);
+              $response = array("status"=>true,"message"=> $dataResponse->customer->id);
           }
           else{
 
-              $response = array("status"=>"failed","message"=> $response);
+              $response = array("status"=>false,"message"=> $response);
           }
       }
 

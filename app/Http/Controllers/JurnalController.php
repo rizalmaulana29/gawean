@@ -25,11 +25,18 @@ use App\Thirdparty\Nicepay\Nicepay;
 class JurnalController extends Controller
 {
     public function Filtering(){
-      $end = Carbon::now()->endOfMonth()->toDateTimestring();
+      $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::now()->firstOfMonth()->toDateTimestring();
-      var_dump($end);
-      dd($start);
-      // $getDataTransaksi = Payment::where('sisa_bayar',0)->where('lunas','y')->where('tgl_kirim','<=',)
+
+      $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                                 ->where('lunas','y')
+                                 ->where('sisa_pembayaran','0')
+                                 ->orwhere('sisa_pembayaran',null)
+                                 ->where('tgl_kirim','<=',$endDate->toDatestring())
+                                 ->get()
+                                 ->take(50);
+
+      dd($getDataTransaksi);
     }
 
     public function CreateCustomer (){

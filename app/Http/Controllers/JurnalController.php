@@ -48,16 +48,16 @@ class JurnalController extends Controller
       // foreach ($getDataTransaksi as $key => $DataTransaksi) {
       //   # code...
       // }
-      dd($getDataTransaksi['id_transaksi']);
+      // dd($getDataTransaksi['id_transaksi']);
 
       $dataRaw = [
-                    "customer"  => ["first_name"   => "Savitri Wulan Agustin Test From API", //nama lengkap dengan id_transaksi
-                                    "display_name" => "Savitri Wulan Agustin Test From API", //nama lengkap
-                                    "address"      => "Savitri Wulan Agustin",
-                                    "phone"        => "081320314029",
-                                    "mobile"       => "081320314029",
-                                    "email"        => "Cappietori.86@gmail.com",
-                                    "custom_id"    => "2011240027653" //id_transaksi tidak boleh sama
+                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
+                                    "display_name" => $getDataTransaksi['nama_customer'], //nama lengkap
+                                    "address"      => $getDataTransaksi['alamat'],
+                                    "phone"        => $getDataTransaksi['hp'],
+                                    "mobile"       => $getDataTransaksi['hp'],
+                                    "email"        => $getDataTransaksi['email'],
+                                    "custom_id"    => $getDataTransaksi['id_transaksi'] //id_transaksi tidak boleh sama
                                     ]
                   ];
 

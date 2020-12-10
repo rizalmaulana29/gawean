@@ -31,6 +31,7 @@ class JurnalController extends Controller
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('lunas','y')
                                  ->where('custom_id',null)
+                                 ->whereIn('id_kantor', [4, 5, 6, 17])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -93,7 +94,7 @@ class JurnalController extends Controller
       else {
           if ($response != "Bad Request"){
               $dataResponse = json_decode($response);
-              dd($dataResponse);
+              dd($dataResponse->customer);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['custom_id' => $dataResponse->customer->id]);
               // $response = array("status"=>"- sending","message"=>"Sending Message Success");
           }

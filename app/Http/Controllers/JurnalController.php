@@ -36,14 +36,20 @@ class JurnalController extends Controller
                                         })
                                  ->where('tgl_kirim','<=',$endDate->toDateString())
                                  ->orderBy('tgl_transaksi','ASC')
-                                 ->limit(50)
-                                 ->get();
-
+                                 ->first();
+                                 // ->limit(50)
+                                 // ->get();
+      $createCustomer = $this->CreateCustomer($getDataTransaksi);
       return response()->json($getDataTransaksi);
     }
 
-    public function CreateCustomer (){
+    public function CreateCustomer ($getDataTransaksi){
 
+      // foreach ($getDataTransaksi as $key => $DataTransaksi) {
+      //   # code...
+      // }
+      dd($getDataTransaksi);
+      
       $dataRaw = [
                     "customer"  => ["first_name"   => "Savitri Wulan Agustin Test From API", //nama lengkap dengan id_transaksi
                                     "display_name" => "Savitri Wulan Agustin Test From API", //nama lengkap

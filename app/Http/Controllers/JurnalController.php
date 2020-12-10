@@ -43,7 +43,7 @@ class JurnalController extends Controller
                                  // ->get();
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
       var_dump($createCustomer);
-      dd($createCustomer[0]);
+      dd($createCustomer->status);
       die;
       if ($createCustomer->status == "success") {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer);

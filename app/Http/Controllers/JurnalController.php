@@ -27,7 +27,7 @@ class JurnalController extends Controller
     public function Filtering(){
       $date = Carbon::now()->endOfMonth();
       dd($date);
-      $getDataTransaksi = Payment::where('sisa_bayar',0)->where('lunas','y')->where('tgl_kirim','<=',)
+      // $getDataTransaksi = Payment::where('sisa_bayar',0)->where('lunas','y')->where('tgl_kirim','<=',)
     }
 
     public function CreateCustomer (){

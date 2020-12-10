@@ -158,6 +158,7 @@ class JurnalController extends Controller
                                   "transaction_lines_attributes" => [["id" => "fromsalesorder","quantity"  => 1],
                                                                      ["id" => "fromsalesorder","quantity"  => 1]
                                                                     ]
+                                  ]
                   ];
 
       $encodedataRaw = json_encode($dataRaw);

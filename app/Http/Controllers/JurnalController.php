@@ -36,7 +36,7 @@ class JurnalController extends Controller
                                  ->get()
                                  ->take(50);
 
-      dd($getDataTransaksi);
+      return response()->json($getDataTransaksi);
     }
 
     public function CreateCustomer (){

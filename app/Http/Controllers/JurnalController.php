@@ -87,21 +87,23 @@ class JurnalController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
       curl_close($curl);
-      
+      $findString    = 'customer';
+      $searchResponse = stripos($response, 'customer');
+
       if ($err) {
-          $response = array("status"=>"- fail","message"=>$err);
+          $response = array("status"=>"failed","message"=>$err);
       } 
       else {
-          if ($response != "Bad Request"){
+          if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              dd($dataResponse->customer);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['custom_id' => $dataResponse->customer->id]);
-              // $response = array("status"=>"- sending","message"=>"Sending Message Success");
+
+              $response = array("status"=>"success","message"=>"Berhasil menginputkan person id");
           }
           else{
               $dataResponse = json_encode($response);
               echo "from else".$dataResponse;
-              // $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+              $response = array("status"=>"failed","message"=> $dataResponse);
           }
       }
     }

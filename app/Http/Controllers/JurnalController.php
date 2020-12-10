@@ -42,6 +42,13 @@ class JurnalController extends Controller
                                  // ->limit(50)
                                  // ->get();
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
+
+      if ($createCustomer->status == "success") {
+        $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer);
+      } else {
+        return $createCustomer;
+      }
+
       return response()->json($getDataTransaksi);
     }
 
@@ -97,18 +104,21 @@ class JurnalController extends Controller
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['custom_id' => $dataResponse->customer->id]);
-
-              $response = array("status"=>"success","message"=>"Berhasil menginputkan person id");
+              $response = array("status"=>"success","message"=> $dataResponse->customer->id);
           }
           else{
-              echo "from else".$response;
-              $response = array("status"=>"failed","message"=> $dataResponse);
+
+              $response = array("status"=>"failed","message"=> $response);
           }
       }
+
+      return response()->json($response);
     }
 
-    public function SalesOrder(){
+    public function SalesOrder($getDataTransaksi,$person_id){
 
+      var_dump($getDataTransaksi);
+      dd($person_id);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"   => "Savitri Wulan Agustin Test From API",
@@ -181,6 +191,63 @@ class JurnalController extends Controller
                                                                      ["id" => "fromsalesorder","quantity"  => 1]
                                                                     ]
                                   ]
+                  ];
+
+      $encodedataRaw = json_encode($dataRaw);
+
+      $curl = curl_init();
+
+      curl_setopt_array($curl, array(
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/201834363/convert_to_invoice",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING       => "",
+        CURLOPT_MAXREDIRS      => 10,
+        CURLOPT_TIMEOUT        => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST  => "POST",
+        CURLOPT_POSTFIELDS     => $encodedataRaw,
+        CURLOPT_HTTPHEADER     => array(
+                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
+                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "Content-Type: application/json; charset=utf-8",
+                                        "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
+                                      ),
+      ));
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+      var_dump($response);
+      var_dump($err);
+
+      die;
+      curl_close($curl);
+      
+      if ($err) {
+          $response = array("status"=>"- fail","message"=>$err);
+      } 
+      else {
+          if ($response != "Bad Request"){
+              $response = array("status"=>"- sending","message"=>"Sending Message Success");
+          }
+          else{
+              $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+          }
+      }
+    }
+
+    public function receivePayment(){
+
+      $dataRaw = [
+                "receive_payment"  => [ 
+                                        "transaction_date"   => "Savitri Wulan Agustin Test From API",
+                                        "records_attributes" => [["transaction_no" => "fromsalesorder",
+                                                                  "amount"  => 1]],
+                                        "custom_id"      => "Savitri Wulan Agustin",
+                                        "payment_method_name"        => "Transfer Bank",
+                                        "payment_method_id"       => 792898,
+                                        "is_draft"        => false,
+                                        "deposit_to_name"    => "Mandiri Publik 131 000 711 2586",
+                                      ]
                   ];
 
       $encodedataRaw = json_encode($dataRaw);

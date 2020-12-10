@@ -30,6 +30,7 @@ class JurnalController extends Controller
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('lunas','y')
+                                 ->where('custom_id',null)
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -84,10 +85,6 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
-      var_dump($response);
-      var_dump($err);
-
-      die;
       curl_close($curl);
       
       if ($err) {
@@ -95,10 +92,15 @@ class JurnalController extends Controller
       } 
       else {
           if ($response != "Bad Request"){
-              $response = array("status"=>"- sending","message"=>"Sending Message Success");
+              $dataResponse = json_encode($response);
+              echo "from if".$dataResponse;
+              // $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['custom_id' => ])
+              // $response = array("status"=>"- sending","message"=>"Sending Message Success");
           }
           else{
-              $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+              $dataResponse = json_encode($response);
+              echo "from else".$dataResponse;
+              // $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
           }
       }
     }

@@ -91,6 +91,7 @@ class CartController extends Controller
           $order->approve = 'y';
           $order->keterangan = 'Tunai';
           $order->nik_input = $request->input('nik_input');
+          $order->id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
           $order->cur = "IDR";
           // $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
           if($request['id_produk_parent'][$key] == 89 || $request['id_produk_parent'][$key] == 20){

@@ -101,8 +101,7 @@ class JurnalController extends Controller
               $response = array("status"=>"success","message"=>"Berhasil menginputkan person id");
           }
           else{
-              $dataResponse = json_encode($response);
-              echo "from else".$dataResponse;
+              echo "from else".$response;
               $response = array("status"=>"failed","message"=> $dataResponse);
           }
       }

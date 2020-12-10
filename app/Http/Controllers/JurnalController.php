@@ -40,6 +40,12 @@ class JurnalController extends Controller
                                     ]
                   ];
 
+      $headers = array(
+                    "apikey: 56593d3e45a37eb7033e356d33fd83c4",
+                    "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                    "Content-Type: application/json; charset=utf-8",
+                    "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p"
+                );
 
       $curl = curl_init();
 

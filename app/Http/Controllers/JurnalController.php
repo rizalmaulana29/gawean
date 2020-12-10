@@ -30,11 +30,14 @@ class JurnalController extends Controller
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('lunas','y')
-                                 // ->where('sisa_pembayaran','0')
-                                 ->where('sisa_pembayaran',null)
+                                 ->where(function($q) {
+                                            $q->where('sisa_pembayaran', '=', 0)
+                                            ->orWhereNull('sisa_pembayaran');
+                                        })
                                  ->where('tgl_kirim','<=',$endDate->toDateString())
-                                 ->get()
-                                 ->take(50);
+                                 ->orderBy('tgl_transaksi','ASC')
+                                 ->limit(50)
+                                 ->get();
 
       return response()->json($getDataTransaksi);
     }

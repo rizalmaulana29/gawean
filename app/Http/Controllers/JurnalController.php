@@ -42,7 +42,8 @@ class JurnalController extends Controller
                                  // ->limit(50)
                                  // ->get();
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
-      dd($createCustomer);
+      var_dump($createCustomer);
+      die;
       if ($createCustomer->status == "success") {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer);
       } else {

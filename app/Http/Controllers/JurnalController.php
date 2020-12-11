@@ -150,7 +150,7 @@ class JurnalController extends Controller
         $data_produk        .= "[ quantity"."=>". $order['quantity'].", rate"."=>". $order['harga'].",product_id"."=>". $produk_harga."]".$ending;
         $countData++;
       }
-
+      dd($data_produk);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"             => $getDataTransaksi['tgl'],

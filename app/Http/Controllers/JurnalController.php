@@ -142,7 +142,6 @@ class JurnalController extends Controller
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
 
-      // dd($dataOrder);
       $data_produk = "";
       foreach ($dataOrder as $key => $order) {
 
@@ -152,12 +151,6 @@ class JurnalController extends Controller
         $countData++;
       }
 
-      dd($data_produk);
-      foreach ($request['program'] as $key => $value) {
-
-          
-  
-      }
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"             => $getDataTransaksi['tgl'],

@@ -110,7 +110,7 @@ class JurnalController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> $response);
+              $response = array("status"=>false,"message"=> "create customer".$response);
           }
       }
 
@@ -206,7 +206,7 @@ class JurnalController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> $response);
+              $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
 
@@ -257,11 +257,10 @@ class JurnalController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
       
-      var_dump($response);
-      var_dump($err);
-
-      die;
       
+      var_dump($err);
+      dd($response);
+
       curl_close($curl);
       
       if ($err) {

@@ -225,7 +225,7 @@ class JurnalController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      dd($detail_atribute);
+      // dd($detail_atribute);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"   => "Savitri Wulan Agustin Test From API",
@@ -261,6 +261,7 @@ class JurnalController extends Controller
       var_dump($err);
 
       die;
+      
       curl_close($curl);
       
       if ($err) {

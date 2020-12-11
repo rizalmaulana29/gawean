@@ -142,7 +142,7 @@ class JurnalController extends Controller
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
 
-      $data_produk = "";
+      $detail_produk = "";
       foreach ($dataOrder as $key => $order) {
 
         $ending              = (count($dataOrder) == $countData)?"":",";

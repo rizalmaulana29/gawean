@@ -228,7 +228,7 @@ class JurnalController extends Controller
       // dd($detail_atribute);
       $dataRaw = [
                 "sales_order"  => [ 
-                                  "transaction_date"   => "Savitri Wulan Agustin Test From API",
+                                  "transaction_date"   => $getDataTransaksi['tgl'],
                                   "transaction_lines_attributes" => $detail_atribute
                                   ]
                   ];

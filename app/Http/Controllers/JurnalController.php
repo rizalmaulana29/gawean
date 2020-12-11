@@ -47,6 +47,9 @@ class JurnalController extends Controller
       var_dump($getDataTransaksi);
       if ($createCustomer['status'] == true) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
+          if ($sales_order['status'] == true) {
+            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$sales_order['id'],$sales_order['message']);
+          }
       } else {
         return $createCustomer;
       }
@@ -55,11 +58,6 @@ class JurnalController extends Controller
     }
 
     public function CreateCustomer ($getDataTransaksi){
-
-      // foreach ($getDataTransaksi as $key => $DataTransaksi) {
-      //   # code...
-      // }
-      // dd($getDataTransaksi['id_transaksi']);
 
       $dataRaw = [
                     "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
@@ -117,23 +115,23 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function SalesOrder(Request $request){ //$getDataTransaksi,$person_id
+    public function SalesOrder($getDataTransaksi,$person_id){ //$getDataTransaksi,$person_id
 
-      $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->firstOfMonth()->toDateTimestring();
-      $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 ->where('lunas','y')
-                                 ->where('person_id',$request['person_id'])
-                                 ->whereIn('id_kantor', [4, 5, 6, 17])
-                                 ->where(function($q) {
-                                            $q->where('sisa_pembayaran', '=', 0)
-                                            ->orWhereNull('sisa_pembayaran');
-                                        })
-                                 ->where('tgl_kirim','<=',$endDate->toDateString())
-                                 ->orderBy('tgl_transaksi','ASC')
-                                 ->first();
-      var_dump($getDataTransaksi);
-      $person_id = $request['person_id'];
+      // $endDate = Carbon::now()->endOfMonth();
+      // $start = Carbon::now()->firstOfMonth()->toDateTimestring();
+      // $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+      //                            ->where('lunas','y')
+      //                            ->where('person_id',$request['person_id'])
+      //                            ->whereIn('id_kantor', [4, 5, 6, 17])
+      //                            ->where(function($q) {
+      //                                       $q->where('sisa_pembayaran', '=', 0)
+      //                                       ->orWhereNull('sisa_pembayaran');
+      //                                   })
+      //                            ->where('tgl_kirim','<=',$endDate->toDateString())
+      //                            ->orderBy('tgl_transaksi','ASC')
+      //                            ->first();
+      // var_dump($getDataTransaksi);
+      // $person_id = $request['person_id'];
       $agen      = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
@@ -200,8 +198,9 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              dd($dataResponse->sales_order->transaction_lines_attributes);
-              $response = array("status"=>true,"message"=> $dataResponse->customer->id);
+              $response = array("status" =>true,
+                                "id"     => $dataResponse->sales_order->id,
+                                "message"=> $dataResponse->sales_order->transaction_lines_attributes);
           }
           else{
 
@@ -212,14 +211,23 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function SalesOrdertoInvoice(){
+    public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
+
+      var_dump($getDataTransaksi);
+      var_dump($sales_id);
+      dd($sales_atribute);
+
+      $detail_atribute = [];
+      foreach ($sales_atribute as $key => $atribute) {
+
+        $produk              = ["id" => $atribute['id'], "quantity"=> $atribute['quantity'];
+        array_push($detail_atribute,$produk);
+      }
 
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"   => "Savitri Wulan Agustin Test From API",
-                                  "transaction_lines_attributes" => [["id" => "fromsalesorder","quantity"  => 1],
-                                                                     ["id" => "fromsalesorder","quantity"  => 1]
-                                                                    ]
+                                  "transaction_lines_attributes" => $detail_atribute
                                   ]
                   ];
 
@@ -228,7 +236,7 @@ class JurnalController extends Controller
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/201834363/convert_to_invoice",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/".$sales_id."/convert_to_invoice",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,

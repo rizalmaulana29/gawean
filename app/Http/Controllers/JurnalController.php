@@ -149,7 +149,7 @@ class JurnalController extends Controller
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
         $data_produk         = [];
         $produk              = "quantity"."=>". $order['quantity'].", rate"."=>". $order['harga'].",product_id"."=>". $produk_harga;
-        array_push($detail_produk,$detail_produk);
+        array_push($detail_produk,$produk);
         array_merge($data_produk,$detail_produk);
         $countData++;
       }

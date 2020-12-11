@@ -219,7 +219,7 @@ class JurnalController extends Controller
 
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
-        dd($atribute[$key]->id);
+        dd($atribute->id);
         $produk              = ["id" => $atribute[$key]->id, "quantity"=> $atribute[$key]->quantity];
         array_push($detail_atribute,$produk);
       }

@@ -47,8 +47,8 @@ class JurnalController extends Controller
       var_dump($getDataTransaksi);
       if ($createCustomer['status'] == true) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-          if ($sales_order['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$sales_order['id'],$sales_order['message']);
+          if ($salesOrder['status'] == true) {
+            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
           }
       } else {
         return $createCustomer;

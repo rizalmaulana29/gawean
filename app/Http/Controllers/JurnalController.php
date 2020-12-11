@@ -143,6 +143,7 @@ class JurnalController extends Controller
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
 
       $detail_produk = [];
+      $produk = "";
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');

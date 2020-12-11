@@ -61,7 +61,7 @@ class JurnalController extends Controller
 
       $dataRaw = [
                     "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'], //nama lengkap
+                                    "display_name" => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap
                                     "address"      => $getDataTransaksi['alamat'],
                                     "phone"        => $getDataTransaksi['hp'],
                                     "mobile"       => $getDataTransaksi['hp'],

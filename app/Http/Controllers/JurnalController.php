@@ -49,6 +49,8 @@ class JurnalController extends Controller
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
           if ($salesOrder['status'] == true) {
             $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+          }else{
+            return $salesOrder;
           }
       } else {
         return $createCustomer;
@@ -223,7 +225,7 @@ class JurnalController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      dd($produk);
+      dd($detail_atribute);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"   => "Savitri Wulan Agustin Test From API",
@@ -254,6 +256,7 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
+      
       var_dump($response);
       var_dump($err);
 

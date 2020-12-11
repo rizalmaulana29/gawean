@@ -119,6 +119,8 @@ class JurnalController extends Controller
 
     public function SalesOrder(Request $request){ //$getDataTransaksi,$person_id
 
+      $endDate = Carbon::now()->endOfMonth();
+      $start = Carbon::now()->firstOfMonth()->toDateTimestring();
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('lunas','y')
                                  ->where('person_id',$request['person_id'])
@@ -130,6 +132,7 @@ class JurnalController extends Controller
                                  ->where('tgl_kirim','<=',$endDate->toDateString())
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
+      $person_id = $request['person_id'];
       $agen      = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');

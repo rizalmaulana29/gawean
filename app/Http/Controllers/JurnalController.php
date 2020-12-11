@@ -215,15 +215,15 @@ class JurnalController extends Controller
 
       var_dump($getDataTransaksi);
       var_dump($sales_id);
-      dd($sales_atribute);
+      var_dump($sales_atribute);
 
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
 
-        $produk              = ["id" => $atribute['id'], "quantity"=> $atribute['quantity']];
+        $produk              = ["id" => $atribute[$key]->id, "quantity"=> $atribute[$key]->quantity];
         array_push($detail_atribute,$produk);
       }
-
+      dd($produk);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"   => "Savitri Wulan Agustin Test From API",

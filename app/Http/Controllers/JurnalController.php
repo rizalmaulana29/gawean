@@ -200,7 +200,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              dd($dataResponse->sales_order);
+              dd($dataResponse->sales_order->transaction_lines_attribute);
               $response = array("status"=>true,"message"=> $dataResponse->customer->id);
           }
           else{
@@ -210,7 +210,6 @@ class JurnalController extends Controller
       }
 
       return $response;}
-      }
     }
 
     public function SalesOrdertoInvoice(){

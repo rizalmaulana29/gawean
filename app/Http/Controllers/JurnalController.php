@@ -153,7 +153,7 @@ class JurnalController extends Controller
         array_merge($data_produk,$detail_produk);
         $countData++;
       }
-      var_dump($data_produk);
+      dd($detail_produk);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"             => $getDataTransaksi['tgl'],

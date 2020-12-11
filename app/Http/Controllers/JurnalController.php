@@ -132,6 +132,7 @@ class JurnalController extends Controller
                                  ->where('tgl_kirim','<=',$endDate->toDateString())
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
+      var_dump($getDataTransaksi);
       $person_id = $request['person_id'];
       $agen      = '';
       if ($getDataTransaksi['id_agen'] != null) {

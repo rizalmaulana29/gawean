@@ -150,7 +150,6 @@ class JurnalController extends Controller
         array_push($detail_produk,$produk);
       }
 
-      var_dump($detail_produk);
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"             => $getDataTransaksi['tgl'],
@@ -168,7 +167,7 @@ class JurnalController extends Controller
                                   "custom_id"          => $getDataTransaksi['id_transaksi']
                                   ]
                   ];
-      dd($dataRaw);
+      
       $encodedataRaw = json_encode($dataRaw);
 
       $curl = curl_init();

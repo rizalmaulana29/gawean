@@ -200,7 +200,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              dd($dataResponse->sales_order->transaction_lines_attribute);
+              dd($dataResponse->sales_order);
               $response = array("status"=>true,"message"=> $dataResponse->customer->id);
           }
           else{

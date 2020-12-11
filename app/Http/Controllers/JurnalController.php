@@ -209,7 +209,7 @@ class JurnalController extends Controller
           }
       }
 
-      return $response;}
+      return $response;
     }
 
     public function SalesOrdertoInvoice(){

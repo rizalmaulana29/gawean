@@ -117,10 +117,19 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function SalesOrder($getDataTransaksi,$person_id){
+    public function SalesOrder(Request $request){ //$getDataTransaksi,$person_id
 
-      var_dump($getDataTransaksi);
-      dd($person_id);
+      $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                                 ->where('lunas','y')
+                                 ->where('person_id',$request['person_id'])
+                                 ->whereIn('id_kantor', [4, 5, 6, 17])
+                                 ->where(function($q) {
+                                            $q->where('sisa_pembayaran', '=', 0)
+                                            ->orWhereNull('sisa_pembayaran');
+                                        })
+                                 ->where('tgl_kirim','<=',$endDate->toDateString())
+                                 ->orderBy('tgl_transaksi','ASC')
+                                 ->first();
       $agen      = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
@@ -129,6 +138,8 @@ class JurnalController extends Controller
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
 
+      var_dump($dataOrder);
+
       foreach ($dataOrder as $key => $order) {
         $ending              = (count($dataOrder) == $countData)?"":",";
         $produk_harga        = Harga::where('id',$order['id_produk_harga'])->value('jurnal_product_id');
@@ -136,8 +147,7 @@ class JurnalController extends Controller
         $countData++;
       }
 
-      $nominalPerProgram = [];
-
+      dd($data_produk);
       foreach ($request['program'] as $key => $value) {
 
           

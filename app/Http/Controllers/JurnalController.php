@@ -191,22 +191,25 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
-      var_dump($response);
-      var_dump($err);
+      $findString    = 'sales_order';
+      $searchResponse = stripos($response, 'sales_order');
 
-      die;
-      curl_close($curl);
-      
       if ($err) {
-          $response = array("status"=>"- fail","message"=>$err);
+          $response = array("status"=>"failed","message"=>$err);
       } 
       else {
-          if ($response != "Bad Request"){
-              $response = array("status"=>"- sending","message"=>"Sending Message Success");
+          if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              dd($dataResponse->sales_order);
+              $response = array("status"=>true,"message"=> $dataResponse->customer->id);
           }
           else{
-              $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+
+              $response = array("status"=>false,"message"=> $response);
           }
+      }
+
+      return $response;}
       }
     }
 

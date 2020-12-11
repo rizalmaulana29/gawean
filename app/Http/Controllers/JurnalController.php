@@ -12,17 +12,12 @@ use App\Pendapatan;
 use App\Paymeth;
 use App\AdminEntitas;
 use App\Anak;
-use App\Instruction;
-use App\Mail\Invoice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
-use App\Nicepaylog;
-use App\Thirdparty\Nicepay\Nicepay;
 
 class JurnalController extends Controller
 {
@@ -41,7 +36,7 @@ class JurnalController extends Controller
                                  ->where('tgl_kirim','<=',$endDate->toDateString())
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-                                 // ->limit(50)
+                                 // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
       var_dump($getDataTransaksi);
@@ -49,18 +44,31 @@ class JurnalController extends Controller
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
           if ($salesOrder['status'] == true) {
             $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+              if ($salesOrdertoInvoice['status'] == true) {
+                $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+                if ($createPayment['status'] == true) {
+                  return response()->json(["status"       => true,
+                                           "message"      => "Data berhasil di inputkan ke JurnalID",
+                                           "Data Request" => $getDataTransaksi,
+                                           "Data Response"=> $createPayment['message']
+                                          ],200);
+                } else {
+                  return $createPayment;
+                }
+                
+              }else{
+                return $salesOrdertoInvoice;
+              }
           }else{
             return $salesOrder;
           }
-      } else {
-        return $createCustomer;
-      }
+      } 
+      return $createCustomer;
 
-      return response()->json($getDataTransaksi);
     }
 
     public function CreateCustomer ($getDataTransaksi){
-
+      //Tambahkan looping (mis:foreach) jika data lebih dari satu
       $dataRaw = [
                     "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
                                     "display_name" => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap
@@ -117,23 +125,8 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function SalesOrder($getDataTransaksi,$person_id){ //$getDataTransaksi,$person_id
+    public function SalesOrder($getDataTransaksi,$person_id){ 
 
-      // $endDate = Carbon::now()->endOfMonth();
-      // $start = Carbon::now()->firstOfMonth()->toDateTimestring();
-      // $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-      //                            ->where('lunas','y')
-      //                            ->where('person_id',$request['person_id'])
-      //                            ->whereIn('id_kantor', [4, 5, 6, 17])
-      //                            ->where(function($q) {
-      //                                       $q->where('sisa_pembayaran', '=', 0)
-      //                                       ->orWhereNull('sisa_pembayaran');
-      //                                   })
-      //                            ->where('tgl_kirim','<=',$endDate->toDateString())
-      //                            ->orderBy('tgl_transaksi','ASC')
-      //                            ->first();
-      // var_dump($getDataTransaksi);
-      // $person_id = $request['person_id'];
       $agen      = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
@@ -215,17 +208,13 @@ class JurnalController extends Controller
 
     public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
 
-      var_dump($getDataTransaksi);
-      var_dump($sales_id);
-      var_dump($sales_atribute);
-
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      // dd($detail_atribute);
+
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"   => $getDataTransaksi['tgl'],
@@ -256,47 +245,68 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
-      
-      
-      var_dump($err);
-      dd($response);
+      $findString    = 'sales_invoice';
+      $searchResponse = stripos($response, 'sales_invoice');
 
-      curl_close($curl);
-      
       if ($err) {
-          $response = array("status"=>"- fail","message"=>$err);
+          $response = array("status"=>"failed","message"=>$err);
       } 
       else {
-          if ($response != "Bad Request"){
-              $response = array("status"=>"- sending","message"=>"Sending Message Success");
+          if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              $response = array("status" => true,
+                                "message"=> $dataResponse->sales_invoice->transaction_no);
           }
           else{
-              $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+
+              $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
+
+      return $response;
     }
 
-    public function receivePayment(){
+    public function receivePayment($getDataTransaksi,$transaction_no){
 
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
+      if ($paymentMethode != 'cash') {
+
+        $createExpenses      = $this->createExpenses($getDataTransaksi);
+
+        $payment_method_name = "Transfer Bank";
+        $payment_method_id   = 792898;
+        $deposit_to_name     = "Mandiri Publik 131 000 711 2586";
+      } 
+      elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
+        $payment_method_name = "Kas Tunai";
+        $payment_method_id   = 20438423;
+        $deposit_to_name     = "Kas Bandung";
+      } else {
+        $payment_method_name = "Kas Tunai";
+        $payment_method_id   = 20438424;
+        $deposit_to_name     = "Kas Cirebon";
+      }
+      
       $dataRaw = [
                 "receive_payment"  => [ 
-                                        "transaction_date"   => "Savitri Wulan Agustin Test From API",
-                                        "records_attributes" => [["transaction_no" => "fromsalesorder",
-                                                                  "amount"  => 1]],
-                                        "custom_id"      => "Savitri Wulan Agustin",
-                                        "payment_method_name"        => "Transfer Bank",
-                                        "payment_method_id"       => 792898,
-                                        "is_draft"        => false,
-                                        "deposit_to_name"    => "Mandiri Publik 131 000 711 2586",
+                                        "transaction_date"    => $getDataTransaksi['tgl'],
+                                        "records_attributes"  => [[ "transaction_no" => $transaction_no,
+                                                                    "amount"         => $getDataTransaksi['nominal_total']]],
+                                        "custom_id"           => $getDataTransaksi['id_transaksi'],
+                                        "payment_method_name" => $payment_method_name,
+                                        "payment_method_id"   => $payment_method_id,
+                                        "is_draft"            => false,
+                                        "deposit_to_name"     => $deposit_to_name,
                                       ]
                   ];
+
 
       $encodedataRaw = json_encode($dataRaw);
 
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/201834363/convert_to_invoice",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/receive_payments",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,
@@ -314,23 +324,91 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
-      var_dump($response);
-      var_dump($err);
+      $findString    = 'receive_payment';
+      $searchResponse = stripos($response, 'receive_payment');
 
-      die;
-      curl_close($curl);
-      
       if ($err) {
-          $response = array("status"=>"- fail","message"=>$err);
+          $response = array("status"=>"failed","message"=>$err);
       } 
       else {
-          if ($response != "Bad Request"){
-              $response = array("status"=>"- sending","message"=>"Sending Message Success");
+          if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              $response = array("status" => true,
+                                "id"     => $dataResponse->receive_payment->id,
+                                "message"=> $dataResponse->receive_payment->transaction_no);
           }
           else{
-              $response = array("status"=>"- fail: email gagal terkirim !","message"=>"Bad Request");
+
+              $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
+
+      return $response;
+    }
+
+    private function createExpenses($getDataTransaksi){
+  
+      $dataRaw = [
+                "expense"  => [ 
+                                        "refund_from_name"   => "Mandiri Publik 131 000 711 2586",
+                                        "person_name"        => "Nicepay",
+                                        "transaction_date"   => $getDataTransaksi['tgl'],
+                                        "payment_method_name"=> "Transfer Bank",
+                                        "payment_method_id"  => 792898,
+                                        "transaction_no"     => $getDataTransaksi['id_transaksi'],
+                                        "custom_id"          => $getDataTransaksi['id_transaksi'],
+                                        "expense_payable"    => false,
+                                        "transaction_account_lines_attributes"  => [[ "account_name" => "Biaya lain-lain",
+                                                                                      "description"  => "biaya nicepay 2011240027650",
+                                                                                      "debit"        => 4400
+                                                                                   ]],
+                                      ]
+                  ];
+
+
+      $encodedataRaw = json_encode($dataRaw);
+
+      $curl = curl_init();
+
+      curl_setopt_array($curl, array(
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/expenses",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING       => "",
+        CURLOPT_MAXREDIRS      => 10,
+        CURLOPT_TIMEOUT        => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST  => "POST",
+        CURLOPT_POSTFIELDS     => $encodedataRaw,
+        CURLOPT_HTTPHEADER     => array(
+                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
+                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "Content-Type: application/json; charset=utf-8",
+                                        "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
+                                      ),
+      ));
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+      $findString    = 'expense';
+      $searchResponse = stripos($response, 'expense');
+
+      if ($err) {
+          $response = array("status"=>"failed","message"=>$err);
+      } 
+      else {
+          if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              $response = array("status" => true,
+                                "id"     => $dataResponse->expense->id,
+                                "message"=> $dataResponse->expense->transaction_no);
+          }
+          else{
+
+              $response = array("status"=>false,"message"=> "sales order".$response);
+          }
+      }
+
+      return $response;
     }
 
 }

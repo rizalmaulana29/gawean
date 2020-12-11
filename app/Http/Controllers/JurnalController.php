@@ -142,22 +142,20 @@ class JurnalController extends Controller
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
 
-      $detail_produk = [];
-      // $produk = "";
+      
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
         $data_produk         = [];
         $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga];
-        array_push($detail_produk,$produk);
-        array_merge($data_produk,$detail_produk);
+        array_push($data_produk,$produk);
         $countData++;
       }
-      dd($detail_produk);
+      
       $dataRaw = [
                 "sales_order"  => [ 
                                   "transaction_date"             => $getDataTransaksi['tgl'],
-                                  "transaction_lines_attributes" => [$data_produk],
+                                  "transaction_lines_attributes" => $data_produk,
                                   "shipping_date"      => $getDataTransaksi['tgl_kirim'],
                                   "shipping_price"     => 0,
                                   "shipping_address"   => $getDataTransaksi['alamat'],

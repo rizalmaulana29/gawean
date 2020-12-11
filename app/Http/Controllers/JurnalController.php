@@ -6,7 +6,9 @@ use App\Harga;
 use App\Kantor;
 use App\Produk;
 use App\Order;
+use App\CmsUser;
 use App\Payment;
+use App\Pendapatan;
 use App\Paymeth;
 use App\AdminEntitas;
 use App\Anak;
@@ -42,9 +44,9 @@ class JurnalController extends Controller
                                  // ->limit(50)
                                  // ->get();
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
- 
+      var_dump($getDataTransaksi);
       if ($createCustomer['status'] == true) {
-        $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer);
+        $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
       } else {
         return $createCustomer;
       }
@@ -119,24 +121,43 @@ class JurnalController extends Controller
 
       var_dump($getDataTransaksi);
       dd($person_id);
+      $agen      = '';
+      if ($getDataTransaksi['id_agen'] != null) {
+        $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
+      }
+      $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
+      $countData = 1;
+      $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
+
+      foreach ($dataOrder as $key => $order) {
+        $ending              = (count($dataOrder) == $countData)?"":",";
+        $produk_harga        = Harga::where('id',$order['id_produk_harga'])->value('jurnal_product_id');
+        $data_produk        .= ["quantity"  => $order['quantity'],"rate"=> $order['harga'],"product_id"=> $produk_harga].$ending;
+        $countData++;
+      }
+
+      $nominalPerProgram = [];
+
+      foreach ($request['program'] as $key => $value) {
+
+          
+  
+      }
       $dataRaw = [
                 "sales_order"  => [ 
-                                  "transaction_date"   => "Savitri Wulan Agustin Test From API",
-                                  "transaction_lines_attributes" => [["quantity"  => 1,"rate"      => 1505000,"product_id"=> "10543700"],
-                                                                     ["quantity"  => 1,"rate"      => 1505000,"product_id"=> "10543700"]
-                                                                    ],
-
-                                  "shipping_date"      => "Savitri Wulan Agustin",
-                                  "shipping_price"        => "081320314029",
-                                  "shipping_address"       => "081320314029",
-                                  "is_shipped"        => "Cappietori.86@gmail.com",
-                                  "address"    => "2011240027653",
-                                  "due_date"    => "2011240027653",
-                                  "person_id"    => "2011240027653",
-                                  "tags"    => ["2011240027653","test"],
-                                  "email"    => "2011240027653",
-                                  "transaction_no"    => "2011240027653",
-                                  "custom_id"    => "2011240027653"
+                                  "transaction_date"             => $getDataTransaksi['tgl'],
+                                  "transaction_lines_attributes" => [$data_produk],
+                                  "shipping_date"      => $getDataTransaksi['tgl_kirim'],
+                                  "shipping_price"     => 0,
+                                  "shipping_address"   => $getDataTransaksi['alamat'],
+                                  "is_shipped"         => true,
+                                  "address"            => $getDataTransaksi['alamat'],
+                                  "due_date"           => $getDataTransaksi['tgl'],
+                                  "person_id"          => $person_id,
+                                  "tags"               => [$getDataTransaksi['tgl'],$getDataTransaksi['jenis'],$getDataTransaksi['tunai'],$kantor,$agen],
+                                  "email"              => $getDataTransaksi['email'],
+                                  "transaction_no"     => $getDataTransaksi['id_transaksi'],
+                                  "custom_id"          => $getDataTransaksi['id_transaksi']
                                   ]
                   ];
 

@@ -9,6 +9,7 @@ use App\Order;
 use App\CmsUser;
 use App\Payment;
 use App\Pendapatan;
+use App\JurnalLog;
 use App\Paymeth;
 use App\AdminEntitas;
 use App\Anak;
@@ -38,8 +39,8 @@ class JurnalController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
+                                 
       $createCustomer = $this->CreateCustomer($getDataTransaksi);
-      var_dump($getDataTransaksi);
       if ($createCustomer['status'] == true) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
           if ($salesOrder['status'] == true) {
@@ -104,6 +105,15 @@ class JurnalController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
       curl_close($curl);
+
+      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
+                                        'action' => "CreateCustomer",
+                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body' => $encodedataRaw,
+                                        'response_body' => $response
+                                        ]);
+
       $findString    = 'customer';
       $searchResponse = stripos($response, 'customer');
 
@@ -121,7 +131,7 @@ class JurnalController extends Controller
               $response = array("status"=>false,"message"=> "create customer".$response);
           }
       }
-
+      
       return $response;
     }
 
@@ -184,6 +194,15 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
+
+      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
+                                        'action' => "SalesOrder",
+                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body' => $encodedataRaw,
+                                        'response_body' => $response
+                                        ]);
+
       $findString    = 'sales_order';
       $searchResponse = stripos($response, 'sales_order');
 
@@ -202,7 +221,7 @@ class JurnalController extends Controller
               $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
-
+      
       return $response;
     }
 
@@ -245,6 +264,15 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
+
+      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
+                                        'action' => "SalesOrdertoInvoice",
+                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body' => $encodedataRaw,
+                                        'response_body' => $response
+                                        ]);
+
       $findString    = 'sales_invoice';
       $searchResponse = stripos($response, 'sales_invoice');
 
@@ -324,6 +352,15 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
+
+      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
+                                        'action' => "receivePayment",
+                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body' => $encodedataRaw,
+                                        'response_body' => $response
+                                        ]);
+
       $findString    = 'receive_payment';
       $searchResponse = stripos($response, 'receive_payment');
 
@@ -389,6 +426,15 @@ class JurnalController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
+
+      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
+                                        'action' => "createExpenses",
+                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body' => $encodedataRaw,
+                                        'response_body' => $response
+                                        ]);
+
       $findString    = 'expense';
       $searchResponse = stripos($response, 'expense');
 

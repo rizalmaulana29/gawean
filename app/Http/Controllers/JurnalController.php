@@ -24,7 +24,7 @@ class JurnalController extends Controller
 {
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->firstOfMonth()->toDateTimestring();
+      $start = Carbon::now()->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('lunas','y')

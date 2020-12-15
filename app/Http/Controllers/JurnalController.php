@@ -306,12 +306,12 @@ class JurnalController extends Controller
         $deposit_to_name     = "Mandiri Publik 131 000 711 2586";
       } 
       elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-        $payment_method_name = "Kas Tunai";
-        $payment_method_id   = 20438423;
+        $payment_method_name = "Cash";
+        $payment_method_id   = 984210;
         $deposit_to_name     = "Kas Bandung";
       } else {
-        $payment_method_name = "Kas Tunai";
-        $payment_method_id   = 20438424;
+        $payment_method_name = "Cash";
+        $payment_method_id   = 984210;
         $deposit_to_name     = "Kas Cirebon";
       }
       

@@ -39,32 +39,32 @@ class JurnalController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-                                 
-      $createCustomer = $this->CreateCustomer($getDataTransaksi);
-      if ($createCustomer['status'] == true) {
-        $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-          if ($salesOrder['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-              if ($salesOrdertoInvoice['status'] == true) {
-                $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-                if ($createPayment['status'] == true) {
-                  return response()->json(["status"       => true,
-                                           "message"      => "Data berhasil di inputkan ke JurnalID",
-                                           "Data Request" => $getDataTransaksi,
-                                           "Data Response"=> $createPayment['message']
-                                          ],200);
-                } else {
+      if (isset($getDataTransaksi)) {                      
+        $createCustomer = $this->CreateCustomer($getDataTransaksi);
+        if ($createCustomer['status'] == true) {
+          $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
+            if ($salesOrder['status'] == true) {
+              $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+                if ($salesOrdertoInvoice['status'] == true) {
+                  $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+                  if ($createPayment['status'] == true) {
+                    return response()->json(["status"       => true,
+                                             "message"      => "Data berhasil di inputkan ke JurnalID",
+                                             "Data Request" => $getDataTransaksi,
+                                             "Data Response"=> $createPayment['message']
+                                            ],200);
+                  }
                   return $createPayment;
                 }
-                
-              }else{
-                return $salesOrdertoInvoice;
-              }
-          }else{
+                return $salesOrdertoInvoice;   
+            }
             return $salesOrder;
-          }
-      } 
-      return $createCustomer;
+        } 
+        return $createCustomer;
+      }
+      return response()->json(["status"       => false,
+                               "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
+                              ],200);
 
     }
 

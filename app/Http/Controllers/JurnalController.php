@@ -144,6 +144,8 @@ class JurnalController extends Controller
       $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
+      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
+      $tglTransaksi = date('Y-m-d',$tgl);
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
@@ -155,7 +157,7 @@ class JurnalController extends Controller
 
       $dataRaw = [
                 "sales_order"  => [ 
-                                  "transaction_date"             => $getDataTransaksi['tgl'],
+                                  "transaction_date"             => $tglTransaksi,
                                   "transaction_lines_attributes" => $detail_produk,
                                   "shipping_date"      => $getDataTransaksi['tgl_kirim'],
                                   "shipping_price"     => 0,
@@ -233,10 +235,12 @@ class JurnalController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
+      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
+      $tglTransaksi = date('Y-m-d',$tgl);
 
       $dataRaw = [
                 "sales_order"  => [ 
-                                  "transaction_date"   => $getDataTransaksi['tgl'],
+                                  "transaction_date"   => $tglTransaksi,
                                   "transaction_lines_attributes" => $detail_atribute
                                   ]
                   ];
@@ -315,9 +319,12 @@ class JurnalController extends Controller
         $deposit_to_name     = "Kas Cirebon";
       }
       
+      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
+      $tglTransaksi = date('Y-m-d',$tgl);
+
       $dataRaw = [
                 "receive_payment"  => [ 
-                                        "transaction_date"    => $getDataTransaksi['tgl'],
+                                        "transaction_date"    => $tglTransaksi,
                                         "records_attributes"  => [[ "transaction_no" => $transaction_no,
                                                                     "amount"         => $getDataTransaksi['nominal_total']]],
                                         "custom_id"           => $getDataTransaksi['id_transaksi'],
@@ -384,12 +391,15 @@ class JurnalController extends Controller
     }
 
     private function createExpenses($getDataTransaksi){
-  
+      
+      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
+      $tglTransaksi = date('Y-m-d',$tgl);
+
       $dataRaw = [
                 "expense"  => [ 
                                         "refund_from_name"   => "Mandiri Publik 131 000 711 2586",
                                         "person_name"        => "Nicepay",
-                                        "transaction_date"   => $getDataTransaksi['tgl'],
+                                        "transaction_date"   => $tglTransaksi,
                                         "payment_method_name"=> "Transfer Bank",
                                         "payment_method_id"  => 792898,
                                         "transaction_no"     => $getDataTransaksi['id_transaksi'],

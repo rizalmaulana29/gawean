@@ -27,6 +27,7 @@ class JurnalController extends Controller
       $start = Carbon::now()->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                                 ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','')
                                  ->whereIn('id_kantor', [6, 17])

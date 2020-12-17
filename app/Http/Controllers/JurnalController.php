@@ -138,9 +138,14 @@ class JurnalController extends Controller
 
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
-      $agen      = '';
+      $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
+      }
+
+      $dataDiskon   = 0;
+      if ($getDataTransaksi['nominal_diskon'] != null) {
+        $dataDiskon = $getDataTransaksi['nominal_diskon'];
       }
       $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $countData = 1;
@@ -166,6 +171,8 @@ class JurnalController extends Controller
                                   "is_shipped"         => true,
                                   "address"            => $getDataTransaksi['alamat'],
                                   "due_date"           => $getDataTransaksi['tgl'],
+                                  "discount_type_name" => "Value",
+                                  "discount_type_value"=> $dataDiskon,
                                   "person_id"          => $person_id,
                                   "tags"               => [$getDataTransaksi['tgl'],$getDataTransaksi['jenis'],$getDataTransaksi['tunai'],$kantor,$agen],
                                   "email"              => $getDataTransaksi['email'],

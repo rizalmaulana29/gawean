@@ -100,7 +100,7 @@ class JurnalDevController extends Controller
                                  ->where('tgl_kirim','=',$start)
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+      dd($getDataTransaksi['person_id']);
       if (isset($getDataTransaksi)) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {

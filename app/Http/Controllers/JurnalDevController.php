@@ -640,15 +640,15 @@ class JurnalDevController extends Controller
 
       $dataRaw = [
                 "customer_apply_credit_memo"  => [ 
-                                        "person_id"              => $getDataTransaksi['person_id'],
-                                        "selected_credit_memo_id"=> $getDataTransaksi['memo_id'],
-                                        "records_attributes" => [[ "transaction_id"=> $transaction_no,
-                                                                   "amount" => $nominal]]
-                                      ]
+                                                  "person_id"              => $getDataTransaksi['person_id'],
+                                                  "selected_credit_memo_id"=> $getDataTransaksi['memo_id'],
+                                                  "records_attributes"     => [[ "transaction_id"=> $transaction_no,
+                                                                                 "amount" => $nominal]]
+                                                ]
                   ];  
       var_dump($dataRaw);
       $encodedataRaw = json_encode($dataRaw);
-
+      var_dump($encodedataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

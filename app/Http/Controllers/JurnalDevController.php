@@ -106,7 +106,7 @@ class JurnalDevController extends Controller
           if ($salesOrder['status'] == true) {
             $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
               if ($salesOrdertoInvoice['status'] == true) {
-                $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['message']);
+                $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
                 if ($applyMemo['status'] == true) {
                   return response()->json(["status"       => true,
                                        "message"      => "Data berhasil di inputkan ke Apply MEMO",
@@ -351,6 +351,7 @@ class JurnalDevController extends Controller
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
               $response = array("status" => true,
+                                "id"     => $dataResponse->sales_invoice->id,
                                 "message"=> $dataResponse->sales_invoice->transaction_no);
           }
           else{

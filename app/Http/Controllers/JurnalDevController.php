@@ -86,7 +86,7 @@ class JurnalDevController extends Controller
     public function transaksiBedaBulan (){
 
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDatestring();
+      $start = '2021-01-01';//Carbon::now()->toDatestring();
 
       $getDataTransaksi = Payment::where('status','paid')
                                  ->where('lunas','y')
@@ -100,7 +100,7 @@ class JurnalDevController extends Controller
                                  ->where('tgl_kirim','=',$start)
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {
@@ -638,7 +638,7 @@ class JurnalDevController extends Controller
 
       $dataRaw = [
                 "customer_apply_credit_memo"  => [ 
-                                        "person_id"              => is_int($getDataTransaksi['person_id']),
+                                        "person_id"              => $getDataTransaksi['person_id'],
                                         "selected_credit_memo_id"=> $getDataTransaksi['memo_id'],
                                         "records_attributes" => [[ "transaction_id"=> $transaction_no,
                                                                    "amount" => $nominal]]

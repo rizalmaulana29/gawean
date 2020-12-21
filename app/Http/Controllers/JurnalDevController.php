@@ -86,7 +86,7 @@ class JurnalDevController extends Controller
     public function transaksiBedaBulan (){
 
       $endDate = Carbon::now()->endOfMonth();
-      $start = '2021-01-01';//Carbon::now()->toDatestring();
+      $start = Carbon::now()->toDatestring();
 
       $getDataTransaksi = Payment::where('status','paid')
                                  ->where('lunas','y')
@@ -134,7 +134,8 @@ class JurnalDevController extends Controller
                                     "phone"        => $getDataTransaksi['hp'],
                                     "mobile"       => $getDataTransaksi['hp'],
                                     "email"        => $getDataTransaksi['email'],
-                                    "custom_id"    => $getDataTransaksi['id_transaksi'] //id_transaksi tidak boleh sama
+                                    "custom_id"    => $getDataTransaksi['id_transaksi'], //id_transaksi tidak boleh sama
+                                    "default_ap_account_name" => "Pendapatan Diterima Di Muka"
                                     ]
                   ];
 
@@ -537,7 +538,7 @@ class JurnalDevController extends Controller
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
 
       if ($paymentMethode != 'cash') {
-        // $createExpenses      = $this->createExpenses($getDataTransaksi);
+        $createExpenses      = $this->createExpenses($getDataTransaksi);
         $deposit_to_name     = "Mandiri Publik 131 000 711 2586";
       } 
       elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
@@ -689,7 +690,6 @@ class JurnalDevController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              // $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['memo_id' => $dataResponse->credit_memo->id]);
               $response = array("status" => true,
                                 "message"=> $dataResponse->customer_apply_credit_memo);
           }

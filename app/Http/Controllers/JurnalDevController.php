@@ -548,13 +548,14 @@ class JurnalDevController extends Controller
                                         "person_type"        => "customer",
                                         "transaction_date"   => $tglTransaksi,
                                         "transaction_no"     => $getDataTransaksi['id_transaksi'],
-                                        "records_attributes" => [[ "account_name"=> $deposit_to_name,
-                                                                   "description" => $tipeTransaksi,
-                                                                   "debit"       => $nominal]],
+                                        "transaction_account_lines_attributes" => [[ "account_name"=> $deposit_to_name,
+                                                                                     "description" => $tipeTransaksi,
+                                                                                     "debit"       => $nominal]],
                                         "memo"               => $tipeTransaksi,
                                         "custom_id"          => $getDataTransaksi['id_transaksi']
                                       ]
                   ];  
+        
         
       $encodedataRaw = json_encode($dataRaw);
 

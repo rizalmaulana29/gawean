@@ -36,7 +36,7 @@ class JurnalDevController extends Controller
                                             ->orWhereNull('sisa_pembayaran');
                                         })
                                  // ->where('tgl_kirim','<=',$endDate->toDateString())
-                                 ->orderBy('tgl_transaksi','ASC');
+                                 ->orderBy('tgl_transaksi','ASC')
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();

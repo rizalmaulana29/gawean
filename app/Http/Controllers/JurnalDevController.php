@@ -97,7 +97,7 @@ class JurnalDevController extends Controller
                                             ->orWhereNull('sisa_pembayaran');
                                         })
                                  ->where('tgl_kirim','=',$start)
-                                 ->orderBy('tgl_transaksi','ASC');
+                                 ->orderBy('tgl_transaksi','ASC')
                                  ->first();
 
       if (isset($getDataTransaksi)) {

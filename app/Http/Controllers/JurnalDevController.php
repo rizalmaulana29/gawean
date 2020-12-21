@@ -645,7 +645,7 @@ class JurnalDevController extends Controller
                                                                    "amount" => $nominal]]
                                       ]
                   ];  
-        
+      dd($dataRaw);
       $encodedataRaw = json_encode($dataRaw);
 
       $curl = curl_init();

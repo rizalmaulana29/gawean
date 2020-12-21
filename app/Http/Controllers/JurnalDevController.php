@@ -106,10 +106,22 @@ class JurnalDevController extends Controller
           if ($salesOrder['status'] == true) {
             $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
               if ($salesOrdertoInvoice['status'] == true) {
-                $applyMemo = $this->ApplyMemo();
+                $applyMemo = $this->ApplyMemo($getDataTransaksi,$salesOrdertoInvoice['message']);
+                if ($applyMemo['status'] == true) {
+                  return response()->json(["status"       => true,
+                                       "message"      => "Data berhasil di inputkan ke Apply MEMO",
+                                       "Data Request" => $getDataTransaksi,
+                                       "Data Response"=> $applyMemo['message']
+                                      ],200);
+                }
               }
+              return $salesOrdertoInvoice;
           }
+          return $salesOrder;
       }
+      return response()->json(["status"       => false,
+                               "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
+                              ],200);
     }
 
     public function CreateCustomer ($getDataTransaksi){
@@ -556,7 +568,7 @@ class JurnalDevController extends Controller
                                       ]
                   ];  
         
-        
+
       $encodedataRaw = json_encode($dataRaw);
 
       $curl = curl_init();

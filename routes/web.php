@@ -28,6 +28,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('create/salesorder', 	['uses' => 'JurnalController@SalesOrder']);
 	$router->get('filter', 	['uses' => 'JurnalController@Filtering']);
 
+	$router->post('create/customer', 	['uses' => 'JurnalDevController@CreateCustomer']);
+	$router->post('create/salesorder', 	['uses' => 'JurnalDevController@SalesOrder']);
+
+	$router->get('filterDev', 	['uses' => 'JurnalDevController@Filtering']);
+	$router->get('filterDev/bedabulan', 	['uses' => 'JurnalDevController@transaksiBedaBulan']);
+	
+
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
 

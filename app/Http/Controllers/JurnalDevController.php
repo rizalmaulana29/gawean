@@ -40,11 +40,12 @@ class JurnalDevController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-      dd($getDataTransaksi);
+      var_dump($getDataTransaksi);
       if (isset($getDataTransaksi)) {                      
-        $createCustomer = $this->CreateCustomer($getDataTransaksi);
-        if ($createCustomer['status'] == true) {
+        // $createCustomer = $this->CreateCustomer($getDataTransaksi);
+        // if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
+            dd($getDataTransaksi);
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
               if ($salesOrder['status'] == true) {
                 $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
@@ -73,8 +74,8 @@ class JurnalDevController extends Controller
             }
             return $creditMemo;
           }
-        } 
-        return $createCustomer;
+        // } 
+        // return $createCustomer;
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"

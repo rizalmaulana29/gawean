@@ -536,6 +536,7 @@ class JurnalDevController extends Controller
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
 
       if ($paymentMethode != 'cash') {
+        // $createExpenses      = $this->createExpenses($getDataTransaksi);
         $deposit_to_name     = "Mandiri Publik 131 000 711 2586";
       } 
       elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
@@ -645,7 +646,7 @@ class JurnalDevController extends Controller
                                                                    "amount" => $nominal]]
                                       ]
                   ];  
-      dd($dataRaw);
+      var_dump($dataRaw);
       $encodedataRaw = json_encode($dataRaw);
 
       $curl = curl_init();

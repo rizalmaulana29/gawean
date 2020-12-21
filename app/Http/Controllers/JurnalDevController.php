@@ -24,7 +24,7 @@ class JurnalDevController extends Controller
 {
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->firstOfMonth()->toDateTimestring();
+      $start = Carbon::now()->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('status','paid')
@@ -42,8 +42,8 @@ class JurnalDevController extends Controller
                                  // ->get();
       var_dump($getDataTransaksi);
       if (isset($getDataTransaksi)) {                      
-        // $createCustomer = $this->CreateCustomer($getDataTransaksi);
-        // if ($createCustomer['status'] == true) {
+        $createCustomer = $this->CreateCustomer($getDataTransaksi);
+        if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
             dd($getDataTransaksi);
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);

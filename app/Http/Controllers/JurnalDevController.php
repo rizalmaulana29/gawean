@@ -100,7 +100,7 @@ class JurnalDevController extends Controller
                                  ->where('tgl_kirim','=',$start)
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi['person_id']);
+      // dd($getDataTransaksi['person_id']);
       if (isset($getDataTransaksi)) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {
@@ -114,6 +114,7 @@ class JurnalDevController extends Controller
                                        "Data Response"=> $applyMemo['message']
                                       ],200);
                 }
+                return $applyMemo;
               }
               return $salesOrdertoInvoice;
           }

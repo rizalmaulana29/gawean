@@ -679,8 +679,8 @@ class JurnalDevController extends Controller
                                         'response_body' => $response
                                         ]);
 
-      $findString    = 'credit_memo';
-      $searchResponse = stripos($response, 'credit_memo');
+      $findString    = 'customer_apply_credit_memo';
+      $searchResponse = stripos($response, 'customer_apply_credit_memo');
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
@@ -688,13 +688,13 @@ class JurnalDevController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['memo_id' => $dataResponse->credit_memo->id]);
+              // $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['memo_id' => $dataResponse->credit_memo->id]);
               $response = array("status" => true,
-                                "message"=> $dataResponse->credit_memo->id);
+                                "message"=> $dataResponse->customer_apply_credit_memo);
           }
           else{
 
-              $response = array("status"=>false,"message"=> "credit memo".$response);
+              $response = array("status"=>false,"message"=> "customer apply credit memo".$response);
           }
       }
 

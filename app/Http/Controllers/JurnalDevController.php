@@ -74,8 +74,8 @@ class JurnalDevController extends Controller
             }
             return $creditMemo;
           }
-        // } 
-        // return $createCustomer;
+        } 
+        return $createCustomer;
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"

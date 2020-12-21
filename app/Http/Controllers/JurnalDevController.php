@@ -543,7 +543,7 @@ class JurnalDevController extends Controller
 
       $dataRaw = [
                 "credit_memo"  => [ 
-                                        "person_id"          => $tglTransaksi,
+                                        "person_id"          => $person_id,
                                         "person_name"        => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'],
                                         "person_type"        => "customer",
                                         "transaction_date"   => $tglTransaksi,
@@ -625,7 +625,7 @@ class JurnalDevController extends Controller
 
       $dataRaw = [
                 "customer_apply_credit_memo"  => [ 
-                                        "person_id"              => $getDataTransaksi['person_id'],
+                                        "person_id"              => is_int($getDataTransaksi['person_id']),
                                         "selected_credit_memo_id"=> $getDataTransaksi['memo_id'],
                                         "records_attributes" => [[ "transaction_id"=> $transaction_no,
                                                                    "amount" => $nominal]]

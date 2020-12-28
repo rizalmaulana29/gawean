@@ -40,7 +40,7 @@ class JurnalDevController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-      var_dump($getDataTransaksi);
+
       if (isset($getDataTransaksi)) {                      
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
         if ($createCustomer['status'] == true) {
@@ -100,7 +100,7 @@ class JurnalDevController extends Controller
                                  ->where('tgl_kirim','=',$start)
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-      // dd($getDataTransaksi['person_id']);
+      
       if (isset($getDataTransaksi)) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {

@@ -523,11 +523,11 @@ class JurnalCicPelController extends Controller
         $deposit_to_name     = "Kas Cirebon";
       }
 
-      if ($getDataTransaksi['tunai'] == "Tunai") {
-        $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
+      if ($getDataTransaksi['tunai'] == "Cicilan") {
+        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
         $nominal       = $getDataTransaksi['nominal_total'];
       }
-      $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+      $tipeTransaksi = "Pelunasan".$getDataTransaksi['id_transaksi'];
       $nominal       = $getDataTransaksi['nominal_bayar'];
 
       $tgl = strtotime($getDataTransaksi['tgl_transaksi']);

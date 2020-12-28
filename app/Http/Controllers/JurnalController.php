@@ -49,7 +49,6 @@ class JurnalController extends Controller
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
         if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
-            dd($getDataTransaksi);
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
               if ($salesOrder['status'] == true) {
                 $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);

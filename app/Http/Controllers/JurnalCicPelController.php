@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class JurnalDevController extends Controller
+class JurnalCicPelController extends Controller
 {
     public function FilteringCicilan(){
       $endDate = Carbon::now()->endOfMonth();

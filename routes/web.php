@@ -27,6 +27,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('create/customer', 	['uses' => 'JurnalController@CreateCustomer']);
 	$router->post('create/salesorder', 	['uses' => 'JurnalController@SalesOrder']);
 	$router->get('filter', 	['uses' => 'JurnalController@Filtering']);
+	$router->get('filter/bedabulan', 	['uses' => 'JurnalController@transaksiBedaBulan']);
+	$router->get('FilteringCicilan', 	['uses' => 'JurnalCicPelController@FilteringCicilan']);
+	$router->get('filter/transaksiCiPel', 	['uses' => 'JurnalCicPelController@transaksiCiPel']);
 
 	$router->post('create/customer', 	['uses' => 'JurnalDevController@CreateCustomer']);
 	$router->post('create/salesorder', 	['uses' => 'JurnalDevController@SalesOrder']);
@@ -34,7 +37,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('filterDev', 	['uses' => 'JurnalDevController@Filtering']);
 	$router->get('filterDev/bedabulan', 	['uses' => 'JurnalDevController@transaksiBedaBulan']);
 	
-
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
 

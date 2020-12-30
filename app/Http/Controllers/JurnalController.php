@@ -36,10 +36,6 @@ class JurnalController extends Controller
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
                                         })
-                                 ->where(function($q) {
-                                            $q->where('nominal_diskon', '=', 0)
-                                            ->orWhereNull('nominal_diskon');
-                                        })
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
@@ -100,10 +96,6 @@ class JurnalController extends Controller
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
-                                        })
-                                 ->where(function($q) {
-                                            $q->where('nominal_diskon', '=', 0)
-                                            ->orWhereNull('nominal_diskon');
                                         })
                                  ->where('tgl_kirim','=',$start)
                                  ->orderBy('tgl_transaksi','ASC')

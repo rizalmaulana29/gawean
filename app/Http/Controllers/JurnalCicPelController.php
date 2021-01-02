@@ -35,10 +35,10 @@ class JurnalCicPelController extends Controller
                                  ->where('person_id','')
                                  ->where('memo_id','')
                                  ->whereIn('id_kantor', [6, 17])
-                                 ->where(function($q) {
-                                            $q->where('nominal_diskon', '=', 0)
-                                            ->orWhereNull('nominal_diskon');
-                                        })
+                                 // ->where(function($q) {
+                                 //            $q->where('nominal_diskon', '=', 0)
+                                 //            ->orWhereNull('nominal_diskon');
+                                 //        })
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
 
@@ -203,7 +203,7 @@ class JurnalCicPelController extends Controller
                                   "shipping_address"   => $getDataTransaksi['alamat'],
                                   "is_shipped"         => true,
                                   "address"            => $getDataTransaksi['alamat'],
-                                  "due_date"           => $getDataTransaksi['tgl'],
+                                  "due_date"           => $getDataTransaksi['tgl_kirim'],
                                   "discount_type_name" => "Value",
                                   "discount_type_value"=> $dataDiskon,
                                   "person_id"          => $person_id,

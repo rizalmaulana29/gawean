@@ -227,7 +227,7 @@ class JurnalController extends Controller
                                   "shipping_address"   => $getDataTransaksi['alamat'],
                                   "is_shipped"         => true,
                                   "address"            => $getDataTransaksi['alamat'],
-                                  "due_date"           => $getDataTransaksi['tgl'],
+                                  "due_date"           => $getDataTransaksi['tgl_kirim'],
                                   "discount_type_name" => "Value",
                                   "discount_type_value"=> $dataDiskon,
                                   "person_id"          => $person_id,
@@ -279,6 +279,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id]);
               $response = array("status" =>true,
                                 "id"     => $dataResponse->sales_order->id,
                                 "message"=> $dataResponse->sales_order->transaction_lines_attributes);
@@ -351,13 +352,14 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id]);
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,
                                 "message"=> $dataResponse->sales_invoice->transaction_no);
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales order".$response);
+              $response = array("status"=>false,"message"=> "sales invoice".$response);
           }
       }
 
@@ -443,6 +445,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => $dataResponse->receive_payment->id]);
               $response = array("status" => true,
                                 "id"     => $dataResponse->receive_payment->id,
                                 "message"=> $dataResponse->receive_payment->transaction_no);
@@ -520,6 +523,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['expenses_id' => $dataResponse->expense->id]);
               $response = array("status" => true,
                                 "id"     => $dataResponse->expense->id,
                                 "message"=> $dataResponse->expense->transaction_no);
@@ -690,6 +694,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => $dataResponse->customer_apply_credit_memo->id]);
               $response = array("status" => true,
                                 "message"=> $dataResponse->customer_apply_credit_memo);
           }

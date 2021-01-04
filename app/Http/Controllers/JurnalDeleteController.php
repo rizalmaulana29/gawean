@@ -27,28 +27,34 @@ class JurnalDeleteController extends Controller
       $getDataTransaksi = Payment::where('id',$request['id'])->first();
 
       if ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
-        $urldata = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
-        $this->CurlDelete($urldata);
+        $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
+        $response = $this->CurlDelete($urldata);
+        return response()->json($response);
 
       } elseif (condition) { //Sales order
-        $urldata = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
-        $this->CurlDelete($urldata);
+        $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
+        $response = $this->CurlDelete($urldata);
+        return response()->json($response);
 
       } elseif (condition) {  //Sales Invoice
-        $urldata = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
-        $this->CurlDelete($urldata);
+        $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
+        $response = $this->CurlDelete($urldata);
+        return response()->json($response);
 
       } elseif (condition) { //exspense
-        $urldata = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
-        $this->CurlDelete($urldata);
+        $urldata  = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
+        $response = $this->CurlDelete($urldata);
+        return response()->json($response);
 
       } elseif (condition) { //apply Credit memo
-        $urldata = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
-        $this->CurlDelete($urldata);
+        $urldata  = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
+        $response = $this->CurlDelete($urldata);
+        return response()->json($response);
 
       } elseif (condition) { //Credit Memo
-        $urldata = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
-        $this->CurlDelete($urldata);
+        $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
+        $response = $this->CurlDelete($urldata);
+        return response()->json($response);
 
       } else{
         $response = array("status"=>false,"message"=> "Tidak ada data Jurnal yang di hapus");

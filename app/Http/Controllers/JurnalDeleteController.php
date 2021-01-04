@@ -88,8 +88,8 @@ class JurnalDeleteController extends Controller
       if ($err) {
         $response = array("status"=>false,"message"=>"cURL Error #:" . $err);
       } else {
-        dd($httpcode);
-        if ($response != '' || $response != null) {
+        dd();
+        if ($httpcode != 201 || $httpcode != 200) {
           $response = array("status"=>true,"message"=> $response);
         } else {
           $response = array("status"=>true,"message"=> "data berhasil di hapus");

@@ -69,7 +69,7 @@ class JurnalDeleteController extends Controller
             $customer = $this->CurlDelete($urldata);
 
           }
-            $response = array("status"=>true,"message"=> $salesINvoice.' '.$salesOrder.' '.$expense.' '.$applyMemo.' '.$memo.' '.$customer);
+            $response = array("status"=>true,"message"=> $salesInvoice.' '.$salesOrder.' '.$expense.' '.$applyMemo.' '.$memo.' '.$customer);
         }
         return response()->json($response,200);
 

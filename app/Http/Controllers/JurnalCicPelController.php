@@ -69,6 +69,7 @@ class JurnalCicPelController extends Controller
                                  ->where('lunas','y')
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
+                                 ->where('apply_memo_id','=','')
                                  ->whereIn('id_kantor', [6, 17])
                                  ->where(function($q) {
                                             $q->where('tunai', '=', 'Cicilan')

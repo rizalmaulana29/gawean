@@ -88,7 +88,7 @@ class JurnalDeleteController extends Controller
       if ($err) {
         $response = array("status"=>false,"message"=>"cURL Error #:" . $err);
       } else {
-        dd();
+        
         if ($httpcode != 201 || $httpcode != 200) {
           $response = array("status"=>true,"message"=> $response);
         } else {

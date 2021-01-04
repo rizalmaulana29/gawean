@@ -67,7 +67,7 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
             $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
             $customer = $this->CurlDelete($urldata);
-
+            $customer = json_encode($customer);
           }
             $response = array("status"=>true,"message"=> $salesInvoice.' '.$salesOrder.' '.$expense.' '.$applyMemo.' '.$memo.' '.$customer);
         }

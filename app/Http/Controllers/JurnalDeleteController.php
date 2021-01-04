@@ -88,7 +88,7 @@ class JurnalDeleteController extends Controller
       if ($err) {
         $response = array("status"=>false,"message"=>"cURL Error #:" . $err);
       } else {
-        var_dump(http_response_code());
+        var_dump(http_response_code($response));
         $response = array("status"=>true,"message"=> "data berhasil di hapus".$response);
       }
 

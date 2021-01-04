@@ -24,7 +24,7 @@ class JurnalDeleteController extends Controller
 {
     public function DeleteDataJurnal(Request $request){
 
-      $DataTransaksi = Payment::where('id',$request['id'])->first();
+      $DataTransaksi = Payment::where('id',$request['id'])->get();
       var_dump($DataTransaksi);
       foreach ($DataTransaksi as $key => $getDataTransaksi) {
         dd($getDataTransaksi);

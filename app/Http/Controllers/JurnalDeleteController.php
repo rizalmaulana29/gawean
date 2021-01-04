@@ -32,6 +32,7 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
             $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
             $salesInvoice = $this->CurlDelete($urldata);
+            $salesInvoice = $salesInvoice['message'];
 
           }else{
             $salesInvoice = "Tidak ada data Sales Invoice yang di hapus";
@@ -39,6 +40,7 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
             $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
             $salesOrder = $this->CurlDelete($urldata);
+            $salesOrder = $salesOrder['message'];
 
           }else{
             $salesOrder = "Tidak ada data Sales Order yang di hapus";
@@ -46,6 +48,7 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
             $urldata  = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
             $expense = $this->CurlDelete($urldata);
+            $expense = $expense['message'];
 
           } else{
             $expense = "Tidak ada data Expense yang di hapus";
@@ -53,6 +56,7 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['apply_memo_id'] != '' || $getDataTransaksi['apply_memo_id'] != null) { //apply Credit memo
             $urldata  = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
             $applyMemo = $this->CurlDelete($urldata);
+            $applyMemo = $applyMemo['message'];
 
           } else{
             $applyMemo = "Tidak ada data Apply Memo yang di hapus";
@@ -60,6 +64,7 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['memo_id'] != '' || $getDataTransaksi['memo_id'] != null) { //Credit Memo
             $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
             $memo = $this->CurlDelete($urldata);
+            $memo = $memo['message'];
 
           } else{
             $memo = "Tidak ada data Memo yang di hapus";
@@ -67,9 +72,9 @@ class JurnalDeleteController extends Controller
           if ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
             $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
             $customer = $this->CurlDelete($urldata);
-            $customer = json_encode($customer);
+            $customer = $customer['message'];
           }
-            $response = array("status"=>true,"message"=> $salesInvoice.' '.$salesOrder.' '.$expense.' '.$applyMemo.' '.$memo.' '.$customer);
+            $response = array("status"=>true,"message"=> ["Invoice" =>$salesInvoice,"Order" =>$salesOrder,"Expense" =>$expense,"Apply Memo" =>$applyMemo,"Memo" =>$memo,"Customer" =>$customer]);
         }
         return response()->json($response,200);
 
@@ -110,7 +115,7 @@ class JurnalDeleteController extends Controller
         $response = array("status"=>false,"message"=>"cURL Error #:" . $err);
       } else {
 
-        if ($httpcode != 201 || $httpcode != 200) {
+        if ($httpcode != 204 || $httpcode != 201) {
           $response = array("status"=>false,"message"=> $response1);
         } else {
           $response = array("status"=>true,"message"=> "data berhasil di hapus");

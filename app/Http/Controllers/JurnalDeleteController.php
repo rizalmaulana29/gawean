@@ -53,10 +53,8 @@ class JurnalDeleteController extends Controller
             $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
             $response = $this->CurlDelete($urldata);
 
-          }else{
-            $response = array("status"=>false,"message"=> "Tidak ada data Jurnal yang di hapus");
-            
           }
+            $response = array("status"=>true,"message"=> "Data Berhasil di Hapus Semua di Jurnal");
         }
         return response()->json($response);
 

@@ -25,39 +25,45 @@ class JurnalDeleteController extends Controller
     public function DeleteDataJurnal(Request $request){
 
       $DataTransaksi = Payment::where('id',$request['id'])->get();
-      var_dump($DataTransaksi);
-      foreach ($DataTransaksi as $key => $getDataTransaksi) {
+      if (isset($DataTransaksi)) {
+      
+        foreach ($DataTransaksi as $key => $getDataTransaksi) {
 
-        if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
-          $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
-          $response = $this->CurlDelete($urldata);
+          if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
+            $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
+            $response = $this->CurlDelete($urldata);
 
-        } elseif ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
-          $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
-          $response = $this->CurlDelete($urldata);
+          } elseif ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
+            $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
+            $response = $this->CurlDelete($urldata);
 
-        } elseif ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
-          $urldata  = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
-          $response = $this->CurlDelete($urldata);
+          } elseif ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
+            $urldata  = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
+            $response = $this->CurlDelete($urldata);
 
-        } elseif ($getDataTransaksi['apply_memo_id'] != '' || $getDataTransaksi['apply_memo_id'] != null) { //apply Credit memo
-          $urldata  = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
-          $response = $this->CurlDelete($urldata);
+          } elseif ($getDataTransaksi['apply_memo_id'] != '' || $getDataTransaksi['apply_memo_id'] != null) { //apply Credit memo
+            $urldata  = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
+            $response = $this->CurlDelete($urldata);
 
-        } elseif ($getDataTransaksi['memo_id'] != '' || $getDataTransaksi['memo_id'] != null) { //Credit Memo
-          $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
-          $response = $this->CurlDelete($urldata);
+          } elseif ($getDataTransaksi['memo_id'] != '' || $getDataTransaksi['memo_id'] != null) { //Credit Memo
+            $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
+            $response = $this->CurlDelete($urldata);
 
-        } elseif ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
-          $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
-          $response = $this->CurlDelete($urldata);
+          } elseif ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
+            $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
+            $response = $this->CurlDelete($urldata);
 
-        }else{
-          $response = array("status"=>false,"message"=> "Tidak ada data Jurnal yang di hapus");
-          
+          }else{
+            $response = array("status"=>false,"message"=> "Tidak ada data Jurnal yang di hapus");
+            
+          }
         }
+        return response()->json($response);
+      } else {
+        return response()->json(["status"       => false,
+                                 "message"      => "ID Transaksi Tidak Ditemukan"
+                                ],400);
       }
-      return response()->json($response); 
     }
 
     private function CurlDelete ($urldata){

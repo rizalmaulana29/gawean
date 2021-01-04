@@ -31,32 +31,32 @@ class JurnalDeleteController extends Controller
 
           if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
             $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
-            $response = $this->CurlDelete($urldata);
+            $salesINvoice = $this->CurlDelete($urldata);
 
           } elseif ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
             $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
-            $response = $this->CurlDelete($urldata);
+            $salesOrder = $this->CurlDelete($urldata);
 
           } elseif ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
             $urldata  = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
-            $response = $this->CurlDelete($urldata);
+            $expense = $this->CurlDelete($urldata);
 
           } elseif ($getDataTransaksi['apply_memo_id'] != '' || $getDataTransaksi['apply_memo_id'] != null) { //apply Credit memo
             $urldata  = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
-            $response = $this->CurlDelete($urldata);
+            $applyMemo = $this->CurlDelete($urldata);
 
           } elseif ($getDataTransaksi['memo_id'] != '' || $getDataTransaksi['memo_id'] != null) { //Credit Memo
             $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
-            $response = $this->CurlDelete($urldata);
+            $memo = $this->CurlDelete($urldata);
 
           } elseif ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
             $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
-            $response = $this->CurlDelete($urldata);
+            $customer = $this->CurlDelete($urldata);
 
           }
-            $response = array("status"=>true,"message"=> "Data Berhasil di Hapus Semua di Jurnal");
+            $response = array("status"=>true,"message"=> $salesINvoice.' '.$salesOrder.' '.$expense.' '.$applyMemo.' '.$memo.' '.$customer);
         }
-        return response()->json($response);
+        return response()->json($response,200);
 
       } else {
         return response()->json(["status"       => false,

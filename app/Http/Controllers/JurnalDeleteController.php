@@ -25,8 +25,8 @@ class JurnalDeleteController extends Controller
     public function DeleteDataJurnal(Request $request){
 
       $DataTransaksi = Payment::where('id',$request['id'])->get();
-      
-      if (empty($DataTransaksi)) {
+
+      if (!empty($DataTransaksi)) {
         foreach ($DataTransaksi as $key => $getDataTransaksi) {
 
           if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice

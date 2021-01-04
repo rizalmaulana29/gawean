@@ -28,16 +28,12 @@ class JurnalDeleteController extends Controller
       var_dump($DataTransaksi);
       foreach ($DataTransaksi as $key => $getDataTransaksi) {
 
-        if ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
-          $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
+        if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
+          $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
           $response = $this->CurlDelete($urldata);
 
         } elseif ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
           $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
-          $response = $this->CurlDelete($urldata);
-
-        } elseif ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
-          $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
           $response = $this->CurlDelete($urldata);
 
         } elseif ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
@@ -52,7 +48,11 @@ class JurnalDeleteController extends Controller
           $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
           $response = $this->CurlDelete($urldata);
 
-        } else{
+        } elseif ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
+          $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
+          $response = $this->CurlDelete($urldata);
+
+        }else{
           $response = array("status"=>false,"message"=> "Tidak ada data Jurnal yang di hapus");
           
         }
@@ -88,6 +88,7 @@ class JurnalDeleteController extends Controller
       if ($err) {
         $response = array("status"=>false,"message"=>"cURL Error #:" . $err);
       } else {
+        dd($response->status());
         $response = array("status"=>true,"message"=> "data berhasil di hapus".$response);
       }
 

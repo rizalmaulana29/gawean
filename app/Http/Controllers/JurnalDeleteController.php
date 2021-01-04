@@ -79,7 +79,8 @@ class JurnalDeleteController extends Controller
           "content-type: application/json"
         ),
       ));
-      $response = curl_exec($curl);
+
+      $response1 = curl_exec($curl);
       $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
       $err = curl_error($curl);
 
@@ -88,9 +89,9 @@ class JurnalDeleteController extends Controller
       if ($err) {
         $response = array("status"=>false,"message"=>"cURL Error #:" . $err);
       } else {
-        
+
         if ($httpcode != 201 || $httpcode != 200) {
-          $response = array("status"=>true,"message"=> $response);
+          $response = array("status"=>false,"message"=> $response1);
         } else {
           $response = array("status"=>true,"message"=> "data berhasil di hapus");
         }

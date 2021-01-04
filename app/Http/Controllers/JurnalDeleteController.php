@@ -27,7 +27,7 @@ class JurnalDeleteController extends Controller
       $DataTransaksi = Payment::where('id',$request['id'])->first();
       var_dump($DataTransaksi);
       foreach ($DataTransaksi as $key => $getDataTransaksi) {
-        
+        dd($getDataTransaksi);
         if ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
           $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
           $response = $this->CurlDelete($urldata);

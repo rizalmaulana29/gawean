@@ -104,7 +104,7 @@ class JurnalDeleteController extends Controller
         }
 
       }
-      var_dump($response);
+      dd($response);
       return $response;
     }
 

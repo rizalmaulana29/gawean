@@ -31,25 +31,40 @@ class JurnalDeleteController extends Controller
 
           if ($getDataTransaksi['sales_invoice_id'] != '' || $getDataTransaksi['sales_invoice_id'] != null) {  //Sales Invoice
             $urldata  = "https://api.jurnal.id/core/api/v1/sales_invoices/".$getDataTransaksi['sales_invoice_id'];
-            $salesINvoice = $this->CurlDelete($urldata);
+            $salesInvoice = $this->CurlDelete($urldata);
 
-          } elseif ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
+          }else{
+            $salesInvoice = "Tidak ada data Sales Invoice yang di hapus"
+          }
+          if ($getDataTransaksi['sales_order_id'] != '' || $getDataTransaksi['sales_order_id'] != null) { //Sales order
             $urldata  = "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id'];
             $salesOrder = $this->CurlDelete($urldata);
 
-          } elseif ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
+          }else{
+            $salesOrder = "Tidak ada data Sales Order yang di hapus"
+          }
+          if ($getDataTransaksi['exspense_id'] != '' || $getDataTransaksi['exspense_id'] != null) { //exspense
             $urldata  = "https://api.jurnal.id/core/api/v1/expenses/".$getDataTransaksi['exspense_id'];
             $expense = $this->CurlDelete($urldata);
 
-          } elseif ($getDataTransaksi['apply_memo_id'] != '' || $getDataTransaksi['apply_memo_id'] != null) { //apply Credit memo
+          } else{
+            $expense = "Tidak ada data Expense yang di hapus"
+          }
+          if ($getDataTransaksi['apply_memo_id'] != '' || $getDataTransaksi['apply_memo_id'] != null) { //apply Credit memo
             $urldata  = "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo?id=".$getDataTransaksi['apply_memo_id'];
             $applyMemo = $this->CurlDelete($urldata);
 
-          } elseif ($getDataTransaksi['memo_id'] != '' || $getDataTransaksi['memo_id'] != null) { //Credit Memo
+          } else{
+            $applyMemo = "Tidak ada data Apply Memo yang di hapus"
+          }
+          if ($getDataTransaksi['memo_id'] != '' || $getDataTransaksi['memo_id'] != null) { //Credit Memo
             $urldata  = "https://api.jurnal.id/core/api/v1/credit_memos?id=".$getDataTransaksi['memo_id'];
             $memo = $this->CurlDelete($urldata);
 
-          } elseif ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
+          } else{
+            $memo = "Tidak ada data Memo yang di hapus"
+          }
+          if ($getDataTransaksi['person_id'] != '' || $getDataTransaksi['person_id'] != null) { //Customer
             $urldata  = "https://api.jurnal.id/core/api/v1/customers/".$getDataTransaksi['person_id'];
             $customer = $this->CurlDelete($urldata);
 
@@ -102,7 +117,7 @@ class JurnalDeleteController extends Controller
         }
 
       }
-      
+
       return $response;
     }
 

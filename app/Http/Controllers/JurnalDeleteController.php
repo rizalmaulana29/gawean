@@ -25,7 +25,7 @@ class JurnalDeleteController extends Controller
     public function DeleteDataJurnal(Request $request){
 
       $DataTransaksi = Payment::where('id',$request['id'])->get();
-
+      dd($DataTransaksi);
       if (isset($DataTransaksi)) {
         foreach ($DataTransaksi as $key => $getDataTransaksi) {
 
@@ -59,7 +59,7 @@ class JurnalDeleteController extends Controller
           }
         }
         return response()->json($response);
-        
+
       } else {
         return response()->json(["status"       => false,
                                  "message"      => "ID Transaksi Tidak Ditemukan"

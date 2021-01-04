@@ -79,8 +79,8 @@ class JurnalDeleteController extends Controller
           "content-type: application/json"
         ),
       ));
-      $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
       $response = curl_exec($curl);
+      $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
       $err = curl_error($curl);
 
       curl_close($curl);

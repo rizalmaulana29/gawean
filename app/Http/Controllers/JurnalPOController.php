@@ -36,8 +36,8 @@ class JurnalPOController extends Controller
 
       if (isset($getDataTransaksiPO)) {
         $checkVendorId = CmsUser::where('id',$getDataTransaksiPO['id_vendor'])->first();
-        var_dump($checkVendorId);
-        if (isset($checkVendorId['vendor_id'])) {
+        
+        if ($checkVendorId['vendor_id'] != '' || $checkVendorId['vendor_id'] != null) {
           $vendor_id = $checkVendorId['vendor_id'];
         }else{
           $createVendor = $this->CreateVendor($checkVendorId);

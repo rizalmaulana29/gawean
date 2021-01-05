@@ -629,9 +629,9 @@ class JurnalCicPelController extends Controller
                                                                                  "amount" => $nominal]]
                                                 ]
                   ];  
-      var_dump($dataRaw);
+      
       $encodedataRaw = json_encode($dataRaw);
-      var_dump($encodedataRaw);
+      
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

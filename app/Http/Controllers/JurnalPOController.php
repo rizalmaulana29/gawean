@@ -172,7 +172,7 @@ class JurnalPOController extends Controller
                   ];
       
       $encodedataRaw = json_encode($dataRaw);
-
+      var_dump($dataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

@@ -154,7 +154,7 @@ class JurnalPOController extends Controller
       foreach ($dataOrderPo as $key => $orderPO) {
         $get_produk   = Pendapatan::where('id',$orderPO['ra_produk_harga_po_id'])->value('ra_produk_harga_id');
         $produk_harga = Harga::where('id',$get_produk)->first();
-        $produk       = ["quantity" => $orderPO['quantity'], "rate"=> $orderPO['hpp'],"product_id"=> $produk_harga['jurnal_product_id'],"description"=>$keterangan.' '.$orderPO['quantity'].' '.$produk_harga['nama_produk'].'an.'.' '.$namaCustomer];
+        $produk       = ["quantity" => $orderPO['quantity'], "rate"=> $orderPO['hpp'],"product_id"=> $produk_harga['jurnal_product_id'],"description"=>$keterangan.' '.$orderPO['quantity'].' '.$produk_harga['nama_produk'].' '.'an.'.' '.$namaCustomer];
         array_push($detail_produk,$produk);
       }
 
@@ -239,7 +239,7 @@ class JurnalPOController extends Controller
       $tglTransaksi = date('Y-m-d',$tgl);
 
       $dataRaw = [
-                "sales_order"  => [ 
+                "purchase_order"  => [ 
                                   "transaction_date"   => $tglTransaksi,
                                   "transaction_lines_attributes" => $detail_atribute
                                   ]
@@ -323,7 +323,7 @@ class JurnalPOController extends Controller
       $tglTransaksi = date('Y-m-d',$tgl);
 
       $dataRaw = [
-                "receive_payment"  => [ 
+                "purchase_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
                                         "records_attributes"  => [[ "transaction_no" => $transaction_no,
                                                                     "amount"         => $getDataTransaksiPO['total_po']]],

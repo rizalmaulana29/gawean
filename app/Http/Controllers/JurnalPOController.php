@@ -53,7 +53,7 @@ class JurnalPOController extends Controller
                                              "Data Response"=> $purchasePayment['message']
                                             ],200);
                   }
-                  return $createPayment;
+                  return $purchasePayment;
               }
               return $purchaseOrdertoInvoice;
           }

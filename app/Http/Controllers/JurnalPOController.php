@@ -70,7 +70,7 @@ class JurnalPOController extends Controller
     public function CreateVendor ($checkVendorId){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
       $dataRaw = [
-                    "customer"  => ["first_name"   => $checkVendorId['name'].$checkVendorId['id'],
+                    "vendor"  => ["first_name"   => $checkVendorId['name'].$checkVendorId['id'],
                                     "display_name" => $checkVendorId['name'].$checkVendorId['id'],
                                     "email"        => $checkVendorId['email'],
                                     "custom_id"    => $checkVendorId['name'].$checkVendorId['id'],

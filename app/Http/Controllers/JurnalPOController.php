@@ -39,7 +39,8 @@ class JurnalPOController extends Controller
         if (isset($checkVendorId['vendor_id'])) {
           $vendor_id = $checkVendorId['vendor_id'];
         }else{
-          $vendor_id = $this->CreateVendor($checkVendorId);
+          $createVendor = $this->CreateVendor($checkVendorId);
+          $vendor_id = $createVendor['message'];
         }
         $purchaseOrder = $this->PurchaseOrder($getDataTransaksiPO,$vendor_id);
           if ($purchaseOrder['status'] == true) {

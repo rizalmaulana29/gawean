@@ -387,7 +387,7 @@ class NotificationsController extends Controller
                     $payment->lunas = "y";
                     $payment->save();
                 }
-                else if($payment->tipe == "transaksi"){
+                else if($payment->tunai == "Tunai"){
                     // if($payment->tunai == "Tunai"){
                     $payment->lunas = "y";
                     $payment->save();
@@ -536,92 +536,91 @@ class NotificationsController extends Controller
         return $randomString; 
     }
 
-
     public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title){
-    if (substr($hp,0,1) == 0) {
-      $nohp = str_replace('0','+62',$hp);
+        if (substr($hp,0,1) == 0) {
+        $nohp = str_replace('0','+62',$hp);
+        }
+
+        else {
+            $nohp = $hp;
+        }
+
+        $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
+                    ->where('id', $payment->id_payment_method)
+                    ->first();
+
+        $order = Order::where('id_order', $payment->id_transaksi)->get();
+
+        if ($bankRek->keterangan == "cash") {
+        $rek   = $bankRek->keterangan;
+        
+        }elseif ($bankRek->keterangan == "Bank Central Asia") {
+        $rek   = $bankRek->keterangan;
+        $bayar = '- '.'Transfer ke '.$bankRek->id_rekening.'\\n'.'a.n Agro Niaga Abadi PT';
+
+        } else {
+        $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+        $bayar = '- '.'Kode pembayaran : '.$number;
+        }
+
+        $produk = "";
+        $i = 1;
+        foreach ($order as $key) {
+        $label = DB::table('ra_produk_harga')->select('nama_produk')->where('id', $key->ra_produk_harga_id)->first();
+        $ending = (count($order) == $i)?"":" + ";
+        $produk .= $key->quantity.' '.$label->nama_produk .$ending;
+        $i++;
+        }
+
+        $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
+        $url='http://116.203.92.59/api/async_send_message';
+        $data = array(
+                    "phone_no"=> $nohp,
+                    "key"   =>$key,
+                    "message" =>
+                                    "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
+                                    \\n'.'Terima kasih atas pembayaran Ayah/Bunda'.'
+                                    \\n'.'
+                                    \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
+                                    \\n'.' Order ID          : '.$payment->id_transaksi.'
+                                    \\n'.' Nama              : '.$nama.'
+                                    \\n'.' No. Hp            : '.$hp.'
+                                    \\n'.' Keterangan pesanan: '.$produk.'
+                                    \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
+                                    \\n'.'
+                                    \\n'.'Pembayaran dilakukan melalui:'.'
+                                    \\n'.' - '.$rek.'
+                                    \\n'.$bayar.'
+                                    \\n'.'
+                                    \\n'.'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :'.'
+                                    \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$payment->id_transaksi.'
+                                    \\n'.'
+                                    \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
+                                    \\n'.'wa.me/6281370071330'.'
+                                    \\n'.'
+                                    \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
+                                    \\n'.'
+                                    \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
+                                    \\n'.'
+                                    \\n'.'Terima Kasih 😊🙏'
+                    );
+        $data_string = json_encode($data);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data_string))
+        );
+        $res=curl_exec($ch);
+        curl_close($ch);
     }
-
-    else {
-        $nohp = $hp;
-    }
-
-    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
-                 ->where('id', $payment->id_payment_method)
-                 ->first();
-
-    $order = Order::where('id_order', $payment->id_transaksi)->get();
-
-    if ($bankRek->keterangan == "cash") {
-      $rek   = $bankRek->keterangan;
-     
-    }elseif ($bankRek->keterangan == "Bank Central Asia") {
-      $rek   = $bankRek->keterangan;
-      $bayar = '- '.'Transfer ke '.$bankRek->id_rekening.'\\n'.'a.n Agro Niaga Abadi PT';
-
-    } else {
-      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
-      $bayar = '- '.'Kode pembayaran : '.$number;
-    }
-
-    $produk = "";
-    $i = 1;
-    foreach ($order as $key) {
-      $label = DB::table('ra_produk_harga')->select('nama_produk')->where('id', $key->ra_produk_harga_id)->first();
-      $ending = (count($order) == $i)?"":" + ";
-      $produk .= $key->quantity.' '.$label->nama_produk .$ending;
-      $i++;
-    }
-
-    $key='d99e363936ff07dec5c545c3cf7b780126ab3d3c5e86b071';
-    $url='http://116.203.92.59/api/async_send_message';
-    $data = array(
-                  "phone_no"=> $nohp,
-                  "key"   =>$key,
-                  "message" =>
-                                "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
-                                \\n'.'Terima kasih atas pembayaran Ayah/Bunda'.'
-                                \\n'.'
-                                \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
-                                \\n'.' Order ID          : '.$payment->id_transaksi.'
-                                \\n'.' Nama              : '.$nama.'
-                                \\n'.' No. Hp            : '.$hp.'
-                                \\n'.' Keterangan pesanan: '.$produk.'
-                                \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
-                                \\n'.'
-                                \\n'.'Pembayaran dilakukan melalui:'.'
-                                \\n'.' - '.$rek.'
-                                \\n'.$bayar.'
-                                \\n'.'
-                                \\n'.'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :'.'
-                                \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$payment->id_transaksi.'
-                                \\n'.'
-                                \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
-                                \\n'.'wa.me/6281370071330'.'
-                                \\n'.'
-                                \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
-                                \\n'.'
-                                \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
-                                \\n'.'
-                                \\n'.'Terima Kasih 😊🙏'
-                );
-    $data_string = json_encode($data);
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 360);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-      'Content-Type: application/json',
-      'Content-Length: ' . strlen($data_string))
-    );
-    $res=curl_exec($ch);
-    curl_close($ch);
-  }
 
 }

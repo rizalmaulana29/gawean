@@ -20,59 +20,40 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class JurnalController extends Controller
+class JurnalCicPelController extends Controller
 {
-    public function Filtering(){
+    public function FilteringCicilan(){
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::now()->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 ->where('tunai','Tunai')
-                                 ->where('status','paid')
-                                 ->where('lunas','y')
-                                 ->where('person_id','')
-                                 ->whereIn('id_kantor', [6, 17])
                                  ->where(function($q) {
-                                            $q->where('sisa_pembayaran', '=', 0)
-                                            ->orWhereNull('sisa_pembayaran');
+                                            $q->where('tunai', '=', 'Cicilan')
+                                            ->orWhereNull('tunai');
                                         })
+                                 ->where('status','paid')
+                                 ->where('person_id','')
+                                 ->where('memo_id','')
+                                 ->whereIn('id_kantor', [6, 17])
+                                 // ->where(function($q) {
+                                 //            $q->where('nominal_diskon', '=', 0)
+                                 //            ->orWhereNull('nominal_diskon');
+                                 //        })
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-                                 // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
-                                 // ->get();
 
       if (isset($getDataTransaksi)) {                      
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
         if ($createCustomer['status'] == true) {
-          if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
-            $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-              if ($salesOrder['status'] == true) {
-                $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-                  if ($salesOrdertoInvoice['status'] == true) {
-                    $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-                    if ($createPayment['status'] == true) {
-                      return response()->json(["status"       => true,
-                                               "message"      => "Data berhasil di inputkan ke JurnalID",
-                                               "Data Request" => $getDataTransaksi,
-                                               "Data Response"=> $createPayment['message']
-                                              ],200);
-                    }
-                    return $createPayment;
-                  }
-                  return $salesOrdertoInvoice;   
-              }
-              return $salesOrder;
-          }else{
-            $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
-            if ($creditMemo['status'] == true) {
-              return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke MEMO",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $creditMemo['message']
-                                      ],200);
-            }
-            return $creditMemo;
+          $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
+          if ($creditMemo['status'] == true) {
+            return response()->json(["status"       => true,
+                                     "message"      => "Data berhasil di inputkan ke MEMO",
+                                     "Data Request" => $getDataTransaksi,
+                                     "Data Response"=> $creditMemo['message']
+                                    ],200);
           }
+          return $creditMemo;
         } 
         return $createCustomer;
       }
@@ -82,23 +63,18 @@ class JurnalController extends Controller
 
     }
 
-    public function transaksiBedaBulan (){
-
-      $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDatestring();
+    public function transaksiCiPel (){ //CiPel = Cicilan dan Pelunasan
 
       $getDataTransaksi = Payment::where('status','paid')
-                                 ->where('tunai','Tunai')
                                  ->where('lunas','y')
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
                                  ->whereIn('id_kantor', [6, 17])
                                  ->where(function($q) {
-                                            $q->where('sisa_pembayaran', '=', 0)
-                                            ->orWhereNull('sisa_pembayaran');
+                                            $q->where('tunai', '=', 'Cicilan')
+                                            ->orWhereNull('tunai');
                                         })
-                                 ->where('tgl_kirim','=',$start)
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
       
@@ -360,7 +336,7 @@ class JurnalController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales invoice".$response);
+              $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
 
@@ -552,11 +528,11 @@ class JurnalController extends Controller
         $deposit_to_name     = "Kas Cirebon";
       }
 
-      if ($getDataTransaksi['tunai'] == "Tunai") {
-        $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
+      if ($getDataTransaksi['tunai'] == "Cicilan") {
+        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
         $nominal       = $getDataTransaksi['nominal_total'];
       }
-      $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+      $tipeTransaksi = "Pelunasan".$getDataTransaksi['id_transaksi'];
       $nominal       = $getDataTransaksi['nominal_bayar'];
 
       $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
@@ -653,9 +629,9 @@ class JurnalController extends Controller
                                                                                  "amount" => $nominal]]
                                                 ]
                   ];  
-      var_dump($dataRaw);
+      
       $encodedataRaw = json_encode($dataRaw);
-      var_dump($encodedataRaw);
+      
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

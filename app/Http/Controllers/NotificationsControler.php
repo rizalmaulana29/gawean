@@ -179,6 +179,7 @@ class NotificationsController extends Controller
                 $paymentParent->nominal_bayar = $paymentParent->nominal_total;
                 $paymentParent->save();   
                 
+                $payment->lunas = "y";
                 $payment->status = $status;
                 $payment->save();
                 $msg .= "Status Pembayaran : ".$status."<br><b>ID PARENT : ".$payment->id_parent."</b> <br>";

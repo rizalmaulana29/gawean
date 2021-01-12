@@ -549,8 +549,8 @@ class JurnalController extends Controller
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
 
       if ($paymentMethode != 'cash') {
-        $createExpenses      = $this->createExpenses($getDataTransaksi);
-        $deposit_to_name     = "Mandiri Publik 131 000 711 2586";
+        // $createExpenses      = $this->createExpenses($getDataTransaksi);
+        $deposit_to_name     = "Nicepay";
       } 
       elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
         $deposit_to_name     = "Kas Bandung";

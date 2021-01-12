@@ -174,6 +174,14 @@ class CartController extends Controller
         );
       $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title);
 
+      // $virtual_office = [];
+      // if (in_array($request->input('id_kantor'), $virtual_office)) {
+      //   $send_notif = $this->notifTransaksi($transdata);
+      // } else {
+      //   # code...
+      // }
+      
+
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
       if($np){
           if($response->resultCd == '0000'){

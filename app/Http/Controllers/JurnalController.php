@@ -24,7 +24,7 @@ class JurnalController extends Controller
 {
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDateTimestring();
+      $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('tunai','Tunai')
@@ -561,9 +561,10 @@ class JurnalController extends Controller
       if ($getDataTransaksi['tunai'] == "Tunai") {
         $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
         $nominal       = $getDataTransaksi['nominal_total'];
+      }else{
+        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+        $nominal       = $getDataTransaksi['nominal_bayar'];
       }
-      $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
-      $nominal       = $getDataTransaksi['nominal_bayar'];
 
       $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
       $tglTransaksi = date('Y-m-d',$tgl);

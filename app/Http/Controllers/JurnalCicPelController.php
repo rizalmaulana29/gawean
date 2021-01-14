@@ -24,7 +24,7 @@ class JurnalCicPelController extends Controller
 {
     public function FilteringCicilan(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDateTimestring();
+      $start = Carbon::today()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where(function($q) {

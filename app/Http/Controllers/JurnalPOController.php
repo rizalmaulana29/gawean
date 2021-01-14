@@ -23,7 +23,7 @@ class JurnalPOController extends Controller
 {
     public function FilteringPO(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDatestring();
+      $start = Carbon::today()->addHour(1)->toDatestring();
 
       $getDataTransaksiPO = PO::where([["tgl_po", ">=", $start],["tgl_po", "<=", $endDate->toDatestring()]])
                                  ->where('status','paid')

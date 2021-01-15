@@ -27,6 +27,7 @@ class JurnalController extends Controller
       $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                                 ->where('varian','Aqiqah')
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('lunas','y')
@@ -88,6 +89,7 @@ class JurnalController extends Controller
       $start = Carbon::now()->toDatestring();
 
       $getDataTransaksi = Payment::where('status','paid')
+                                 ->where('varian','Aqiqah')
                                  ->where('tunai','Tunai')
                                  ->where('lunas','y')
                                  ->where('person_id','!=','')

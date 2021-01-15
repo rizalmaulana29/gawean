@@ -27,6 +27,7 @@ class JurnalCicPelController extends Controller
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                                 ->where('varian','Aqiqah')
                                  ->where(function($q) {
                                             $q->where('tunai', '=', 'Cicilan')
                                             ->orWhereNull('tunai');

@@ -495,14 +495,27 @@ class CartDevController extends Controller
     //$transdata->id_kantor
     $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
     
-
-    $datasend = urlencode('Ada transaksi Customer di Rumah Aqiqah Cabang'.' '.$kantor.
-                  'Dengan detail order sebagai berikut:'
-                  .'Order ID          : '.'1234567890'
-                  .'Tolong di cek @sandi_alroffik,'
-                  .'Terima Kasih'
+    $data = array(
+                  'Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
+                  \n'.'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
+                  \n'.'
+                  \n'.'Dengan detail order sebagai berikut:'.'
+                  \n'.' Order ID          : '.$request['id_transaksi'].'
+                  \n'.' Nama              : '.$request['nama'].'
+                  \n'.' Total Tagihan     : IDR '.number_format($request['nominal_total']).'
+                  \n'.'
+                  \n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Ayah/Bunda menerima pesan ini,'.'
+                  \n'.'atau pemesananan Ayah/Bunda akan di anggap gagal.'.'
+                  \n'.'
+                  \n'.'Metode Pembayaran:'.'
+                  \n'.'- '.$request['rek'].'
+                  \n'.'
+                  \n'.'Tolong di cek @sandi_alroffik,'.'
+                  \n'.'
+                  \n'.'Terima Kasih'
 
                 );
+    $datasend = json_encode($data);
 
     $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$datasend;
     $curl = curl_init();

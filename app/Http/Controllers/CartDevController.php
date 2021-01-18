@@ -495,20 +495,19 @@ class CartDevController extends Controller
     //$transdata->id_kantor
     $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
     
-    $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
-            \n'.'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
-            \n'.'
-            \n'.'Dengan detail order sebagai berikut:'.'
-            \n'.' Order ID          : '.$request['id_transaksi'].'
-            \n'.' Nama              : '.$request['nama'].'
-            \n'.' Total Tagihan     : IDR '.number_format($request['nominal_total']).'
-            \n'.'
-            \n'.'Metode Pembayaran:'.'
-            \n'.'- '.$request['rek'].'
-            \n'.'
-            \n'.'Tolong di cek @sandi_alroffik,'.'
-            \n'.'
-            \n'.'Terima Kasih';
+    $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.
+           'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
+            Dengan detail order sebagai berikut:'.'
+             Order ID          : '.$request['id_transaksi'].'
+             Nama              : '.$request['nama'].'
+             Total Tagihan     : IDR '.number_format($request['nominal_total']).'
+            
+            Metode Pembayaran:'.'
+            - '.$request['rek'].'
+            
+            Tolong di cek @sandi_alroffik,'.'
+            
+            Terima Kasih';
 
     $datasend = urlencode($data);
 

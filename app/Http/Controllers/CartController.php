@@ -169,15 +169,15 @@ class CartController extends Controller
       $hp = $request->input('hp');
       $parent_id = $request->input('parent_id');
 
-      $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
-        );
-      $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title);
-
       $virtual_office = [5,16,20,22,23,24,25,26];
       if (in_array($request->input('id_kantor'), $virtual_office)) {
         $send_notif = $this->notifTransaksi($transdata, $nama, $alamat);
-      } 
+      }
+      
+      $hasil = Mail::send(
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
+        );
+      $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title); 
       
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE

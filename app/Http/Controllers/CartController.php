@@ -507,9 +507,9 @@ class CartController extends Controller
     // curl_close($ch);
   }
 
-  private function notifTransaksi($nama, $alamat){
+  private function notifTransaksi($transdata,$nama, $alamat){
     
-    $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
+    $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
 
     $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
                  ->where('id', $transdata->id_payment_method)

@@ -507,9 +507,10 @@ class CartDevController extends Controller
 
                 );
 
-    $data_string = urlencode($data);
+    $data_string = json_encode($data);
+    $datasend = urlencode($data_string);
 
-    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$data_string;
+    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$datasend;
     $curl = curl_init();
 
     curl_setopt_array($curl, array(

@@ -501,7 +501,6 @@ class CartDevController extends Controller
                   \\n'.'Ada transaksi Customer di Rumah Aqiqah Cabang'.$kantor.'
                   \\n'.'Dengan detail order sebagai berikut:'.'
                   \\n'.' Order ID          : '.'1234567890'.'
-                  \\n'.' Nama              : '.$nama.'
                   \\n'.'Tolong di cek @sandi_alroffik,'.'
                   \\n'.'
                   \\n'.'Terima Kasih'

@@ -496,19 +496,13 @@ class CartDevController extends Controller
     $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
     
 
-    $data = array(
-                  '
-                  \\n'.'Ada transaksi Customer di Rumah Aqiqah Cabang'.$kantor.'
-                  \\n'.'Dengan detail order sebagai berikut:'.'
-                  \\n'.' Order ID          : '.'1234567890'.'
-                  \\n'.'Tolong di cek @sandi_alroffik,'.'
-                  \\n'.'
-                  \\n'.'Terima Kasih'
+    $datasend = urlencode('Ada transaksi Customer di Rumah Aqiqah Cabang'.' '.$kantor.
+                  .'Dengan detail order sebagai berikut:'
+                  .'Order ID          : '.'1234567890'
+                  .'Tolong di cek @sandi_alroffik,'
+                  .'Terima Kasih'
 
                 );
-
-    $data_string = json_encode($data);
-    $datasend = urlencode($data_string);
 
     $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$datasend;
     $curl = curl_init();

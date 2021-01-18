@@ -496,18 +496,17 @@ class CartDevController extends Controller
     $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
     
     $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.
-           'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
-            Dengan detail order sebagai berikut:'.'
-             Order ID          : '.$request['id_transaksi'].'
-             Nama              : '.$request['nama'].'
-             Total Tagihan     : IDR '.number_format($request['nominal_total']).'
-            
-            Metode Pembayaran:'.'
-            - '.$request['rek'].'
-            
-            Tolong di cek @sandi_alroffik,'.'
-            
-            Terima Kasih';
+    ' untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
+    Dengan detail order sebagai berikut:'.'
+      Order ID          : '.$request['id_transaksi'].'
+      Nama              : '.$request['nama'].'
+      Total Tagihan     : IDR '.number_format($request['nominal_total']).'
+
+    Metode Pembayaran:'.'
+      - '.$request['rek'].'
+
+    Tolong di cek @sandi_alroffik,'.'
+    Terima Kasih';
 
     $datasend = urlencode($data);
 

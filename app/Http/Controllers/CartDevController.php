@@ -495,8 +495,8 @@ class CartDevController extends Controller
     //$transdata->id_kantor
     $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
     
-    $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.
-    ' untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
+    $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
+    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
     Dengan detail order sebagai berikut:'.'
       Order ID          : '.$request['id_transaksi'].'
       Nama              : '.$request['nama'].'

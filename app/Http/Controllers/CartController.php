@@ -174,10 +174,10 @@ class CartController extends Controller
         );
       $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title);
 
-      // $virtual_office = [5,16,20,22,23,24,25,26];
-      // if (in_array($request->input('id_kantor'), $virtual_office)) {
-      //   $send_notif = $this->notifTransaksi($transdata);
-      // } 
+      $virtual_office = [5,16,20,22,23,24,25,26];
+      if (in_array($request->input('id_kantor'), $virtual_office)) {
+        $send_notif = $this->notifTransaksi($transdata, $nama, $alamat);
+      } 
       
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
@@ -507,43 +507,59 @@ class CartController extends Controller
     // curl_close($ch);
   }
 
-  // private function notifTransaksi(Request $request){
-  //   //$transdata->id_kantor
-  //   $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
+  private function notifTransaksi($nama, $alamat){
     
+    $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
 
-  //   $data = array(
-  //                 '
-  //                 \\n'.'Ada transaksi Customer di Rumah Aqiqah Cabang'.$kantor.'
-  //                 \\n'.'Dengan detail order sebagai berikut:'.'
-  //                 \\n'.' Order ID          : '.$transdata->id_transaksi.'
-  //                 \\n'.' Nama              : '.$nama.'
-  //                 \\n'.'Tolong di cek @sandi_alroffik,'.'
-  //                 \\n'.'
-  //                 \\n'.'Terima Kasih'
+    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
+                 ->where('id', $transdata->id_payment_method)
+                 ->first();    
 
-  //               );
+    if ($bankRek->keterangan == "cash") {
+      $rek   = $bankRek->keterangan;
+     
+    }elseif ($bankRek->keterangan == "Bank Central Asia") {
+      $rek   = $bankRek->keterangan;
 
-  //   $data_string = urlencode($data);
+    } else {
+      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+    }
 
-  //   $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$data_string;
-  //   $curl = curl_init();
+    
+    $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
+    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
+    Dengan detail order sebagai berikut:'.'
+      Order ID          : '.$transdata->id_transaksi.'
+      Nama              : '.$nama.'
+      Alamat            : '.$alamat.'
+      Total Tagihan     : IDR '.number_format($transdata->nominal_total).'
 
-  //   curl_setopt_array($curl, array(
-  //     CURLOPT_URL => $url,
-  //     CURLOPT_RETURNTRANSFER => true,
-  //     CURLOPT_ENCODING => '',
-  //     CURLOPT_MAXREDIRS => 10,
-  //     CURLOPT_TIMEOUT => 0,
-  //     CURLOPT_FOLLOWLOCATION => true,
-  //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  //     CURLOPT_CUSTOMREQUEST => 'GET',
-  //   ));
+    Metode Pembayaran:'.'
+      - '.$rek.'
 
-  //   $response = curl_exec($curl);
+    Tolong di cek @sandi_alroffik,'.'
+    Terima Kasih';
 
-  //   curl_close($curl);
-  //   echo $response;
-  // }
+    $datasend = urlencode($data);
+
+    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$datasend;
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    echo $response;
+  }
 
 }

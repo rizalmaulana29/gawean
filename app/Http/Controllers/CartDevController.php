@@ -491,4 +491,43 @@ class CartDevController extends Controller
     curl_close($ch);
   }
 
+  public function notifTransaksi(Request $request){
+    //$transdata->id_kantor
+    $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
+    
+
+    $data = array(
+                  '
+                  \\n'.'Ada transaksi Customer di Rumah Aqiqah Cabang'.$kantor.'
+                  \\n'.'Dengan detail order sebagai berikut:'.'
+                  \\n'.' Order ID          : '.'1234567890'.'
+                  \\n'.' Nama              : '.$nama.'
+                  \\n'.'Tolong di cek @sandi_alroffik,'.'
+                  \\n'.'
+                  \\n'.'Terima Kasih'
+
+                );
+
+    $data_string = urlencode($data);
+
+    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$data_string;
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    echo $response;
+  }
+
 }

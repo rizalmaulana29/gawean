@@ -497,7 +497,7 @@ class CartDevController extends Controller
     
 
     $datasend = urlencode('Ada transaksi Customer di Rumah Aqiqah Cabang'.' '.$kantor.
-                  .'Dengan detail order sebagai berikut:'
+                  'Dengan detail order sebagai berikut:'
                   .'Order ID          : '.'1234567890'
                   .'Tolong di cek @sandi_alroffik,'
                   .'Terima Kasih'

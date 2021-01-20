@@ -99,10 +99,14 @@ class CartController extends Controller
           }
           else{$order->disaksikan = 'N';}
           $order->note = $request['note'][$key];
-
           $order->save();
+
+          // if($request['id_produk_parent'][$key] == 22){
+          //   $stockingTool = $this->stock($request->input('id_kantor'),$request->input('id_kantor'));
+          // }
           $n++;
       }
+
 
       #ganti table kontak dengan hanay table anak
       $url = "https://api.rumahaqiqah.co.id/uploads/online";
@@ -173,7 +177,7 @@ class CartController extends Controller
       if (in_array($request->input('id_kantor'), $virtual_office)) {
         $send_notif = $this->notifTransaksi($transdata, $nama, $alamat);
       }
-      
+
       $hasil = Mail::send(
             (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
         );
@@ -560,6 +564,28 @@ class CartController extends Controller
 
     curl_close($curl);
     // echo $response;
+  }
+
+  private function stock($id_kantor,$id_transaksi){
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.rumahaqiqah.co.id/api/stockTool',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS => array('id_transaksi' => $id_transaksi,'id_kantor' => $id_kantor),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+
   }
 
 }

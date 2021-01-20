@@ -35,7 +35,7 @@ class ToolsController extends Controller
         } else {
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->get();
             foreach ($getQtyTool as $key => $dataTool) {
-                $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box']))->update(['jumlah_out' => $qty,'jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
+                $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->update(['jumlah_out' => $qty,'jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
             if ($updateBento && $updateStock) {
                 $response = "Data Box berhasil di update";

@@ -102,7 +102,7 @@ class CartDevController extends Controller
           $order->save();
 
           if($request['id_produk_parent'][$key] == 22){
-            $stockingTool = $this->stock($request->input('id_kantor'),$request->input('id_kantor'));
+            $stockingTool = $this->stock($request->input('id_kantor'),$request->input('id_transaksi'));
           }
 
           $n++;

@@ -38,7 +38,7 @@ class ToolsController extends Controller
             foreach ($getQtyTool as $key => $dataTool) {
                 $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->update(['jumlah_out' => $qty,'jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
-            if ($updateBento && $updateStock) {
+            if ($updateStock) {
                 $response = "Data Box berhasil di update";
             } else {
                 $response = "Data Box gagal di update";
@@ -46,8 +46,8 @@ class ToolsController extends Controller
         }
 
         return response()->json(["status"       => true,
-                                     "Data Response"=> $response
-                                    ],200);
+                                 "Data Response"=> $response
+                                ],200);
         
     }
 

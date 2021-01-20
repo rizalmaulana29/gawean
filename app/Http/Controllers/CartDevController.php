@@ -101,12 +101,12 @@ class CartDevController extends Controller
 
           $order->save();
 
-          if($request['id_produk_parent'][$key] == 22){
-            $stockingTool = $this->stock($request->input('id_kantor'),$result[2]->id_transaksi);
-          }
-
           $n++;
       }
+
+      if($request['id_produk_parent'][$key] == 22){
+            $stockingTool = $this->stock($request->input('id_kantor'),$result[2]->id_transaksi);
+          }
 
       #ganti table kontak dengan hanay table anak
       $url = "https://api.rumahaqiqah.co.id/uploads/online";

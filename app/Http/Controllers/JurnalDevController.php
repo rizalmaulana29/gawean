@@ -37,7 +37,7 @@ class JurnalDevController extends Controller
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('lunas','y')
-                                 // ->where('person_id','')
+                                 ->where('person_id','!=','')
                                  ->whereIn('id_kantor', [6, 17])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
@@ -725,6 +725,10 @@ class JurnalDevController extends Controller
       }
 
       return $response;     
+    }
+
+    private function Entitas($id_kantor){
+
     }
 
 }

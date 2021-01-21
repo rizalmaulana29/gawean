@@ -30,14 +30,14 @@ class JurnalDevController extends Controller
   //$auth= 'Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c';
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::today()->addHour(1)->toDateTimestring();
+      $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('varian','Aqiqah')
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('lunas','y')
-                                 ->where('person_id','!=','')
+                                 ->where('sales_order_id','=','')
                                  ->whereIn('id_kantor', [6, 17])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)

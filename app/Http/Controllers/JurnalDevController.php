@@ -103,8 +103,8 @@ class JurnalDevController extends Controller
                                  ->where([["tgl_kirim", ">=", $start],["tgl_kirim", "<=", $endDate->toDateTimestring()]])
                                  ->orderBy('tgl_transaksi','ASC')
                                  ->first();
-      var_dump($start);
-      dd($getDataTransaksi);
+      // var_dump($start);
+      // dd($getDataTransaksi);
       
       if (isset($getDataTransaksi)) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);

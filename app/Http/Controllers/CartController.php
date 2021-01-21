@@ -105,7 +105,7 @@ class CartController extends Controller
 
       if($request['id_produk_parent'][$key] == 22){
             $stockingTool = $this->stock($request->input('id_kantor'),$result[2]->id_transaksi);
-          }
+      }
 
 
 

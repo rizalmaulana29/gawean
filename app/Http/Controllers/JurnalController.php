@@ -210,8 +210,7 @@ class JurnalController extends Controller
       $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
@@ -395,8 +394,7 @@ class JurnalController extends Controller
         $deposit_to_name     = "Kas Cirebon";
       }
       
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "receive_payment"  => [ 

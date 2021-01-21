@@ -22,6 +22,12 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class JurnalDevController extends Controller
 {
+  //LMA 
+  //$key = 'apikey: 296beed804916946dc8f6b23b304eb63';
+  //$auth= 'Authorization: e691e920d89740f9a58c36240d1ee807';
+  //ANA
+  //$key = 'apikey: 56593d3e45a37eb7033e356d33fd83c4';
+  //$auth= 'Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c';
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
@@ -31,7 +37,7 @@ class JurnalDevController extends Controller
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('lunas','y')
-                                 ->where('person_id','')
+                                 // ->where('person_id','')
                                  ->whereIn('id_kantor', [6, 17])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
@@ -42,8 +48,14 @@ class JurnalDevController extends Controller
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
 
-      if (isset($getDataTransaksi)) {                      
-        $createCustomer = $this->CreateCustomer($getDataTransaksi);
+      if (isset($getDataTransaksi)) {
+        if ($getDataTransaksi['person_id'] == '') {
+          $createCustomer = $this->CreateCustomer($getDataTransaksi);
+        } else {
+          $createCustomer['status'] = true;
+          $createCustomer['message']= $getDataTransaksi['person_id'];
+        }
+
         if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
@@ -212,8 +224,7 @@ class JurnalDevController extends Controller
       $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
@@ -306,8 +317,7 @@ class JurnalDevController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "sales_order"  => [ 

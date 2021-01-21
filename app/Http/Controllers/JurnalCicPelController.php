@@ -185,8 +185,7 @@ class JurnalCicPelController extends Controller
       $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $countData = 1;
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
@@ -279,8 +278,7 @@ class JurnalCicPelController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "sales_order"  => [ 

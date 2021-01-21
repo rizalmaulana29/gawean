@@ -100,12 +100,13 @@ class CartController extends Controller
           else{$order->disaksikan = 'N';}
           $order->note = $request['note'][$key];
           $order->save();
-
-          // if($request['id_produk_parent'][$key] == 22){
-          //   $stockingTool = $this->stock($request->input('id_kantor'),$result[2]->id_transaksi');
-          // }
           $n++;
       }
+
+      if($request['id_produk_parent'][$key] == 22){
+            $stockingTool = $this->stock($request->input('id_kantor'),$result[2]->id_transaksi);
+          }
+
 
 
       #ganti table kontak dengan hanay table anak

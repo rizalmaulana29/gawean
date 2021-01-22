@@ -140,7 +140,7 @@ class JurnalDevController extends Controller
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
-      dd($jurnalKoneksi);
+      var_dump($jurnalKoneksi['jurnal_key']);
 
       $dataRaw = [
                     "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
@@ -155,6 +155,7 @@ class JurnalDevController extends Controller
                   ];
 
       $encodedataRaw = json_encode($dataRaw);
+      dd($encodedataRaw);
 
       $curl = curl_init();
 

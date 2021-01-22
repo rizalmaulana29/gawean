@@ -156,7 +156,6 @@ class JurnalDevController extends Controller
                   ];
 
       $encodedataRaw = json_encode($dataRaw);
-      dd($encodedataRaw);
 
       $curl = curl_init();
 

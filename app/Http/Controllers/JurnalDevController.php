@@ -143,9 +143,9 @@ class JurnalDevController extends Controller
       var_dump($jurnalKoneksi['jurnal_key']);
 
       $dataRaw = [
-                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
-                                    "address"      => substr($getDataTransaksi['alamat'],255),
+                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
+                                    "display_name" => $getDataTransaksi['nama_customer'].' ID'..substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
+                                    "address"      => substr($getDataTransaksi['alamat'],0,255),
                                     "phone"        => $getDataTransaksi['hp'],
                                     "mobile"       => $getDataTransaksi['hp'],
                                     "email"        => $getDataTransaksi['email'],
@@ -239,9 +239,9 @@ class JurnalDevController extends Controller
                                   "transaction_lines_attributes" => $detail_produk,
                                   "shipping_date"      => $getDataTransaksi['tgl_kirim'],
                                   "shipping_price"     => 0,
-                                  "shipping_address"   => $getDataTransaksi['alamat'],
+                                  "shipping_address"   => substr($getDataTransaksi['alamat'],0,255),
                                   "is_shipped"         => true,
-                                  "address"            => substr($getDataTransaksi['alamat'],255),
+                                  "address"            => substr($getDataTransaksi['alamat'],0,255),
                                   "due_date"           => $getDataTransaksi['tgl_kirim'],
                                   "discount_type_name" => "Value",
                                   "discount_type_value"=> $dataDiskon,

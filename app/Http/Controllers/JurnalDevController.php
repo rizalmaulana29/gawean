@@ -50,6 +50,7 @@ class JurnalDevController extends Controller
       var_dump($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
+        dd($createCustomer);
         if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);

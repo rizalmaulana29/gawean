@@ -38,7 +38,7 @@ class JurnalDevController extends Controller
                                  ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
+                                 ->whereIn('id_kantor', [2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -47,7 +47,7 @@ class JurnalDevController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-
+      var_dump($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
         if ($createCustomer['status'] == true) {
@@ -141,6 +141,7 @@ class JurnalDevController extends Controller
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
       var_dump($jurnalKoneksi['jurnal_key']);
+      var_dump($jurnalKoneksi['jurnal_auth']);
 
       $dataRaw = [
                     "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
@@ -211,6 +212,8 @@ class JurnalDevController extends Controller
 
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
@@ -268,8 +271,8 @@ class JurnalDevController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p"
                                       ),
@@ -310,6 +313,8 @@ class JurnalDevController extends Controller
 
     public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   
@@ -340,8 +345,8 @@ class JurnalDevController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
                                       ),
@@ -381,6 +386,8 @@ class JurnalDevController extends Controller
     }
 
     public function receivePayment($getDataTransaksi,$transaction_no){
+
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
       if ($paymentMethode != 'cash') {
@@ -438,8 +445,8 @@ class JurnalDevController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
                                       ),
@@ -557,6 +564,8 @@ class JurnalDevController extends Controller
 
     public function creditMemo ($getDataTransaksi,$person_id){
       
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
 
       if ($paymentMethode != 'cash') {
@@ -611,8 +620,8 @@ class JurnalDevController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; incap_ses_956_1892526=PV4+bT4OPmmys22YG2VEDUti2F8AAAAAxxOSJglDvTynnT2DtUC2Xg==; nlbi_1892526=swSXL5ITyjseS65LKezQ4QAAAACk4+Rxw/6k0udeObF0BXEI; incap_ses_962_1892526=VQ9FJ6/WYhZ+5dcXGLZZDeL02l8AAAAA/WbrlUVFbEocG5UqQCMVsw=="
                                       ),
@@ -652,6 +661,8 @@ class JurnalDevController extends Controller
 
     public function ApllyCreditMemo ($getDataTransaksi,$transaction_no){
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       if ($getDataTransaksi['tunai'] == "Tunai") {
 
         $nominal       = $getDataTransaksi['nominal_total'];
@@ -687,8 +698,8 @@ class JurnalDevController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; incap_ses_956_1892526=PV4+bT4OPmmys22YG2VEDUti2F8AAAAAxxOSJglDvTynnT2DtUC2Xg==; nlbi_1892526=swSXL5ITyjseS65LKezQ4QAAAACk4+Rxw/6k0udeObF0BXEI; incap_ses_962_1892526=VQ9FJ6/WYhZ+5dcXGLZZDeL02l8AAAAA/WbrlUVFbEocG5UqQCMVsw=="
                                       ),

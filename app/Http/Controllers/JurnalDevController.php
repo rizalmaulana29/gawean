@@ -37,8 +37,8 @@ class JurnalDevController extends Controller
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('lunas','y')
-                                 ->where('sales_order_id','=','')
-                                 ->whereIn('id_kantor', [6, 17])
+                                 ->where('person_id','=','')
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -49,13 +49,7 @@ class JurnalDevController extends Controller
                                  // ->get();
 
       if (isset($getDataTransaksi)) {
-        if ($getDataTransaksi['person_id'] == '') {
-          $createCustomer = $this->CreateCustomer($getDataTransaksi);
-        } else {
-          $createCustomer['status'] = true;
-          $createCustomer['message']= $getDataTransaksi['person_id'];
-        }
-
+        $createCustomer = $this->CreateCustomer($getDataTransaksi);
         if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
@@ -107,7 +101,7 @@ class JurnalDevController extends Controller
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [6, 17])
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -144,10 +138,14 @@ class JurnalDevController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
+      $jurnalKoneksi = $this->Entitas($getDataKoneksi['id_kantor']);
+
+      dd($jurnalKoneksi);
+
       $dataRaw = [
-                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap
-                                    "address"      => $getDataTransaksi['alamat'],
+                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi',-5)], //nama lengkap dengan id_transaksi
+                                    "display_name" => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi',-5), //nama lengkap
+                                    "address"      => substr($getDataTransaksi['alamat'],255),
                                     "phone"        => $getDataTransaksi['hp'],
                                     "mobile"       => $getDataTransaksi['hp'],
                                     "email"        => $getDataTransaksi['email'],
@@ -171,8 +169,8 @@ class JurnalDevController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: "..$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p"
                                       ),
@@ -242,7 +240,7 @@ class JurnalDevController extends Controller
                                   "shipping_price"     => 0,
                                   "shipping_address"   => $getDataTransaksi['alamat'],
                                   "is_shipped"         => true,
-                                  "address"            => $getDataTransaksi['alamat'],
+                                  "address"            => substr($getDataTransaksi['alamat'],255),
                                   "due_date"           => $getDataTransaksi['tgl_kirim'],
                                   "discount_type_name" => "Value",
                                   "discount_type_value"=> $dataDiskon,
@@ -728,7 +726,23 @@ class JurnalDevController extends Controller
     }
 
     private function Entitas($id_kantor){
+      
+      $ana = [6,17];
+      $lma = [2,3,7,8];
 
+      if (in_array($id_kantor, $ana)) {
+        $id_entitas = 'ANA';
+      }
+      elseif (in_array($id_kantor, $lma)) {
+         $id_entitas = 'LMA';
+      } else {
+        echo "id_kantor tidak memiliki koneksi jurnal";
+        die;
+      }
+      
+      $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+
+      return $getDataKoneksi;
     }
 
 }

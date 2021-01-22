@@ -138,7 +138,7 @@ class JurnalDevController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      $jurnalKoneksi = $this->Entitas($getDataKoneksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
       dd($jurnalKoneksi);
 

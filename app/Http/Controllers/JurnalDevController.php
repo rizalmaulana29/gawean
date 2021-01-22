@@ -143,8 +143,8 @@ class JurnalDevController extends Controller
       dd($jurnalKoneksi);
 
       $dataRaw = [
-                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi',-5)], //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi',-5), //nama lengkap
+                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi'],-5)], //nama lengkap dengan id_transaksi
+                                    "display_name" => $getDataTransaksi['nama_customer'].substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
                                     "address"      => substr($getDataTransaksi['alamat'],255),
                                     "phone"        => $getDataTransaksi['hp'],
                                     "mobile"       => $getDataTransaksi['hp'],

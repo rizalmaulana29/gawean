@@ -170,7 +170,7 @@ class JurnalDevController extends Controller
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
                                         "apikey: ".$jurnalKoneksi['jurnal_key'],
-                                        "Authorization: "..$jurnalKoneksi['jurnal_auth'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p"
                                       ),

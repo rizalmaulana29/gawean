@@ -32,7 +32,7 @@ class JurnalDevController extends Controller
                                  ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
+                                 ->whereIn('id_kantor', [2,3,7,8]) //[6,17,2,3,7,8]
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -96,7 +96,7 @@ class JurnalDevController extends Controller
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
+                                 ->whereIn('id_kantor', [2,3,7,8])//[6,17,2,3,7,8]
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -386,31 +386,25 @@ class JurnalDevController extends Controller
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
-      if ($paymentMethode != 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-
+      if ($paymentMethode != 'cash') {
         // $createExpenses      = $this->createExpenses($getDataTransaksi);
-        // if (condition) {
-        //   # code...
-        // } else {
-        //   # code... Mandiri Publik 131 000 711 2586
-        // }
-        
-        $payment_method_name = "Transfer Bank";
-        $payment_method_id   = 792898;
         $deposit_to_name     = "Nicepay";
       } 
       elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-        $payment_method_name = "Cash";
-        $payment_method_id   = 984210;
         $deposit_to_name     = "Kas Bandung";
       } else {
-        $payment_method_name = "Cash";
-        $payment_method_id   = 984210;
         $deposit_to_name     = "Kas Cirebon";
       }
+
+      if ($getDataTransaksi['tunai'] == "Tunai") {
+        $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
+        $nominal       = $getDataTransaksi['nominal_total'];
+      }else{
+        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+        $nominal       = $getDataTransaksi['nominal_bayar'];
+      }
       
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "receive_payment"  => [ 
@@ -562,17 +556,7 @@ class JurnalDevController extends Controller
       
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
-      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
-
-      if ($paymentMethode != 'cash') {
-        // $createExpenses      = $this->createExpenses($getDataTransaksi);
-        $deposit_to_name     = "Nicepay";
-      } 
-      elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-        $deposit_to_name     = "Kas Bandung";
-      } else {
-        $deposit_to_name     = "Kas Cirebon";
-      }
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
 
       if ($getDataTransaksi['tunai'] == "Tunai") {
         $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
@@ -592,7 +576,7 @@ class JurnalDevController extends Controller
                                         "person_type"        => "customer",
                                         "transaction_date"   => $tglTransaksi,
                                         "transaction_no"     => $getDataTransaksi['id_transaksi'],
-                                        "transaction_account_lines_attributes" => [[ "account_name"=> $deposit_to_name,
+                                        "transaction_account_lines_attributes" => [[ "account_name"=> $paymentMethode,
                                                                                      "description" => $tipeTransaksi,
                                                                                      "debit"       => $nominal]],
                                         "memo"               => $tipeTransaksi,

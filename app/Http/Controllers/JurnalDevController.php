@@ -385,15 +385,23 @@ class JurnalDevController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
-      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
-      if ($paymentMethode != 'cash') {
-        // $createExpenses      = $this->createExpenses($getDataTransaksi);
-        $deposit_to_name     = "Nicepay";
-      } 
-      elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-        $deposit_to_name     = "Kas Bandung";
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
+
+      $transfer = [26,33,2,3,4,5];
+
+      if (in_array($paymentMethode->parent_id, $transfer)) {
+        $payment_method_name = "Transfer Bank";
+        $payment_method_id   = $paymentMethode->methode_id_jurnal;
+        $deposit_to_name     = $paymentMethode->methode_jurnal;
+  
       } else {
-        $deposit_to_name     = "Kas Cirebon";
+        if ($getDataTransaksi['id_kantor'] == 6 || $getDataTransaksi['id_kantor'] == 17) {
+          $payment_method_name = "Cash";
+        } else {
+          $payment_method_name = "Kas Tunai";
+        }
+        $payment_method_id   = $paymentMethode->methode_id_jurnal;
+        $deposit_to_name     = $paymentMethode->methode_jurnal;
       }
 
       if ($getDataTransaksi['tunai'] == "Tunai") {

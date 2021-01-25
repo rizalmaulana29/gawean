@@ -22,12 +22,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class JurnalDevController extends Controller
 {
-  //LMA 
-  //$key = 'apikey: 296beed804916946dc8f6b23b304eb63';
-  //$auth= 'Authorization: e691e920d89740f9a58c36240d1ee807';
-  //ANA
-  //$key = 'apikey: 56593d3e45a37eb7033e356d33fd83c4';
-  //$auth= 'Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c';
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
@@ -38,7 +32,7 @@ class JurnalDevController extends Controller
                                  ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [2,3,7,8])
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -50,7 +44,7 @@ class JurnalDevController extends Controller
       var_dump($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
-        dd($createCustomer);
+        // dd($createCustomer);
         if ($createCustomer['status'] == true) {
           if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
             $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
@@ -145,13 +139,14 @@ class JurnalDevController extends Controller
       var_dump($jurnalKoneksi['jurnal_auth']);
 
       $dataRaw = [
-                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
-                                    "address"      => substr($getDataTransaksi['alamat'],0,255),
-                                    "phone"        => $getDataTransaksi['hp'],
-                                    "mobile"       => $getDataTransaksi['hp'],
-                                    "email"        => $getDataTransaksi['email'],
-                                    "custom_id"    => $getDataTransaksi['id_transaksi'], //id_transaksi tidak boleh sama
+                    "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
+                                    "display_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
+                                    "address"        => substr($getDataTransaksi['alamat'],0,255),
+                                    "billing_address"=> substr($getDataTransaksi['alamat'],0,255),
+                                    "phone"          => $getDataTransaksi['hp'],
+                                    "mobile"         => $getDataTransaksi['hp'],
+                                    "email"          => $getDataTransaksi['email'],
+                                    "custom_id"      => $getDataTransaksi['id_transaksi'], //id_transaksi tidak boleh sama
                                     "default_ap_account_name" => "Pendapatan Diterima Di Muka"
                                     ]
                   ];
@@ -232,7 +227,8 @@ class JurnalDevController extends Controller
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
-        $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga];
+        $nama_produk        = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
+        $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }
 
@@ -390,7 +386,7 @@ class JurnalDevController extends Controller
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
-      if ($paymentMethode != 'cash') {
+      if ($paymentMethode != 'cash' && $getDataTransaksi['id_kantor'] == 6) {
 
         // $createExpenses      = $this->createExpenses($getDataTransaksi);
         // if (condition) {

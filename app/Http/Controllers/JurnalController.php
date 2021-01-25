@@ -131,8 +131,8 @@ class JurnalController extends Controller
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
       $dataRaw = [
-                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap
+                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].' '.$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
+                                    "display_name" => $getDataTransaksi['nama_customer'].' '.$getDataTransaksi['id_transaksi'], //nama lengkap
                                     "address"      => $getDataTransaksi['alamat'],
                                     "phone"        => $getDataTransaksi['hp'],
                                     "mobile"       => $getDataTransaksi['hp'],
@@ -216,7 +216,8 @@ class JurnalController extends Controller
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
-        $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga];
+        $nama_produk        = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
+        $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }
 

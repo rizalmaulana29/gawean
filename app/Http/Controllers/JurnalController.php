@@ -131,7 +131,7 @@ class JurnalController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
       $dataRaw = [
                     "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi

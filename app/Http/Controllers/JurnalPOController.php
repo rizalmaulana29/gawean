@@ -136,11 +136,10 @@ class JurnalPOController extends Controller
 
       $detailDataPO = PO_detail::where('id_po_detail',$getDataTransaksiPO['id']);
       $id_transaksi = $detailDataPO->first();
-      $namaCustomer = Payment::where('id',$id_transaksi['id_order'])->value('nama_customer');
+      $namaCustomer = Payment::where('id',$id_transaksi->id_order)->value('nama_customer');
       $kantor    = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 
-      $tgl = strtotime($getDataTransaksiPO['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       if ($getDataTransaksiPO['static_data'] == 20) {
         $keterangan = "Pembelian Hewan";
@@ -235,8 +234,7 @@ class JurnalPOController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tgl = strtotime($getDataTransaksiPO['tgl_po']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "purchase_order"  => [ 
@@ -319,8 +317,7 @@ class JurnalPOController extends Controller
         $deposit_to_name     = "Kas Cirebon";
       }
       
-      $tgl = strtotime($getDataTransaksiPO['tgl_po']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "purchase_payment"  => [ 

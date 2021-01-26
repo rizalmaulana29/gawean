@@ -32,7 +32,7 @@ class JurnalController extends Controller
                                  ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8]) //[2,3,7,8]
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8,16]) //[2,3,7,8]
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -96,7 +96,7 @@ class JurnalController extends Controller
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8,16])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');

@@ -32,7 +32,7 @@ class JurnalDevController extends Controller
                                  ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [2,3,7,8]) //[6,17,2,3,7,8]
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8]) //[2,3,7,8]
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -41,7 +41,7 @@ class JurnalDevController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-      var_dump($getDataTransaksi);
+      // var_dump($getDataTransaksi['id_transaksi']);
       if (isset($getDataTransaksi)) {
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
         // dd($createCustomer);
@@ -96,7 +96,7 @@ class JurnalDevController extends Controller
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [2,3,7,8])//[6,17,2,3,7,8]
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -403,14 +403,6 @@ class JurnalDevController extends Controller
         $payment_method_id   = $paymentMethode->methode_id_jurnal;
         $deposit_to_name     = $paymentMethode->methode_jurnal;
       }
-
-      if ($getDataTransaksi['tunai'] == "Tunai") {
-        $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
-        $nominal       = $getDataTransaksi['nominal_total'];
-      }else{
-        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
-        $nominal       = $getDataTransaksi['nominal_bayar'];
-      }
       
       $tglTransaksi = Carbon::now()->toDatestring();
 
@@ -476,7 +468,7 @@ class JurnalDevController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales order".$response);
+              $response = array("status"=>false,"message"=> "recieve payment".$response);
           }
       }
 
@@ -574,13 +566,12 @@ class JurnalDevController extends Controller
         $nominal       = $getDataTransaksi['nominal_bayar'];
       }
 
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "credit_memo"  => [ 
                                         "person_id"          => $person_id,
-                                        "person_name"        => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'],
+                                        "person_name"        => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5),
                                         "person_type"        => "customer",
                                         "transaction_date"   => $tglTransaksi,
                                         "transaction_no"     => $getDataTransaksi['id_transaksi'],

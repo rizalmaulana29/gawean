@@ -35,7 +35,7 @@ class JurnalCicPelController extends Controller
                                  ->where('status','paid')
                                  ->where('person_id','')
                                  ->where('memo_id','')
-                                 ->whereIn('id_kantor', [6, 17])
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  // ->where(function($q) {
                                  //            $q->where('nominal_diskon', '=', 0)
                                  //            ->orWhereNull('nominal_diskon');
@@ -71,7 +71,7 @@ class JurnalCicPelController extends Controller
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [6, 17])
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('tunai', '=', 'Cicilan')
                                             ->orWhereNull('tunai');
@@ -105,14 +105,20 @@ class JurnalCicPelController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
+      var_dump($jurnalKoneksi['jurnal_key']);
+      var_dump($jurnalKoneksi['jurnal_auth']);
+
       $dataRaw = [
-                    "customer"  => ["first_name"   => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap dengan id_transaksi
-                                    "display_name" => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'], //nama lengkap
-                                    "address"      => $getDataTransaksi['alamat'],
-                                    "phone"        => $getDataTransaksi['hp'],
-                                    "mobile"       => $getDataTransaksi['hp'],
-                                    "email"        => $getDataTransaksi['email'],
-                                    "custom_id"    => $getDataTransaksi['id_transaksi'], //id_transaksi tidak boleh sama
+                    "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
+                                    "display_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
+                                    "address"        => substr($getDataTransaksi['alamat'],0,255),
+                                    "billing_address"=> substr($getDataTransaksi['alamat'],0,255),
+                                    "phone"          => $getDataTransaksi['hp'],
+                                    "mobile"         => $getDataTransaksi['hp'],
+                                    "email"          => $getDataTransaksi['email'],
+                                    "custom_id"      => $getDataTransaksi['id_transaksi'], //id_transaksi tidak boleh sama
                                     "default_ap_account_name" => "Pendapatan Diterima Di Muka"
                                     ]
                   ];
@@ -132,8 +138,8 @@ class JurnalCicPelController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p"
                                       ),
@@ -173,6 +179,8 @@ class JurnalCicPelController extends Controller
 
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
@@ -191,7 +199,8 @@ class JurnalCicPelController extends Controller
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
-        $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga];
+        $nama_produk        = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
+        $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }
 
@@ -201,9 +210,9 @@ class JurnalCicPelController extends Controller
                                   "transaction_lines_attributes" => $detail_produk,
                                   "shipping_date"      => $getDataTransaksi['tgl_kirim'],
                                   "shipping_price"     => 0,
-                                  "shipping_address"   => $getDataTransaksi['alamat'],
+                                  "shipping_address"   => substr($getDataTransaksi['alamat'],0,255),
                                   "is_shipped"         => true,
-                                  "address"            => $getDataTransaksi['alamat'],
+                                  "address"            => substr($getDataTransaksi['alamat'],0,255),
                                   "due_date"           => $getDataTransaksi['tgl_kirim'],
                                   "discount_type_name" => "Value",
                                   "discount_type_value"=> $dataDiskon,
@@ -230,8 +239,8 @@ class JurnalCicPelController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p"
                                       ),
@@ -272,6 +281,8 @@ class JurnalCicPelController extends Controller
 
     public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   
@@ -302,8 +313,8 @@ class JurnalCicPelController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
                                       ),
@@ -344,27 +355,28 @@ class JurnalCicPelController extends Controller
 
     public function receivePayment($getDataTransaksi,$transaction_no){
 
-      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
-      if ($paymentMethode != 'cash') {
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
-        $createExpenses      = $this->createExpenses($getDataTransaksi);
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
 
+      $transfer = [26,33,2,3,4,5];
+
+      if (in_array($paymentMethode->parent_id, $transfer)) {
         $payment_method_name = "Transfer Bank";
-        $payment_method_id   = 792898;
-        $deposit_to_name     = "Mandiri Publik 131 000 711 2586";
-      } 
-      elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-        $payment_method_name = "Cash";
-        $payment_method_id   = 984210;
-        $deposit_to_name     = "Kas Bandung";
+        $payment_method_id   = $paymentMethode->methode_id_jurnal;
+        $deposit_to_name     = $paymentMethode->methode_jurnal;
+  
       } else {
-        $payment_method_name = "Cash";
-        $payment_method_id   = 984210;
-        $deposit_to_name     = "Kas Cirebon";
+        if ($getDataTransaksi['id_kantor'] == 6 || $getDataTransaksi['id_kantor'] == 17) {
+          $payment_method_name = "Cash";
+        } else {
+          $payment_method_name = "Kas Tunai";
+        }
+        $payment_method_id   = $paymentMethode->methode_id_jurnal;
+        $deposit_to_name     = $paymentMethode->methode_jurnal;
       }
       
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "receive_payment"  => [ 
@@ -395,8 +407,8 @@ class JurnalCicPelController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
                                       ),
@@ -428,7 +440,7 @@ class JurnalCicPelController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales order".$response);
+              $response = array("status"=>false,"message"=> "receive payment".$response);
           }
       }
 
@@ -515,36 +527,28 @@ class JurnalCicPelController extends Controller
 
     public function creditMemo ($getDataTransaksi,$person_id){
       
-      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('keterangan');
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
-      if ($paymentMethode != 'cash') {
-        // $createExpenses      = $this->createExpenses($getDataTransaksi);
-        $deposit_to_name     = "Nicepay";
-      } 
-      elseif ($paymentMethode == 'cash' && $getDataTransaksi['id_kantor'] == 6) {
-        $deposit_to_name     = "Kas Bandung";
-      } else {
-        $deposit_to_name     = "Kas Cirebon";
-      }
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
 
-      if ($getDataTransaksi['tunai'] == "Cicilan") {
-        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+      if ($getDataTransaksi['tunai'] == "Tunai") {
+        $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
         $nominal       = $getDataTransaksi['nominal_total'];
+      }else{
+        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+        $nominal       = $getDataTransaksi['nominal_bayar'];
       }
-      $tipeTransaksi = "Pelunasan".$getDataTransaksi['id_transaksi'];
-      $nominal       = $getDataTransaksi['nominal_bayar'];
 
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "credit_memo"  => [ 
                                         "person_id"          => $person_id,
-                                        "person_name"        => $getDataTransaksi['nama_customer'].$getDataTransaksi['id_transaksi'],
+                                        "person_name"        => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5),
                                         "person_type"        => "customer",
                                         "transaction_date"   => $tglTransaksi,
                                         "transaction_no"     => $getDataTransaksi['id_transaksi'],
-                                        "transaction_account_lines_attributes" => [[ "account_name"=> $deposit_to_name,
+                                        "transaction_account_lines_attributes" => [[ "account_name"=> $paymentMethode,
                                                                                      "description" => $tipeTransaksi,
                                                                                      "debit"       => $nominal]],
                                         "memo"               => $tipeTransaksi,
@@ -568,8 +572,8 @@ class JurnalCicPelController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; incap_ses_956_1892526=PV4+bT4OPmmys22YG2VEDUti2F8AAAAAxxOSJglDvTynnT2DtUC2Xg==; nlbi_1892526=swSXL5ITyjseS65LKezQ4QAAAACk4+Rxw/6k0udeObF0BXEI; incap_ses_962_1892526=VQ9FJ6/WYhZ+5dcXGLZZDeL02l8AAAAA/WbrlUVFbEocG5UqQCMVsw=="
                                       ),
@@ -609,6 +613,8 @@ class JurnalCicPelController extends Controller
 
     public function ApllyCreditMemo ($getDataTransaksi,$transaction_no){
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+
       if ($getDataTransaksi['tunai'] == "Tunai") {
 
         $nominal       = $getDataTransaksi['nominal_total'];
@@ -617,8 +623,7 @@ class JurnalCicPelController extends Controller
 
       $nominal       = $getDataTransaksi['nominal_bayar'];
 
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
+      $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "customer_apply_credit_memo"  => [ 
@@ -628,9 +633,9 @@ class JurnalCicPelController extends Controller
                                                                                  "amount" => $nominal]]
                                                 ]
                   ];  
-      
+      var_dump($dataRaw);
       $encodedataRaw = json_encode($dataRaw);
-      
+      var_dump($encodedataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
@@ -644,8 +649,8 @@ class JurnalCicPelController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
                                         "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; incap_ses_956_1892526=PV4+bT4OPmmys22YG2VEDUti2F8AAAAAxxOSJglDvTynnT2DtUC2Xg==; nlbi_1892526=swSXL5ITyjseS65LKezQ4QAAAACk4+Rxw/6k0udeObF0BXEI; incap_ses_962_1892526=VQ9FJ6/WYhZ+5dcXGLZZDeL02l8AAAAA/WbrlUVFbEocG5UqQCMVsw=="
                                       ),
@@ -681,6 +686,26 @@ class JurnalCicPelController extends Controller
       }
 
       return $response;     
+    }
+
+    private function Entitas($id_kantor){
+      
+      $ana = [6,17];
+      $lma = [2,3,7,8];
+
+      if (in_array($id_kantor, $ana)) {
+        $id_entitas = 'ANA';
+      }
+      elseif (in_array($id_kantor, $lma)) {
+         $id_entitas = 'LMA';
+      } else {
+        echo "id_kantor tidak memiliki koneksi jurnal";
+        die;
+      }
+      
+      $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+
+      return $getDataKoneksi;
     }
 
 }

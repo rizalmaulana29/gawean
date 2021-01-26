@@ -133,9 +133,6 @@ class JurnalController extends Controller
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
       jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
 
-      var_dump($jurnalKoneksi['jurnal_key']);
-      var_dump($jurnalKoneksi['jurnal_auth']);
-
       $dataRaw = [
                     "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
                                     "display_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap

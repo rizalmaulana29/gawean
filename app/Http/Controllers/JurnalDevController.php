@@ -734,7 +734,7 @@ class JurnalDevController extends Controller
       $id_entitas = Kantor::where('id',$id_kantor)->value('id_entitas');
       
       $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
-      if ($getDataKoneksi != '' && $getDataKoneksi != null ) {
+      if ($getDataKoneksi['jurnal_key'] != '' && $getDataKoneksi['jurnal_key'] != null ) {
         if ($requester == 'validator') {
           $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
         } else {

@@ -691,7 +691,7 @@ class JurnalCicPelController extends Controller
     private function Entitas($id_kantor){
       
       $ana = [6,17];
-      $lma = [2,3,7,8];
+      $lma = [2,3,7,8,16];
 
       if (in_array($id_kantor, $ana)) {
         $id_entitas = 'ANA';

@@ -31,8 +31,10 @@ class JurnalDevController extends Controller
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('lunas','y')
-                                 ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8]) //[2,3,7,8]
+                                 ->where(function($q) {
+                                            $q->where('person_id','=', '')
+                                            ->orWhere('person_id','!='.'none');
+                                        })
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -41,42 +43,48 @@ class JurnalDevController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-      // var_dump($getDataTransaksi['id_transaksi']);
+      var_dump($getDataTransaksi['id_transaksi']);
+
       if (isset($getDataTransaksi)) {
-        $createCustomer = $this->CreateCustomer($getDataTransaksi);
-        // dd($createCustomer);
-        if ($createCustomer['status'] == true) {
-          if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
-            $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-              if ($salesOrder['status'] == true) {
-                $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-                  if ($salesOrdertoInvoice['status'] == true) {
-                    $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-                    if ($createPayment['status'] == true) {
-                      return response()->json(["status"       => true,
-                                               "message"      => "Data berhasil di inputkan ke JurnalID",
-                                               "Data Request" => $getDataTransaksi,
-                                               "Data Response"=> $createPayment['message']
-                                              ],200);
+        $validasiJurnal = $this->Entitas($getDataTransaksi'id_kantor'],$requester = 'validator');
+        if ($validasiJurnal['status'] == true) {
+          $createCustomer = $this->CreateCustomer($getDataTransaksi);
+          if ($createCustomer['status'] == true) {
+            if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
+              $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
+                if ($salesOrder['status'] == true) {
+                  $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+                    if ($salesOrdertoInvoice['status'] == true) {
+                      $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+                      if ($createPayment['status'] == true) {
+                        return response()->json(["status"       => true,
+                                                 "message"      => "Data berhasil di inputkan ke JurnalID",
+                                                 "Data Request" => $getDataTransaksi,
+                                                 "Data Response"=> $createPayment['message']
+                                                ],200);
+                      }
+                      return $createPayment;
                     }
-                    return $createPayment;
-                  }
-                  return $salesOrdertoInvoice;   
+                    return $salesOrdertoInvoice;   
+                }
+                return $salesOrder;
+            }else{
+              $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
+              if ($creditMemo['status'] == true) {
+                return response()->json(["status"       => true,
+                                         "message"      => "Data berhasil di inputkan ke MEMO",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $creditMemo['message']
+                                        ],200);
               }
-              return $salesOrder;
-          }else{
-            $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
-            if ($creditMemo['status'] == true) {
-              return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke MEMO",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $creditMemo['message']
-                                      ],200);
+              return $creditMemo;
             }
-            return $creditMemo;
-          }
-        } 
-        return $createCustomer;
+          } 
+          return $createCustomer;
+        }
+        return response()->json(["status"       => false,
+                                 "message"      => "Entitas / Kantor belum terdaftar di Jurnal"
+                                ],200);
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
@@ -93,10 +101,15 @@ class JurnalDevController extends Controller
                                  ->where('varian','Aqiqah')
                                  ->where('tunai','Tunai')
                                  ->where('lunas','y')
-                                 ->where('person_id','!=','')
-                                 ->where('memo_id','!=','')
+                                 ->where(function($q) {
+                                            $q->where('person_id','=', '')
+                                            ->orWhere('person_id','!='.'none');
+                                        })
+                                 ->where(function($q) {
+                                            $q->where('memo_id','=', '')
+                                            ->orWhere('memo_id','!='.'none');
+                                        })
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -133,7 +146,7 @@ class JurnalDevController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
 
       var_dump($jurnalKoneksi['jurnal_key']);
       var_dump($jurnalKoneksi['jurnal_auth']);
@@ -207,7 +220,7 @@ class JurnalDevController extends Controller
 
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
 
       $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
@@ -309,7 +322,7 @@ class JurnalDevController extends Controller
 
     public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
 
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
@@ -383,7 +396,7 @@ class JurnalDevController extends Controller
 
     public function receivePayment($getDataTransaksi,$transaction_no){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
 
@@ -554,7 +567,7 @@ class JurnalDevController extends Controller
 
     public function creditMemo ($getDataTransaksi,$person_id){
       
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
 
@@ -640,7 +653,7 @@ class JurnalDevController extends Controller
 
     public function ApllyCreditMemo ($getDataTransaksi,$transaction_no){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
 
       if ($getDataTransaksi['tunai'] == "Tunai") {
 
@@ -716,24 +729,27 @@ class JurnalDevController extends Controller
       return $response;     
     }
 
-    private function Entitas($id_kantor){
+    private function Entitas($id_kantor,$requester){
       
-      $ana = [6,17];
-      $lma = [2,3,7,8];
-
-      if (in_array($id_kantor, $ana)) {
-        $id_entitas = 'ANA';
-      }
-      elseif (in_array($id_kantor, $lma)) {
-         $id_entitas = 'LMA';
-      } else {
-        echo "id_kantor tidak memiliki koneksi jurnal";
-        die;
-      }
+      $id_entitas = Kantor::where('id',$id_kantor)->value('id_entitas');
       
       $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+      if ($getDataKoneksi != '' && $getDataKoneksi != null ) {
+        if ($requester == 'validator') {
+          $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
+        } else {
+          $response = $getDataKoneksi;
+        }
+      } else {
+        if ($requester == 'validator') {
+          $update = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none']);
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        } else {
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        }
+      }
 
-      return $getDataKoneksi;
+      return $response;
     }
 
 }

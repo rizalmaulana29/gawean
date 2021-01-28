@@ -30,7 +30,7 @@ class JurnalPOController extends Controller
                                  ->where('purchase_order_id','')
                                  ->where('purchase_invoice_id','')
                                  ->where('purchase_payment_id','')
-                                 ->whereIn('id_kantor', [6, 17])
+                                 ->whereIn('id_kantor', [6,17,2,3,7,8,16])
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
 
@@ -69,14 +69,13 @@ class JurnalPOController extends Controller
 
     public function CreateVendor ($checkVendorId){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
+      $jurnalKoneksi = $this->Entitas($checkVendorId['id_kantor']);
+
       $dataRaw = [
-                    "vendor"  => ["first_name"   => $checkVendorId['name'].$checkVendorId['id'],
-                                    "display_name" => $checkVendorId['name'].$checkVendorId['id'],
+                    "vendor"  => [  "first_name"   => $checkVendorId['name'].' '.$checkVendorId['id'],
+                                    "display_name" => $checkVendorId['name'].' '.$checkVendorId['id'],
                                     "email"        => $checkVendorId['email'],
-                                    "custom_id"    => $checkVendorId['name'].$checkVendorId['id'],
-                                    // "default_ar_account_name": "Account Receivable",
-                                    // "default_ap_account_name": "Account Payable",
-                                    // "default_ap_account_name" => "Pendapatan Diterima Di Muka"
+                                    "custom_id"    => $checkVendorId['id']
                                     ]
                   ];
 
@@ -95,8 +94,8 @@ class JurnalPOController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8"
                                       ),
       ));
@@ -134,10 +133,12 @@ class JurnalPOController extends Controller
 
     public function PurchaseOrder($getDataTransaksiPO,$vendor_id){ 
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_kantor']);
+
       $detailDataPO = PO_detail::where('id_po_detail',$getDataTransaksiPO['id']);
       $id_transaksi = $detailDataPO->first();
       $namaCustomer = Payment::where('id',$id_transaksi->id_order)->value('nama_customer');
-      $kantor    = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
+      $kantor       = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 
       $tglTransaksi = Carbon::now()->toDatestring();
 
@@ -148,12 +149,12 @@ class JurnalPOController extends Controller
       }
       
 
-      $dataOrderPo = $detailDataPO->get();
+      $dataOrderPo   = $detailDataPO->get();
       $detail_produk = [];
       foreach ($dataOrderPo as $key => $orderPO) {
         $get_produk   = Pendapatan::where('id',$orderPO['ra_produk_harga_po_id'])->value('ra_produk_harga_id');
         $produk_harga = Harga::where('id',$get_produk)->first();
-        $produk       = ["quantity" => $orderPO['quantity'], "rate"=> $orderPO['hpp'],"product_id"=> $produk_harga['jurnal_product_id'],"description"=>$keterangan.' '.$orderPO['quantity'].' '.$produk_harga['nama_produk'].' '.'an.'.' '.$namaCustomer];
+        $produk       = ["quantity" => $orderPO['quantity'], "rate"=> $orderPO['hpp'],"product_id"=> $produk_harga['jurnal_product_id'],"description"=>$keterangan.' '.$orderPO['quantity'].' '.$produk_harga['nama_produk'].' '.'an. '.$namaCustomer];
         array_push($detail_produk,$produk);
       }
 
@@ -187,8 +188,8 @@ class JurnalPOController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8"
                                       ),
       ));
@@ -228,6 +229,8 @@ class JurnalPOController extends Controller
 
     public function PurchaseOrdertoInvoice($getDataTransaksiPO,$purchase_order_id,$purchase_order_atribute){
 
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_kantor']);
+
       $detail_atribute = [];
       foreach ($purchase_order_atribute as $key => $atribute) {
   
@@ -258,8 +261,8 @@ class JurnalPOController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8"
                                       ),
       ));
@@ -299,24 +302,58 @@ class JurnalPOController extends Controller
 
     public function PurchasePayment($getDataTransaksiPO,$transaction_no){
 
-      
-      if ($getDataTransaksiPO['payment_method'] != 'Kas') {
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_kantor']);
 
-        $payment_method_name = "Transfer Bank";
-        $payment_method_id   = 792898;
-        $deposit_to_name     = "Mandiri ANA Operasional 131-00-0732212-8"; 
+      $ana = [6,17];
+      $lma = [2,3,7,8,16];
 
-      } 
-      elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 6) {
-        $payment_method_name = "Cash";
-        $payment_method_id   = 984210;
-        $deposit_to_name     = "Kas Bandung";
-      } else {
-        $payment_method_name = "Cash";
-        $payment_method_id   = 984210;
-        $deposit_to_name     = "Kas Cirebon";
+      if (in_array($getDataTransaksiPO['id_kantor'], $ana)) {
+        if ($getDataTransaksiPO['payment_method'] != 'Kas') {
+
+          $payment_method_name = "Transfer Bank";
+          $payment_method_id   = 792898;
+          $deposit_to_name     = "Mandiri ANA Operasional 131-00-0732212-8"; 
+
+        } 
+        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 6) {
+          $payment_method_name = "Cash";
+          $payment_method_id   = 984210;
+          $deposit_to_name     = "Kas Bandung";
+        } else {
+          $payment_method_name = "Cash";
+          $payment_method_id   = 984210;
+          $deposit_to_name     = "Kas Cirebon";
+        }
+      }else{
+        if ($getDataTransaksiPO['payment_method'] != 'Kas') {
+
+          $payment_method_name = "Transfer Bank";
+          $payment_method_id   = 1528391;
+          $deposit_to_name     = "Mandiri LMA Pusat 1310016430102 Ops"; 
+
+        } 
+        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 2) {
+          $payment_method_name = "Kas Tunai";
+          $payment_method_id   = 1528389;
+          $deposit_to_name     = "Kas Tangerang";
+        }
+        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 3){
+          $payment_method_name = "Kas Tunai";
+          $payment_method_id   = 1528389;
+          $deposit_to_name     = "Kas Bogor";
+        }
+        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 8){
+          $payment_method_name = "Kas Tunai";
+          $payment_method_id   = 1528389;
+          $deposit_to_name     = "Kas Cilegon";
+        }
+        else{
+          $payment_method_name = "Kas Tunai";
+          $payment_method_id   = 1528389;
+          $deposit_to_name     = "Kas Jakarta";
+        }
       }
-      
+
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
@@ -348,8 +385,8 @@ class JurnalPOController extends Controller
         CURLOPT_CUSTOMREQUEST  => "POST",
         CURLOPT_POSTFIELDS     => $encodedataRaw,
         CURLOPT_HTTPHEADER     => array(
-                                        "apikey: 56593d3e45a37eb7033e356d33fd83c4",
-                                        "Authorization: 815f1ce4f83e46a3a3f2b87ac79fc79c",
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8"
                                       ),
       ));
@@ -358,7 +395,7 @@ class JurnalPOController extends Controller
 
       $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksiPO['id'],
                                         'id_transaksi' =>$getDataTransaksiPO['id_transaksi'],
-                                        'action' => "receivePayment",
+                                        'action' => "purchasePayment",
                                         'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,
                                         'response_body' => $response
@@ -380,11 +417,31 @@ class JurnalPOController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales order".$response);
+              $response = array("status"=>false,"message"=> "purchase payment".$response);
           }
       }
 
       return $response;
+    }
+
+    private function Entitas($id_kantor){
+      
+      $ana = [6,17];
+      $lma = [2,3,7,8,16];
+
+      if (in_array($id_kantor, $ana)) {
+        $id_entitas = 'ANA';
+      }
+      elseif (in_array($id_kantor, $lma)) {
+         $id_entitas = 'LMA';
+      } else {
+        echo "id_kantor tidak memiliki koneksi jurnal";
+        die;
+      }
+      
+      $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+
+      return $getDataKoneksi;
     }
 
 }

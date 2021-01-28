@@ -46,7 +46,7 @@ class JurnalDevController extends Controller
       var_dump($getDataTransaksi['id_transaksi']);
 
       if (isset($getDataTransaksi)) {
-        $validasiJurnal = $this->Entitas($getDataTransaksi'id_kantor'],$requester = 'validator');
+        $validasiJurnal = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'validator');
         if ($validasiJurnal['status'] == true) {
           $createCustomer = $this->CreateCustomer($getDataTransaksi);
           if ($createCustomer['status'] == true) {

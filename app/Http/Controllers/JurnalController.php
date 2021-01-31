@@ -125,7 +125,7 @@ class JurnalController extends Controller
             return response()->json(["status"       => true,
                                      "message"      => "Data berhasil di inputkan ke JurnalID",
                                      "Data Request" => $getDataTransaksi,
-                                     "Data Response"=> $salesOrdertoInvoice['message']
+                                     "Data Response"=> $createPayment['message']
                                     ],200);
           }
           return $createPayment;

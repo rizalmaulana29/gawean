@@ -48,7 +48,7 @@ class JurnalController extends Controller
                                  // ->get();
 
       if (isset($getDataTransaksi)) {
-        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'validator');
+        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
           $createCustomer = $this->CreateCustomer($getDataTransaksi);
           if ($createCustomer['status'] == true) {
@@ -753,13 +753,13 @@ class JurnalController extends Controller
       
       $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
       if ($getDataKoneksi['jurnal_key'] != '' && $getDataKoneksi['jurnal_key'] != null ) {
-        if ($requester == 'validator') {
+        if ($requester != 'konektor') {
           $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
         } else {
           $response = $getDataKoneksi;
         }
       } else {
-        if ($requester == 'validator') {
+        if ($requester != 'konektor') {
           $update = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none']);
           $response = array("status"=>false,"message"=> "belum ada key jurnal");
         } else {

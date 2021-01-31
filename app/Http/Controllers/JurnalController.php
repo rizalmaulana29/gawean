@@ -26,13 +26,17 @@ class JurnalController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
-      $getDataTransaksi = Payment::where([["tgl_transaksi", ">=", $start],["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 ->where('varian','Aqiqah')
+      $getDataTransaksi = Payment::slect('id_transaksi','nama_customer','alamat','tgl_transaksi',
+                                         'tgl_kirim','hp','email','id_kantor','id_agen','nominal_diskon',
+                                         'nominal_bayar','nominal_total','jenis','tgl','tunai','ra_order_dua.id_entitas as id_entitas')
+                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
+                                 ->where([["tgl_transaksi", ">=", $start],
+                                          ["tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
+                                 ->where('varian','!=','Qurban')
                                  ->where('lunas','y')
                                  ->where('person_id','=','')
-                                 ->whereIn('id_kantor', [5,6,17,2,3,7,8,16]) //[2,3,7,8]
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
@@ -41,7 +45,7 @@ class JurnalController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-      // var_dump($getDataTransaksi['id_transaksi']);
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $createCustomer = $this->CreateCustomer($getDataTransaksi);
         // dd($createCustomer);
@@ -172,10 +176,10 @@ class JurnalController extends Controller
       curl_close($curl);
 
       $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
-                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action' => "CreateCustomer",
-                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                                        'request_body' => $encodedataRaw,
+                                        'id_transaksi'  =>$getDataTransaksi['id_transaksi'],
+                                        'action'        => "CreateCustomer",
+                                        'insert_at'     => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body'  => $encodedataRaw,
                                         'response_body' => $response
                                         ]);
 
@@ -213,16 +217,15 @@ class JurnalController extends Controller
       if ($getDataTransaksi['nominal_diskon'] != null) {
         $dataDiskon = $getDataTransaksi['nominal_diskon'];
       }
-      $kantor    = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
-      $countData = 1;
-      $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
+      $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
+      $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
-        $nama_produk        = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
+        $nama_produk         = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
         $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }
@@ -271,15 +274,15 @@ class JurnalController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
 
-      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+      $insertTolog = JurnalLog::insert(['ra_payment_id'=> $getDataTransaksi['id'],
                                         'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action' => "SalesOrder",
-                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'action'       => "SalesOrder",
+                                        'insert_at'    => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,
-                                        'response_body' => $response
+                                        'response_body'=> $response
                                         ]);
 
-      $findString    = 'sales_order';
+      $findString     = 'sales_order';
       $searchResponse = stripos($response, 'sales_order');
 
       if ($err) {
@@ -288,7 +291,8 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id]);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id]);
+
               $response = array("status" =>true,
                                 "id"     => $dataResponse->sales_order->id,
                                 "message"=> $dataResponse->sales_order->transaction_lines_attributes);
@@ -345,12 +349,12 @@ class JurnalController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
 
-      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+      $insertTolog = JurnalLog::insert(['ra_payment_id'=> $getDataTransaksi['id'],
                                         'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action' => "SalesOrdertoInvoice",
-                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'action'       => "SalesOrdertoInvoice",
+                                        'insert_at'    => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,
-                                        'response_body' => $response
+                                        'response_body'=> $response
                                         ]);
 
       $findString    = 'sales_invoice';
@@ -361,8 +365,9 @@ class JurnalController extends Controller
       } 
       else {
           if ($searchResponse == true){
-              $dataResponse = json_decode($response);
+              $dataResponse  = json_decode($response);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id]);
+
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,
                                 "message"=> $dataResponse->sales_invoice->transaction_no);
@@ -398,6 +403,10 @@ class JurnalController extends Controller
         $payment_method_id   = $paymentMethode->methode_id_jurnal;
         $deposit_to_name     = $paymentMethode->methode_jurnal;
       }
+      //PDN "id": 1539634,
+      // "name": "Kas Tunai",
+      // "id": 1539636,
+      // "name": "Transfer Bank",
       
       $tglTransaksi = Carbon::now()->toDatestring();
 

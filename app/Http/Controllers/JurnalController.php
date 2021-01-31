@@ -26,7 +26,8 @@ class JurnalController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
-      $getDataTransaksi = Payment::select('id_transaksi','nama_customer','alamat','ra_payment_dua.tgl_transaksi',
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
+                                          'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
                                           'tunai','ra_order_dua.id_entitas as id_entitas')
@@ -95,7 +96,8 @@ class JurnalController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::now()->toDatestring();
 
-      $getDataTransaksi = Payment::select('id_transaksi','nama_customer','alamat','ra_payment_dua.tgl_transaksi',
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
+                                          'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
                                           'tunai','ra_order_dua.id_entitas as id_entitas','sales_invoice_id','memo_id')

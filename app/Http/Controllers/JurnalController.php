@@ -113,11 +113,8 @@ class JurnalController extends Controller
                                             $q->where('memo_id', '!=', '')
                                             ->orWhere('sales_invoice_id','!=','');
                                         })
-                                 ->where(function($q) {
-                                            $q->where('apply_memo_id','=','')
-                                            ->andWhere('recieve_payment_id','=','');
-                                        })
                                  ->where('apply_memo_id','=','')
+                                 ->Where('recieve_payment_id','=','')
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');

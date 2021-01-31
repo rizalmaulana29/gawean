@@ -46,42 +46,48 @@ class JurnalController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-      dd($getDataTransaksi);
+      var_dump($getDataTransaksi['id_entitas']);
       if (isset($getDataTransaksi)) {
-        $createCustomer = $this->CreateCustomer($getDataTransaksi);
-        // dd($createCustomer);
-        if ($createCustomer['status'] == true) {
-          if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
-            $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-              if ($salesOrder['status'] == true) {
-                $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-                  if ($salesOrdertoInvoice['status'] == true) {
-                    $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-                    if ($createPayment['status'] == true) {
-                      return response()->json(["status"       => true,
-                                               "message"      => "Data berhasil di inputkan ke JurnalID",
-                                               "Data Request" => $getDataTransaksi,
-                                               "Data Response"=> $createPayment['message']
-                                              ],200);
+        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'validator');
+        dd($validasiJurnal);
+        if ($validasiJurnal['status'] == true) {
+          $createCustomer = $this->CreateCustomer($getDataTransaksi);
+          if ($createCustomer['status'] == true) {
+            if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
+              $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
+                if ($salesOrder['status'] == true) {
+                  $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+                    if ($salesOrdertoInvoice['status'] == true) {
+                      $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+                      if ($createPayment['status'] == true) {
+                        return response()->json(["status"       => true,
+                                                 "message"      => "Data berhasil di inputkan ke JurnalID",
+                                                 "Data Request" => $getDataTransaksi,
+                                                 "Data Response"=> $createPayment['message']
+                                                ],200);
+                      }
+                      return $createPayment;
                     }
-                    return $createPayment;
-                  }
-                  return $salesOrdertoInvoice;   
+                    return $salesOrdertoInvoice;   
+                }
+                return $salesOrder;
+            }else{
+              $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
+              if ($creditMemo['status'] == true) {
+                return response()->json(["status"       => true,
+                                         "message"      => "Data berhasil di inputkan ke MEMO",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $creditMemo['message']
+                                        ],200);
               }
-              return $salesOrder;
-          }else{
-            $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
-            if ($creditMemo['status'] == true) {
-              return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke MEMO",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $creditMemo['message']
-                                      ],200);
+              return $creditMemo;
             }
-            return $creditMemo;
-          }
-        } 
-        return $createCustomer;
+          } 
+          return $createCustomer;
+        }
+        return response()->json(["status"       => false,
+                                 "message"      => "Entitas / Kantor belum terdaftar di Jurnal"
+                                ],200);
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
@@ -722,24 +728,25 @@ class JurnalController extends Controller
       return $response;     
     }
 
-    private function Entitas($id_kantor){
-      
-      $ana = [5,6,17];
-      $lma = [2,3,7,8,16];
-
-      if (in_array($id_kantor, $ana)) {
-        $id_entitas = 'ANA';
-      }
-      elseif (in_array($id_kantor, $lma)) {
-         $id_entitas = 'LMA';
-      } else {
-        echo "id_kantor tidak memiliki koneksi jurnal";
-        die;
-      }
+    private function Entitas($id_entitas,$requester){
       
       $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+      if ($getDataKoneksi['jurnal_key'] != '' && $getDataKoneksi['jurnal_key'] != null ) {
+        if ($requester == 'validator') {
+          $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
+        } else {
+          $response = $getDataKoneksi;
+        }
+      } else {
+        if ($requester == 'validator') {
+          $update = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none']);
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        } else {
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        }
+      }
 
-      return $getDataKoneksi;
+      return $response;
     }
 
 }

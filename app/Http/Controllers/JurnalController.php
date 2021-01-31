@@ -49,7 +49,7 @@ class JurnalController extends Controller
       var_dump($getDataTransaksi['id_entitas']);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'validator');
-        dd($validasiJurnal);
+        // dd($validasiJurnal);
         if ($validasiJurnal['status'] == true) {
           $createCustomer = $this->CreateCustomer($getDataTransaksi);
           if ($createCustomer['status'] == true) {
@@ -58,15 +58,15 @@ class JurnalController extends Controller
                 if ($salesOrder['status'] == true) {
                   $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
                     if ($salesOrdertoInvoice['status'] == true) {
-                      $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-                      if ($createPayment['status'] == true) {
+                      // $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+                      // if ($createPayment['status'] == true) {
                         return response()->json(["status"       => true,
                                                  "message"      => "Data berhasil di inputkan ke JurnalID",
                                                  "Data Request" => $getDataTransaksi,
-                                                 "Data Response"=> $createPayment['message']
+                                                 "Data Response"=> $salesOrdertoInvoice['message']
                                                 ],200);
-                      }
-                      return $createPayment;
+                      // }
+                      // return $createPayment;
                     }
                     return $salesOrdertoInvoice;   
                 }
@@ -142,8 +142,8 @@ class JurnalController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
-
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
+      dd($jurnalKoneksi);
       $dataRaw = [
                     "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
                                     "display_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
@@ -213,7 +213,7 @@ class JurnalController extends Controller
 
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
@@ -315,7 +315,7 @@ class JurnalController extends Controller
 
     public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
@@ -390,7 +390,7 @@ class JurnalController extends Controller
 
     public function receivePayment($getDataTransaksi,$transaction_no){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
 
@@ -567,7 +567,7 @@ class JurnalController extends Controller
 
     public function creditMemo ($getDataTransaksi,$person_id){
       
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
 
@@ -653,7 +653,7 @@ class JurnalController extends Controller
 
     public function ApllyCreditMemo ($getDataTransaksi,$transaction_no){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       if ($getDataTransaksi['tunai'] == "Tunai") {
 

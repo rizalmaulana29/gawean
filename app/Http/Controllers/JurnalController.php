@@ -36,13 +36,13 @@ class JurnalController extends Controller
                                  ->where('tunai','Tunai')
                                  ->where('status','paid')
                                  ->where('varian','!=','Qurban')
-                                 ->where('lunas','y')
+                                 ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','=','')
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
                                         })
-                                 ->orderBy('tgl_transaksi','ASC')
+                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();

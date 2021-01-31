@@ -58,7 +58,7 @@ class JurnalController extends Controller
                   $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
                     if ($salesOrdertoInvoice['status'] == true) {
                         return response()->json(["status"       => true,
-                                                 "message"      => "Data berhasil di inputkan ke JurnalID",
+                                                 "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
                                                  "Data Request" => $getDataTransaksi,
                                                  "Data Response"=> $salesOrdertoInvoice['message']
                                                 ],200);
@@ -117,18 +117,18 @@ class JurnalController extends Controller
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+      // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
           $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-            if ($createPayment['status'] == true) {
-              return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke JurnalID",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $salesOrdertoInvoice['message']
-                                      ],200);
-            }
-            return $createPayment;
+          if ($createPayment['status'] == true) {
+            return response()->json(["status"       => true,
+                                     "message"      => "Data berhasil di inputkan ke JurnalID",
+                                     "Data Request" => $getDataTransaksi,
+                                     "Data Response"=> $salesOrdertoInvoice['message']
+                                    ],200);
+          }
+          return $createPayment;
         } else {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {

@@ -760,7 +760,7 @@ class JurnalController extends Controller
         }
       } else {
         if ($requester != 'konektor') {
-          $update = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none']);
+          $update = Payment::where('id_transaksi',$requester)->update(['apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none','apply_memo_id' => 'none']);
           $response = array("status"=>false,"message"=> "belum ada key jurnal");
         } else {
           $response = array("status"=>false,"message"=> "belum ada key jurnal");

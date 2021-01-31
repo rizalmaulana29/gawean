@@ -230,7 +230,7 @@ class JurnalController extends Controller
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
-      dd($jurnalKoneksi['jurnal_key']);
+      
       $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');

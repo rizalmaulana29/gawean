@@ -120,7 +120,7 @@ class JurnalController extends Controller
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
-          $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+          $createPayment = $this->receivePayment($getDataTransaksi);
           if ($createPayment['status'] == true) {
             return response()->json(["status"       => true,
                                      "message"      => "Data berhasil di inputkan ke JurnalID",

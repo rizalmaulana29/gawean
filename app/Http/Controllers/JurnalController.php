@@ -46,10 +46,10 @@ class JurnalController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
+
       var_dump($getDataTransaksi['id_entitas']);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'validator');
-        // dd($validasiJurnal);
         if ($validasiJurnal['status'] == true) {
           $createCustomer = $this->CreateCustomer($getDataTransaksi);
           if ($createCustomer['status'] == true) {
@@ -95,29 +95,52 @@ class JurnalController extends Controller
 
     }
 
-    public function transaksiBedaBulan (){
+    public function AdjustmentTransaksi (){
 
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::now()->toDatestring();
 
-      $getDataTransaksi = Payment::where('status','paid')
+      $getDataTransaksi = Payment::select('id_transaksi','nama_customer','alamat','ra_payment_dua.tgl_transaksi',
+                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
+                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','sales_invoice_id','memo_id')
+                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
+                                 ->where('status','paid')
                                  ->where('varian','Aqiqah')
                                  ->where('tunai','Tunai')
-                                 ->where('lunas','y')
+                                 ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
-                                 ->where('memo_id','!=','')
+                                 ->where(function($q) {
+                                            $q->where('memo_id', '!=', '')
+                                            ->orWhere('sales_invoice_id','!=','');
+                                        })
+                                 ->where(function($q) {
+                                            $q->where('apply_memo_id','=','')
+                                            ->orWhere('receive_payment_id','=','');
+                                        })
                                  ->where('apply_memo_id','=','')
                                  ->whereIn('id_kantor', [5,6,17,2,3,7,8,16])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');
                                         })
-                                 ->where('tgl_kirim','=',$start)
-                                 ->orderBy('tgl_transaksi','ASC')
+                                 ->where('ra_payment_dua.tgl_kirim','=',$start)
+                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+        if ($getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
+          $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
+            if ($createPayment['status'] == true) {
+              return response()->json(["status"       => true,
+                                       "message"      => "Data berhasil di inputkan ke JurnalID",
+                                       "Data Request" => $getDataTransaksi,
+                                       "Data Response"=> $salesOrdertoInvoice['message']
+                                      ],200);
+            }
+            return $createPayment;
+        } else {
+          $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {
             $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
               if ($salesOrdertoInvoice['status'] == true) {
@@ -134,6 +157,7 @@ class JurnalController extends Controller
               return $salesOrdertoInvoice;
           }
           return $salesOrder;
+        }
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
@@ -143,7 +167,7 @@ class JurnalController extends Controller
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
-      dd($jurnalKoneksi);
+
       $dataRaw = [
                     "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
                                     "display_name"   => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap
@@ -373,7 +397,7 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,
@@ -388,7 +412,7 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function receivePayment($getDataTransaksi,$transaction_no){
+    public function receivePayment($getDataTransaksi){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
@@ -420,7 +444,7 @@ class JurnalController extends Controller
       $dataRaw = [
                 "receive_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
-                                        "records_attributes"  => [[ "transaction_no" => $transaction_no,
+                                        "records_attributes"  => [[ "transaction_no" => $getDataTransaksi['sales_invoice_id'],
                                                                     "amount"         => $getDataTransaksi['nominal_total']]],
                                         "custom_id"           => $getDataTransaksi['id_transaksi'],
                                         "payment_method_name" => $payment_method_name,

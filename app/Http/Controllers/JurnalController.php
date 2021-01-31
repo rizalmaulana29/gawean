@@ -116,7 +116,7 @@ class JurnalController extends Controller
                                         })
                                  ->where(function($q) {
                                             $q->where('apply_memo_id','=','')
-                                            ->orWhere('receive_payment_id','=','');
+                                            ->orWhere('recieve_payment_id','=','');
                                         })
                                  ->where('apply_memo_id','=','')
                                  ->whereIn('id_kantor', [5,6,17,2,3,7,8,16])

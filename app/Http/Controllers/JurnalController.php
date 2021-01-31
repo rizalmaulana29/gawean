@@ -47,7 +47,6 @@ class JurnalController extends Controller
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
 
-      var_dump($getDataTransaksi['id_entitas']);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'validator');
         if ($validasiJurnal['status'] == true) {
@@ -58,15 +57,11 @@ class JurnalController extends Controller
                 if ($salesOrder['status'] == true) {
                   $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
                     if ($salesOrdertoInvoice['status'] == true) {
-                      // $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-                      // if ($createPayment['status'] == true) {
                         return response()->json(["status"       => true,
                                                  "message"      => "Data berhasil di inputkan ke JurnalID",
                                                  "Data Request" => $getDataTransaksi,
                                                  "Data Response"=> $salesOrdertoInvoice['message']
                                                 ],200);
-                      // }
-                      // return $createPayment;
                     }
                     return $salesOrdertoInvoice;   
                 }
@@ -416,23 +411,30 @@ class JurnalController extends Controller
       $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
 
       if (in_array($paymentMethode->parent_id, $transfer)) {
-        $payment_method_name = "Transfer Bank";
-        $payment_method_id   = $paymentMethode->methode_id_jurnal;
-        $deposit_to_name     = $paymentMethode->methode_jurnal;
-  
-      } else {
-        if ($getDataTransaksi['id_kantor'] == 6 || $getDataTransaksi['id_kantor'] == 17) {
-          $payment_method_name = "Cash";
+        if (getDataTransaksi['id_entitas'] == 'PDN') {
+          $payment_method_name = "Transfer Bank";
+          $payment_method_id   = "1539636";
+          $deposit_to_name     = "Mandiri 1310012793792";
         } else {
-          $payment_method_name = "Kas Tunai";
+          $payment_method_name = "Transfer Bank";
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
-        $payment_method_id   = $paymentMethode->methode_id_jurnal;
-        $deposit_to_name     = $paymentMethode->methode_jurnal;
+      } else {
+        if (condition) {
+          $payment_method_name = "Kas Tunai";
+          $payment_method_id   = "1539634";
+          $deposit_to_name     = "Kas";
+        } else {
+          if ($getDataTransaksi['id_kantor'] == 6 || $getDataTransaksi['id_kantor'] == 17) {
+          $payment_method_name = "Cash";
+          } else {
+            $payment_method_name = "Kas Tunai";
+          }
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
+        }
       }
-      //PDN "id": 1539634,
-      // "name": "Kas Tunai",
-      // "id": 1539636,
-      // "name": "Transfer Bank",
       
       $tglTransaksi = Carbon::now()->toDatestring();
 

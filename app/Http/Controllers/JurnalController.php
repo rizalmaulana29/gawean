@@ -26,9 +26,10 @@ class JurnalController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
-      $getDataTransaksi = Payment::select('id_transaksi','nama_customer','alamat','tgl_transaksi',
-                                         'tgl_kirim','hp','email','id_kantor','id_agen','nominal_diskon',
-                                         'nominal_bayar','nominal_total','jenis','tgl','tunai','ra_order_dua.id_entitas as id_entitas')
+      $getDataTransaksi = Payment::select('ra_payment_dua.id_transaksi','nama_customer','alamat','tgl_transaksi',
+                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
+                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
+                                          'tunai','ra_order_dua.id_entitas as id_entitas')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where([["tgl_transaksi", ">=", $start],
                                           ["tgl_transaksi", "<=", $endDate->toDateTimestring()]])

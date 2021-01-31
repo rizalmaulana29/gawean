@@ -106,7 +106,6 @@ class JurnalController extends Controller
                                           'tunai','ra_order_dua.id_entitas as id_entitas','sales_invoice_id','memo_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where('status','paid')
-                                 ->where('varian','Aqiqah')
                                  ->where('tunai','Tunai')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
@@ -119,7 +118,6 @@ class JurnalController extends Controller
                                             ->orWhere('recieve_payment_id','=','');
                                         })
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [5,6,17,2,3,7,8,16])
                                  ->where(function($q) {
                                             $q->where('sisa_pembayaran', '=', 0)
                                             ->orWhereNull('sisa_pembayaran');

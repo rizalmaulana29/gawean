@@ -35,7 +35,7 @@ class JurnalCicPelController extends Controller
                                  ->where('status','paid')
                                  ->where('person_id','')
                                  ->where('memo_id','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
+                                 ->whereIn('id_kantor', [5,6,17,2,3,7,8])
                                  // ->where(function($q) {
                                  //            $q->where('nominal_diskon', '=', 0)
                                  //            ->orWhereNull('nominal_diskon');
@@ -195,11 +195,17 @@ class JurnalCicPelController extends Controller
       $dataOrder = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = Carbon::now()->toDatestring();
 
+      if ($getDataTransaksi['id_entitas'] == 'PDN') {
+        $wh_name = $kantor;
+      } else {
+        $wh_name = "";
+      }
+
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
 
         $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
-        $nama_produk        = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
+        $nama_produk         = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
         $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }
@@ -211,6 +217,7 @@ class JurnalCicPelController extends Controller
                                   "shipping_date"      => $getDataTransaksi['tgl_kirim'],
                                   "shipping_price"     => 0,
                                   "shipping_address"   => substr($getDataTransaksi['alamat'],0,255),
+                                  "warehouse_name"     => $wh_name,
                                   "is_shipped"         => true,
                                   "address"            => substr($getDataTransaksi['alamat'],0,255),
                                   "due_date"           => $getDataTransaksi['tgl_kirim'],

@@ -230,7 +230,7 @@ class JurnalController extends Controller
     public function SalesOrder($getDataTransaksi,$person_id){ 
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
-      
+
       $agen   = '';
       if ($getDataTransaksi['id_agen'] != null) {
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
@@ -243,6 +243,12 @@ class JurnalController extends Controller
       $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = Carbon::now()->toDatestring();
+
+      if ($getDataTransaksi['id_entitas'] == 'PDN') {
+        $wh_name = $kantor;
+      } else {
+        $wh_name = "";
+      }
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
@@ -260,6 +266,7 @@ class JurnalController extends Controller
                                   "shipping_date"      => $getDataTransaksi['tgl_kirim'],
                                   "shipping_price"     => 0,
                                   "shipping_address"   => substr($getDataTransaksi['alamat'],0,255),
+                                  "warehouse_name"     => $wh_name,
                                   "is_shipped"         => true,
                                   "address"            => substr($getDataTransaksi['alamat'],0,255),
                                   "due_date"           => $getDataTransaksi['tgl_kirim'],

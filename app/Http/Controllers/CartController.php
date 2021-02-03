@@ -542,12 +542,12 @@ class CartController extends Controller
     Metode Pembayaran:'.'
       - '.$rek.'
 
-    Tolong di cek @sandi_alroffik,'.'
+    Tolong di cek @Rumah_Aqiqah,'.'
     Terima Kasih';
 
     $datasend = urlencode($data);
 
-    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$datasend;
+    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-1001257247870&text='.$datasend;
     $curl = curl_init();
 
     curl_setopt_array($curl, array(

@@ -362,11 +362,10 @@ class JurnalPOController extends Controller
                                         "transaction_date"    => $tglTransaksi,
                                         "records_attributes"  => [[ "transaction_no" => $transaction_no,
                                                                     "amount"         => $getDataTransaksiPO['total_po']]],
-                                        "custom_id"           => $getDataTransaksiPO['id_po_trans'],
                                         "payment_method_name" => $payment_method_name,
                                         "payment_method_id"   => $payment_method_id,
+                                        "custom_id"           => $getDataTransaksiPO['id_po_trans'],
                                         "is_draft"            => false,
-                                        "deposit_to_name"     => $deposit_to_name,
                                       ]
                   ];
 
@@ -395,7 +394,7 @@ class JurnalPOController extends Controller
       $err = curl_error($curl);
 
       $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksiPO['id'],
-                                        'id_transaksi' =>$getDataTransaksiPO['id_transaksi'],
+                                        'id_transaksi' =>$getDataTransaksiPO['id_po_trans'],
                                         'action' => "purchasePayment",
                                         'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,

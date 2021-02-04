@@ -355,7 +355,7 @@ class JurnalPOController extends Controller
         }
       }
 
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = Carbon::now()->format('d/m/Y');
 
       $dataRaw = [
                 "purchase_payment"  => [ 

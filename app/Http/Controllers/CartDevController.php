@@ -496,7 +496,7 @@ class CartDevController extends Controller
     curl_close($ch);
   }
 
-  public function notifTransaksi($transdata,$nama, $alamat){
+  public function notifTransaksi(Request $request){
     
     $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
 

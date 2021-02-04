@@ -74,12 +74,17 @@ class JurnalCicPelController extends Controller
 
     public function transaksiCiPel (){ //CiPel = Cicilan dan Pelunasan
 
-      $getDataTransaksi = Payment::where('status','paid')
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
+                                          'ra_payment_dua.tgl_transaksi',
+                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
+                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
+                                          'tunai','ra_order_dua.id_entitas as id_entitas')
+                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
+                                 ->where('status','paid')
                                  ->where('lunas','y')
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
                                  ->where('apply_memo_id','=','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8])
                                  ->where(function($q) {
                                             $q->where('tunai', '=', 'Cicilan')
                                             ->orWhereNull('tunai');
@@ -457,14 +462,22 @@ class JurnalCicPelController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
-      if ($getDataTransaksi['tunai'] == "Tunai") {
+      $sisaBayar = Payment::where('id_parent',$getDataTransaksi['id'])->value('nominal_total');
+
+      if ($getDataTransaksi['tunai'] == " ") {
 
         $nominal       = $getDataTransaksi['nominal_total'];
 
       }
 
-      $nominal       = $getDataTransaksi['nominal_bayar'];
+      if ($sisaBayar == $getDataTransaksi['nominal_total']) {
 
+        $nominal       = $getDataTransaksi['nominal_bayar'];
+      } else {
+        
+        $nominal       = $getDataTransaksi['nominal_bayar'] - $sisaBayar;
+      }
+      
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [

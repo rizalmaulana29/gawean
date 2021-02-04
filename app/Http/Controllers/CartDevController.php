@@ -496,26 +496,42 @@ class CartDevController extends Controller
     curl_close($ch);
   }
 
-  public function notifTransaksi(Request $request){
-    //$transdata->id_kantor
-    $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
+  public function notifTransaksi($transdata,$nama, $alamat){
+    
+    $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
+
+    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
+                 ->where('id', $transdata->id_payment_method)
+                 ->first();    
+
+    if ($bankRek->keterangan == "cash") {
+      $rek   = $bankRek->keterangan;
+     
+    }elseif ($bankRek->keterangan == "Bank Central Asia") {
+      $rek   = $bankRek->keterangan;
+
+    } else {
+      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+    }
+
     
     $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
-    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
+    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
     Dengan detail order sebagai berikut:'.'
-      Order ID          : '.$request['id_transaksi'].'
-      Nama              : '.$request['nama'].'
-      Total Tagihan     : IDR '.number_format($request['nominal_total']).'
+      Order ID          : '.$transdata->id_transaksi.'
+      Nama              : '.$nama.'
+      Alamat            : '.$alamat.'
+      Total Tagihan     : IDR '.number_format($transdata->nominal_total).'
 
     Metode Pembayaran:'.'
-      - '.$request['rek'].'
+      - '.$rek.'
 
-    Tolong di cek @sandi_alroffik,'.'
+    Tolong di cek @Rumah_Aqiqah,'.'
     Terima Kasih';
 
     $datasend = urlencode($data);
 
-    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-412162640&text='.$datasend;
+    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-1001257247870&text='.$datasend;
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -532,7 +548,7 @@ class CartDevController extends Controller
     $response = curl_exec($curl);
 
     curl_close($curl);
-    // echo $response;
+    echo $response;
   }
 
   private function stock($id_kantor,$id_transaksi){

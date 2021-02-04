@@ -497,36 +497,20 @@ class CartDevController extends Controller
   }
 
   public function notifTransaksi(Request $request){
-    
-    $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
-
-    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
-                 ->where('id', $transdata->id_payment_method)
-                 ->first();    
-
-    if ($bankRek->keterangan == "cash") {
-      $rek   = $bankRek->keterangan;
-     
-    }elseif ($bankRek->keterangan == "Bank Central Asia") {
-      $rek   = $bankRek->keterangan;
-
-    } else {
-      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
-    }
-
+    //$transdata->id_kantor
+    $kantor = Kantor::where('id',$request['id_kantor'])->value('kantor');
     
     $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
-    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
+    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($request['expired_at'])).'
     Dengan detail order sebagai berikut:'.'
-      Order ID          : '.$transdata->id_transaksi.'
-      Nama              : '.$nama.'
-      Alamat            : '.$alamat.'
-      Total Tagihan     : IDR '.number_format($transdata->nominal_total).'
+      Order ID          : '.$request['id_transaksi'].'
+      Nama              : '.$request['nama'].'
+      Total Tagihan     : IDR '.number_format($request['nominal_total']).'
 
     Metode Pembayaran:'.'
-      - '.$rek.'
+      - '.$request['rek'].'
 
-    Tolong di cek @Rumah_Aqiqah,'.'
+    Tolong di cek @Rumah_,'.'
     Terima Kasih';
 
     $datasend = urlencode($data);
@@ -548,7 +532,7 @@ class CartDevController extends Controller
     $response = curl_exec($curl);
 
     curl_close($curl);
-    echo $response;
+    // echo $response;
   }
 
   private function stock($id_kantor,$id_transaksi){

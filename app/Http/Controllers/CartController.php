@@ -532,7 +532,7 @@ class CartController extends Controller
 
     
     $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
-    untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->expired_at)).'
+    untuk pengiriman di tanggal '.date('d M Y',strtotime($transdata->tgl_kirim)).' '.$transdata->waktu_kirim.'
     Dengan detail order sebagai berikut:'.'
       Order ID          : '.$transdata->id_transaksi.'
       Nama              : '.$nama.'

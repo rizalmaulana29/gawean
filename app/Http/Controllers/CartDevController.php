@@ -510,7 +510,7 @@ class CartDevController extends Controller
     Metode Pembayaran:'.'
       - '.$request['rek'].'
 
-    Tolong di cek @Rumah_,'.'
+    Tolong di cek @Rumah_Aqiqah,'.'
     Terima Kasih';
 
     $datasend = urlencode($data);

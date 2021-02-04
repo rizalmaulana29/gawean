@@ -557,4 +557,9 @@ class CartDevController extends Controller
 
   }
 
+  public function testing_aja (){
+    $tglTransaksi = Carbon::now()->format('d/M/Y');
+    echo $tglTransaksi; //toDatestring();
+  }
+
 }

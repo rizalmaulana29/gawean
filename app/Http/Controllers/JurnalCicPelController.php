@@ -474,7 +474,7 @@ class JurnalCicPelController extends Controller
 
         $nominal       = $getDataTransaksi['nominal_bayar'];
       } else {
-        
+
         $nominal       = $getDataTransaksi['nominal_bayar'] - $sisaBayar;
       }
       
@@ -531,8 +531,12 @@ class JurnalCicPelController extends Controller
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => $dataResponse->customer_apply_credit_memo->id]);
-              $response = array("status" => true,
+              if ($sisaBayar == $getDataTransaksi['nominal_total']) {
+                $response = array("status" => true,
                                 "message"=> $dataResponse->customer_apply_credit_memo);
+              } else {
+                $recievepayment = $this->receivePayment($getDataTransaksi,$dataResponse->customer_apply_credit_memo->transaction_no);
+              }
           }
           else{
 
@@ -543,7 +547,7 @@ class JurnalCicPelController extends Controller
       return $response;     
     }
 
-    public function receivePayment($getDataTransaksi){
+    public function receivePayment($getDataTransaksi,$transaction_no){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
@@ -582,7 +586,7 @@ class JurnalCicPelController extends Controller
       $dataRaw = [
                 "receive_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
-                                        "records_attributes"  => [[ "transaction_no" => $getDataTransaksi['sales_invoice_id'],
+                                        "records_attributes"  => [[ "transaction_no" => $transaction_no,
                                                                     "amount"         => $getDataTransaksi['nominal_total']]],
                                         "custom_id"           => $getDataTransaksi['id_transaksi'],
                                         "payment_method_name" => $payment_method_name,

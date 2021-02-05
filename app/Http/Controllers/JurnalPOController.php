@@ -26,12 +26,16 @@ class JurnalPOController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDatestring();
 
-      $getDataTransaksiPO = PO::where([["tgl_po", ">=", $start],["tgl_po", "<=", $endDate->toDatestring()]])
+      $getDataTransaksiPO = PO::select('id','id_po_trans','id_kantor','tgl_po','id_vendor','total_po','tgl_eksekusi',
+                                       'payment_method','status','static_data'
+                                       'ra_pendapatan.id_entitas as id_entitas')
+                                 ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
+                                 ->leftjoin('ra_pendapatan_dua', 'ra_po_detail.id_order','=','ra_pendapatan_dua.id_order')
+                                 ->where([["tgl_po", ">=", $start],["tgl_po", "<=", $endDate->toDatestring()]])
                                  ->where('status','paid')
                                  ->where('purchase_order_id','')
                                  ->where('purchase_invoice_id','')
                                  ->where('purchase_payment_id','')
-                                 ->whereIn('id_kantor', [6,17,2,3,7,8,16])
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
 
@@ -70,7 +74,7 @@ class JurnalPOController extends Controller
 
     public function CreateVendor ($checkVendorId){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      $jurnalKoneksi = $this->Entitas($checkVendorId['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
       $dataRaw = [
                     "vendor"  => [  "first_name"   => $checkVendorId['name'].' '.$checkVendorId['id'],
@@ -134,11 +138,11 @@ class JurnalPOController extends Controller
 
     public function PurchaseOrder($getDataTransaksiPO,$vendor_id){ 
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
       $detailDataPO = PO_detail::where('id_po_detail',$getDataTransaksiPO['id']);
       $id_transaksi = $detailDataPO->first();
-      $namaCustomer = Payment::where('id',$id_transaksi->id_order)->value('nama_customer');
+      $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
       $kantor       = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 
       $tglTransaksi = Carbon::now()->toDatestring();
@@ -230,7 +234,7 @@ class JurnalPOController extends Controller
 
     public function PurchaseOrdertoInvoice($getDataTransaksiPO,$purchase_order_id,$purchase_order_atribute){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
       $detail_atribute = [];
       foreach ($purchase_order_atribute as $key => $atribute) {
@@ -303,7 +307,10 @@ class JurnalPOController extends Controller
 
     public function PurchasePayment($getDataTransaksiPO,$transaction_no){
 
-      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_kantor']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
+
+      $paymentMethode =  Paymeth::where('id_kantor',$getDataTransaksi['id_payment_method'])->first();
+      $transfer = [26]; //id ra_bank_rek
 
       $ana = [6,17];
       $lma = [2,3,7,8,16];
@@ -424,24 +431,25 @@ class JurnalPOController extends Controller
       return $response;
     }
 
-    private function Entitas($id_kantor){
-      
-      $ana = [6,17];
-      $lma = [2,3,7,8,16];
-
-      if (in_array($id_kantor, $ana)) {
-        $id_entitas = 'ANA';
-      }
-      elseif (in_array($id_kantor, $lma)) {
-         $id_entitas = 'LMA';
-      } else {
-        echo "id_kantor tidak memiliki koneksi jurnal";
-        die;
-      }
+    private function Entitas($id_entitas,$requester){
       
       $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+      if ($getDataKoneksi['jurnal_key'] != '' && $getDataKoneksi['jurnal_key'] != null ) {
+        if ($requester != 'konektor') {
+          $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
+        } else {
+          $response = $getDataKoneksi;
+        }
+      } else {
+        if ($requester != 'konektor') {
+          $update = Payment::where('id_transaksi',$requester)->update(['person_id' => 'none','sales_order_id' => 'none','sales_invoice_id' => 'none','recieve_payment_id' => 'none','memo_id' => 'none','apply_memo_id' => 'none']);
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        } else {
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        }
+      }
 
-      return $getDataKoneksi;
+      return $response;
     }
 
 }

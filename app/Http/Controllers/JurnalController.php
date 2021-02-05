@@ -96,7 +96,7 @@ class JurnalController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::now()->toDatestring();
 
-      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat','person_id'
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
@@ -445,7 +445,7 @@ class JurnalController extends Controller
         }
       }
       
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = $getDataTransaksi['tgl_kirim'];
 
       $dataRaw = [
                 "receive_payment"  => [ 

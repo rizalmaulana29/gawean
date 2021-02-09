@@ -160,7 +160,6 @@ class JurnalPOController extends Controller
       foreach ($dataOrderPo as $key => $orderPO) {
         $get_produk   = Pendapatan::where('id',$orderPO['ra_produk_harga_po_id'])->value('ra_produk_harga_id');
         $produk_harga = Harga::where('id',$get_produk)->first();
-        // var_dump($produk_harga);
         $produk       = ["quantity" => $orderPO['quantity'], "rate"=> $orderPO['hpp'],"product_id"=> $produk_harga['jurnal_product_id'],"description"=>$keterangan.' '.$orderPO['quantity'].' '.$produk_harga['nama_produk'].' '.'an. '.$namaCustomer];
         array_push($detail_produk,$produk);
       }
@@ -330,7 +329,7 @@ class JurnalPOController extends Controller
           $payment_method_id   = "1539634";
           $deposit_to_name     = "Kas";
         } else {
-          if ($getDataTransaksiPO['id_kantor'] == 6 || $getDataTransaksiPO['id_kantor'] == 17) {
+          if ($getDataTransaksiPO['id_entitas'] == 'ANA') {
           $payment_method_name = "Cash";
           } else {
             $payment_method_name = "Kas Tunai";

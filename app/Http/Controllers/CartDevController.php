@@ -8,6 +8,8 @@ use App\Produk;
 use App\Order;
 use App\Payment;
 use App\Paymeth;
+use App\PO;
+use App\PO_detail;
 use App\AdminEntitas;
 use App\Anak;
 use App\Instruction;
@@ -557,11 +559,20 @@ class CartDevController extends Controller
 
   }
 
-  public function testing_aja (){
-    $tglTransaksi = Carbon::now()->format('d/m/Y');
-    $tglTransaksi = json_encode($tglTransaksi, JSON_UNESCAPED_SLASHES);
-    var_dump($tglTransaksi);
-    echo $tglTransaksi; //toDatestring();
+  public function testing_aja (Request $request){
+    // $tglTransaksi = Carbon::now()->format('d/m/Y');
+    // $tglTransaksi = json_encode($tglTransaksi, JSON_UNESCAPED_SLASHES);
+    // var_dump($tglTransaksi);
+    // echo $tglTransaksi;
+
+    $detailDataPO = PO_detail::where('id_po_detail',$request['id']);
+      $id_transaksi = $detailDataPO->first();
+      $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
+      $kantor       = Kantor::where('id',$request['id_kantor'])->value('kantor');
+      $dataOrderPo   = $detailDataPO->get(); //toDatestring();
+
+      echo $id_transaksi;
+      echo dataOrderPo;
   }
 
 }

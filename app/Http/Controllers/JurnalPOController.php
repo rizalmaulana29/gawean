@@ -336,11 +336,11 @@ class JurnalPOController extends Controller
             $payment_method_name = "Kas Tunai";
           }
           $payment_method_id   = $paymentMethode->methode_id_jurnal;
-          $deposit_to_name     = $paymentMethode->methode_po_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
       }
 
-      $tglTransaksi = Carbon::now()->format('d/m/Y');
+      $tglTransaksi = Carbon::now()->format('d/m/Y')->toDatestring();
 
       $dataRaw = [
                 "purchase_payment"  => [ 

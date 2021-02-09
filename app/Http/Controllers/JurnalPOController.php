@@ -360,7 +360,7 @@ class JurnalPOController extends Controller
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/receive_payments",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/purchase_payments",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,
@@ -372,7 +372,7 @@ class JurnalPOController extends Controller
         CURLOPT_HTTPHEADER     => array(
                                         "apikey: ".$jurnalKoneksi['jurnal_key'],
                                         "Authorization: ".$jurnalKoneksi['jurnal_auth'],
-                                        "Content-Type: application/json; charset=utf-8"
+                                        "Content-Type: application/json"
                                       ),
       ));
       $response = curl_exec($curl);

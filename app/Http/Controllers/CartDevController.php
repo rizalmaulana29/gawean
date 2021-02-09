@@ -572,7 +572,7 @@ class CartDevController extends Controller
       $dataOrderPo   = $detailDataPO->get(); //toDatestring();
 
       echo $id_transaksi;
-      echo dataOrderPo;
+      echo $dataOrderPo;
   }
 
 }

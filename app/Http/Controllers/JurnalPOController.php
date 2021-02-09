@@ -309,56 +309,33 @@ class JurnalPOController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
-      $paymentMethode =  Paymeth::where('id_kantor',$getDataTransaksi['id_payment_method'])->first();
-      $transfer = [26]; //id ra_bank_rek
+      $paymentMethode =  Paymeth::where('id_kantor',$getDataTransaksiPO['id_kantor'])->first();
 
-      $ana = [6,17];
-      $lma = [2,3,7,8,16];
+      if ($getDataTransaksiPO['payment_method'] != 'Kas') {
 
-      if (in_array($getDataTransaksiPO['id_kantor'], $ana)) {
-        if ($getDataTransaksiPO['payment_method'] != 'Kas') {
-
+          if ($getDataTransaksiPO['id_entitas'] == 'PDN') {
           $payment_method_name = "Transfer Bank";
-          $payment_method_id   = 792898;
-          $deposit_to_name     = "Mandiri ANA Operasional 131-00-0732212-8"; 
-
-        } 
-        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 6) {
-          $payment_method_name = "Cash";
-          $payment_method_id   = 984210;
-          $deposit_to_name     = "Kas Bandung";
+          $payment_method_id   = "1539636";
+          $deposit_to_name     = "Mandiri 1310012793792";
         } else {
-          $payment_method_name = "Cash";
-          $payment_method_id   = 984210;
-          $deposit_to_name     = "Kas Cirebon";
-        }
-      }else{
-        if ($getDataTransaksiPO['payment_method'] != 'Kas') {
-
           $payment_method_name = "Transfer Bank";
-          $payment_method_id   = 1528391;
-          $deposit_to_name     = "Mandiri LMA Pusat 1310016430102 Ops"; 
-
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_po_jurnal;
         } 
-        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 2) {
+
+      }else{
+        if ($getDataTransaksi['id_entitas'] == 'PDN') {
           $payment_method_name = "Kas Tunai";
-          $payment_method_id   = 1528389;
-          $deposit_to_name     = "Kas Tangerang";
-        }
-        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 3){
-          $payment_method_name = "Kas Tunai";
-          $payment_method_id   = 1528389;
-          $deposit_to_name     = "Kas Bogor";
-        }
-        elseif ($getDataTransaksiPO['payment_method'] == 'Kas' && $getDataTransaksiPO['id_kantor'] == 8){
-          $payment_method_name = "Kas Tunai";
-          $payment_method_id   = 1528389;
-          $deposit_to_name     = "Kas Cilegon";
-        }
-        else{
-          $payment_method_name = "Kas Tunai";
-          $payment_method_id   = 1528389;
-          $deposit_to_name     = "Kas Jakarta";
+          $payment_method_id   = "1539634";
+          $deposit_to_name     = "Kas";
+        } else {
+          if ($getDataTransaksiPO['id_kantor'] == 6 || $getDataTransaksiPO['id_kantor'] == 17) {
+          $payment_method_name = "Cash";
+          } else {
+            $payment_method_name = "Kas Tunai";
+          }
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_po_jurnal;
         }
       }
 

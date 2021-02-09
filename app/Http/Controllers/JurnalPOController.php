@@ -38,7 +38,7 @@ class JurnalPOController extends Controller
                                  ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
-      dd($getDataTransaksiPO);
+
       if (isset($getDataTransaksiPO)) {
         $checkVendorId = CmsUser::where('id',$getDataTransaksiPO['id_vendor'])->first();
         
@@ -179,7 +179,7 @@ class JurnalPOController extends Controller
                   ];
       
       $encodedataRaw = json_encode($dataRaw);
-      var_dump($dataRaw);
+      dd($dataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

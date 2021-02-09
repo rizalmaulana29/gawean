@@ -78,8 +78,8 @@ class JurnalPOController extends Controller
       $jurnalKoneksi = $this->Entitas($id_entitas,$requester = 'konektor');
 
       $dataRaw = [
-                    "vendor"  => [  "first_name"   => $checkVendorId['name'],
-                                    "display_name" => $checkVendorId['name'],
+                    "vendor"  => [  "first_name"   => $checkVendorId['name'].' '.$checkVendorId['id'],
+                                    "display_name" => $checkVendorId['name'].' '.$checkVendorId['id'],
                                     "email"        => $checkVendorId['email'],
                                     "custom_id"    => $checkVendorId['id']
                                     ]
@@ -340,7 +340,7 @@ class JurnalPOController extends Controller
         }
       }
 
-      $tglTransaksi = Carbon::now()->format('d/m/Y')->toDatestring();
+      $tglTransaksi = Carbon::now()->format('d/m/Y');
 
       $dataRaw = [
                 "purchase_payment"  => [ 

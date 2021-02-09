@@ -325,7 +325,7 @@ class JurnalPOController extends Controller
         } 
 
       }else{
-        if ($getDataTransaksi['id_entitas'] == 'PDN') {
+        if ($getDataTransaksiPO['id_entitas'] == 'PDN') {
           $payment_method_name = "Kas Tunai";
           $payment_method_id   = "1539634";
           $deposit_to_name     = "Kas";

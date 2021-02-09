@@ -78,8 +78,8 @@ class JurnalPOController extends Controller
       $jurnalKoneksi = $this->Entitas($id_entitas,$requester = 'konektor');
 
       $dataRaw = [
-                    "vendor"  => [  "first_name"   => $checkVendorId['name'].' '.$checkVendorId['id'],
-                                    "display_name" => $checkVendorId['name'].' '.$checkVendorId['id'],
+                    "vendor"  => [  "first_name"   => $checkVendorId['name'],
+                                    "display_name" => $checkVendorId['name'],
                                     "email"        => $checkVendorId['email'],
                                     "custom_id"    => $checkVendorId['id']
                                     ]

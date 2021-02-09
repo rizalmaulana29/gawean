@@ -24,7 +24,7 @@ class JurnalPOController extends Controller
 {
     public function FilteringPO(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::today()->addHour(1)->toDatestring();
+      $start = Carbon::yesterday()->addHour(1)->toDatestring();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data',
@@ -38,7 +38,7 @@ class JurnalPOController extends Controller
                                  ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
-
+      dd($getDataTransaksiPO);
       if (isset($getDataTransaksiPO)) {
         $checkVendorId = CmsUser::where('id',$getDataTransaksiPO['id_vendor'])->first();
         

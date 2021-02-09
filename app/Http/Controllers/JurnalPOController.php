@@ -38,14 +38,14 @@ class JurnalPOController extends Controller
                                  ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
-      dd($getDataTransaksiPO['id_entitas']);
+      
       if (isset($getDataTransaksiPO)) {
         $checkVendorId = CmsUser::where('id',$getDataTransaksiPO['id_vendor'])->first();
         
         if ($checkVendorId['vendor_id'] != '' || $checkVendorId['vendor_id'] != null) {
           $vendor_id = $checkVendorId['vendor_id'];
         }else{
-          $createVendor = $this->CreateVendor($checkVendorId);
+          $createVendor = $this->CreateVendor($checkVendorId,$getDataTransaksiPO['id_entitas']);
           $vendor_id = $createVendor['message'];
         }
         $purchaseOrder = $this->PurchaseOrder($getDataTransaksiPO,$vendor_id);
@@ -72,9 +72,9 @@ class JurnalPOController extends Controller
 
     }
 
-    public function CreateVendor ($checkVendorId){
+    public function CreateVendor ($checkVendorId,$id_entitas){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
+      $jurnalKoneksi = $this->Entitas($id_entitas,$requester = 'konektor');
 
       $dataRaw = [
                     "vendor"  => [  "first_name"   => $checkVendorId['name'].' '.$checkVendorId['id'],

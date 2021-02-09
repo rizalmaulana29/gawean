@@ -26,7 +26,7 @@ class JurnalPOController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDatestring();
 
-      $getDataTransaksiPO = PO::select('id','id_po_trans','id_kantor','tgl_po','id_vendor','total_po','tgl_eksekusi',
+      $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','id_kantor','tgl_po','id_vendor','total_po','tgl_eksekusi',
                                        'payment_method','status','static_data',
                                        'ra_pendapatan.id_entitas as id_entitas')
                                  ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')

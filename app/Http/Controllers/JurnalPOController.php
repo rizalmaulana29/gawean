@@ -141,8 +141,7 @@ class JurnalPOController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
-      $detailDataPO = PO_detail::where('id_po_detail',$getDataTransaksiPO['id']);
-      $id_transaksi = $detailDataPO->first();
+      $id_transaksi = PO_detail::where('id_po_detail',$request['id'])->first();
       $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
       $kantor       = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 
@@ -155,7 +154,7 @@ class JurnalPOController extends Controller
       }
       
 
-      $dataOrderPo   = $detailDataPO->get();
+      $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get();
       $detail_produk = [];
       foreach ($dataOrderPo as $key => $orderPO) {
         $get_produk   = Pendapatan::where('id',$orderPO['ra_produk_harga_po_id'])->value('ra_produk_harga_id');
@@ -313,7 +312,7 @@ class JurnalPOController extends Controller
 
       if ($getDataTransaksiPO['payment_method'] != 'Kas') {
 
-          if ($getDataTransaksiPO['id_entitas'] == 'PDN') {
+        if ($getDataTransaksiPO['id_entitas'] == 'PDN') {
           $payment_method_name = "Transfer Bank";
           $payment_method_id   = "1539636";
           $deposit_to_name     = "Mandiri 1310012793792";

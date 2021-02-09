@@ -177,7 +177,7 @@ class JurnalPOController extends Controller
                                   "custom_id"          => $getDataTransaksiPO['id_po_trans']
                                   ]
                   ];
-      
+      dd($dataRaw);
       $encodedataRaw = json_encode($dataRaw);
       $curl = curl_init();
 

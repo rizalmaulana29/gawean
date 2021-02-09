@@ -348,7 +348,7 @@ class JurnalPOController extends Controller
                                         "records_attributes"  => [[ "transaction_no" => $transaction_no,
                                                                     "amount"         => $getDataTransaksiPO['total_po']]],
                                         "payment_method_name" => $payment_method_name,
-                                        "payment_method_id"   => $payment_method_id,
+                                        "refund_from_name"    => $deposit_to_name,
                                         "custom_id"           => $getDataTransaksiPO['id_po_trans'],
                                         "is_draft"            => false,
                                       ]

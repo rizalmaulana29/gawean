@@ -569,7 +569,7 @@ class CartDevController extends Controller
       $id_transaksi = $detailDataPO->first();
       $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
       $kantor       = Kantor::where('id',$request['id_kantor'])->value('kantor');
-      $dataOrderPo   = $detailDataPO->get(); //toDatestring();
+      $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get(); //toDatestring();
 
       echo $id_transaksi;
       echo $dataOrderPo;

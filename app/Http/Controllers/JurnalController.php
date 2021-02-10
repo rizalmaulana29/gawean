@@ -236,10 +236,12 @@ class JurnalController extends Controller
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
       }
 
-      $dataDiskon   = 0;
       if ($getDataTransaksi['nominal_diskon'] != null) {
         $dataDiskon = $getDataTransaksi['nominal_diskon'];
+      }else{
+        $dataDiskon   = 0;
       }
+      
       $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = Carbon::now()->toDatestring();

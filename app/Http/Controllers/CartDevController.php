@@ -572,7 +572,7 @@ class CartDevController extends Controller
       // $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get(); //toDatestring();
       var_dump($namaCustomer);
       $decode = json_decode($namaCustomer);
-      var_dump($decode);
+      echo $decode;
       echo "test";
       // echo $id_transaksi;
       // echo $dataOrderPo;

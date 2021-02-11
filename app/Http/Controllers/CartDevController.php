@@ -570,6 +570,7 @@ class CartDevController extends Controller
       $namaCustomer = Payment::where('sales_order_id',$request['id'])->value('order_message');
       // $kantor       = Kantor::where('id',$request['id_kantor'])->value('kantor');
       // $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get(); //toDatestring();
+      var_dump($namaCustomer);
       $decode = json_decode($namaCustomer);
       var_dump($decode);
       echo "test";

@@ -121,7 +121,7 @@ class JurnalController extends Controller
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
           $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
-            if ($salesOrdertoInvoice['status'] == true)
+            if ($salesOrdertoInvoice['status'] == true){
               $createPayment = $this->receivePayment($getDataTransaksi);
               if ($createPayment['status'] == true) {
                 return response()->json(["status"       => true,
@@ -133,7 +133,7 @@ class JurnalController extends Controller
               return $createPayment;
             }
             return $salesOrdertoInvoice; 
-             
+
         } else {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {

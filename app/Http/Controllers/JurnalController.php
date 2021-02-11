@@ -60,9 +60,7 @@ class JurnalController extends Controller
                                                  "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
                                                  "Data Request" => $getDataTransaksi,
                                                  "Data Response"=> $salesOrdertoInvoice['message']
-                                                ],200);
-                    }
-                    return $salesOrdertoInvoice;   
+                                                ],200); 
                 }
                 return $salesOrder;
             }else{

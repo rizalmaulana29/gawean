@@ -60,7 +60,8 @@ class JurnalController extends Controller
                                                  "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
                                                  "Data Request" => $getDataTransaksi,
                                                  "Data Response"=> $salesOrdertoInvoice['message']
-                                                ],200); 
+                                                ],200);
+                   
                 }
                 return $salesOrder;
             }else{
@@ -130,6 +131,9 @@ class JurnalController extends Controller
                                         ],200);
               }
               return $createPayment;
+            }
+            return $salesOrdertoInvoice; 
+             
         } else {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {

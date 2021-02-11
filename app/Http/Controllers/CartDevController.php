@@ -560,22 +560,72 @@ class CartDevController extends Controller
   }
 
   public function testing_aja (Request $request){
-    // $tglTransaksi = Carbon::now()->format('d/m/Y');
-    // $tglTransaksi = json_encode($tglTransaksi, JSON_UNESCAPED_SLASHES);
-    // var_dump($tglTransaksi);
-    // echo $tglTransaksi;
+    
+    $jurnalKoneksi = $this->Entitas($request['id_entitas'],$requester = 'konektor');
 
-    // $detailDataPO = PO_detail::where('id_po_detail',$request['id']);
-    //   $id_transaksi = $detailDataPO->first();
-      $namaCustomer = Payment::where('sales_order_id',$request['id'])->value('order_message');
-      // $kantor       = Kantor::where('id',$request['id_kantor'])->value('kantor');
-      // $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get(); //toDatestring();
-      var_dump($namaCustomer);
-      $decode = json_decode($namaCustomer);
-      echo $decode;
-      echo "test";
-      // echo $id_transaksi;
-      // echo $dataOrderPo;
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.jurnal.id/core/api/v1/sales_orders/'$request['id'],
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => array(
+        "apikey: ".$jurnalKoneksi['jurnal_key'],
+        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
+        'content-type:  application/json',
+      ),
+    ));
+
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+      $findString     = 'sales_order';
+      $searchResponse = stripos($response, 'sales_order');
+
+      if ($err) {
+          $response = array("status"=>"failed","message"=>$err);
+      } 
+      else {
+          if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              $message = json_encode($dataResponse->sales_order->transaction_lines_attributes);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
+
+              $response = array("status" =>true,
+                                "id"     => $dataResponse->sales_order->id);
+          }
+          else{
+
+              $response = array("status"=>false,"message"=> "sales order".$response);
+          }
+      }
+      
+      return $response;
   }
+
+  private function Entitas($id_entitas,$requester){
+      
+      $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+      if ($getDataKoneksi['jurnal_key'] != '' && $getDataKoneksi['jurnal_key'] != null ) {
+        if ($requester != 'konektor') {
+          $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
+        } else {
+          $response = $getDataKoneksi;
+        }
+      } else {
+        if ($requester != 'konektor') {
+          $update = Payment::where('id_transaksi',$requester)->update(['person_id' => 'none','sales_order_id' => 'none','sales_invoice_id' => 'none','recieve_payment_id' => 'none','memo_id' => 'none','apply_memo_id' => 'none']);
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        } else {
+          $response = array("status"=>false,"message"=> "belum ada key jurnal");
+        }
+      }
+
+      return $response;
+    }
 
 }

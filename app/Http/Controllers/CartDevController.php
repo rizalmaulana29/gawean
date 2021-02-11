@@ -565,14 +565,16 @@ class CartDevController extends Controller
     // var_dump($tglTransaksi);
     // echo $tglTransaksi;
 
-    $detailDataPO = PO_detail::where('id_po_detail',$request['id']);
-      $id_transaksi = $detailDataPO->first();
-      $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
-      $kantor       = Kantor::where('id',$request['id_kantor'])->value('kantor');
-      $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get(); //toDatestring();
-
-      echo $id_transaksi;
-      echo $dataOrderPo;
+    // $detailDataPO = PO_detail::where('id_po_detail',$request['id']);
+    //   $id_transaksi = $detailDataPO->first();
+      $namaCustomer = Payment::where('sales_order_id',$request['id'])->value('order_message');
+      // $kantor       = Kantor::where('id',$request['id_kantor'])->value('kantor');
+      // $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get(); //toDatestring();
+      $decode = json_decode($namaCustomer);
+      var_dump($decode);
+      echo "test";
+      // echo $id_transaksi;
+      // echo $dataOrderPo;
   }
 
 }

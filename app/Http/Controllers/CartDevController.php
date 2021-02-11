@@ -593,8 +593,8 @@ class CartDevController extends Controller
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
               $message = json_encode($dataResponse->sales_order->transaction_lines_attributes);
-              dd($message);
-              // $updatePayment= Payment::where('sales_order_id',$request['id'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
+              // dd($message);
+              $updatePayment= Payment::where('sales_order_id',$request['id'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
 
               $response = array("status" =>true,
                                 "id"     => $dataResponse->sales_order->id);

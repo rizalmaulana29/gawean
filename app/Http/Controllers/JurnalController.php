@@ -122,7 +122,7 @@ class JurnalController extends Controller
         if ($getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
           $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
             if ($salesOrdertoInvoice['status'] == true){
-              $createPayment = $this->receivePayment($getDataTransaksi);
+              $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
               if ($createPayment['status'] == true) {
                 return response()->json(["status"       => true,
                                          "message"      => "Data berhasil di inputkan ke JurnalID",
@@ -417,7 +417,7 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function receivePayment($getDataTransaksi){
+    public function receivePayment($getDataTransaksi,$transaction_no){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
@@ -456,7 +456,7 @@ class JurnalController extends Controller
       $dataRaw = [
                 "receive_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
-                                        "records_attributes"  => [[ "transaction_no" => $getDataTransaksi['sales_invoice_id'],
+                                        "records_attributes"  => [[ "transaction_no" => $transaction_no,
                                                                     "amount"         => $getDataTransaksi['nominal_total']]],
                                         "custom_id"           => $getDataTransaksi['id_transaksi'],
                                         "payment_method_name" => $payment_method_name,

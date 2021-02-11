@@ -56,8 +56,6 @@ class JurnalController extends Controller
             if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
               $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
                 if ($salesOrder['status'] == true) {
-                  $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-                    if ($salesOrdertoInvoice['status'] == true) {
                         return response()->json(["status"       => true,
                                                  "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
                                                  "Data Request" => $getDataTransaksi,
@@ -100,7 +98,8 @@ class JurnalController extends Controller
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas','sales_invoice_id','memo_id')
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','sales_invoice_id','memo_id',
+                                          'receive_payment_id','sales_order_id','order_message','apply_memo_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where('status','paid')
                                  ->where('tunai','Tunai')
@@ -121,16 +120,18 @@ class JurnalController extends Controller
                                  ->first();
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        if ($getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
-          $createPayment = $this->receivePayment($getDataTransaksi);
-          if ($createPayment['status'] == true) {
-            return response()->json(["status"       => true,
-                                     "message"      => "Data berhasil di inputkan ke JurnalID",
-                                     "Data Request" => $getDataTransaksi,
-                                     "Data Response"=> $createPayment['message']
-                                    ],200);
-          }
-          return $createPayment;
+        if ($getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
+          $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
+            if ($salesOrdertoInvoice['status'] == true)
+              $createPayment = $this->receivePayment($getDataTransaksi);
+              if ($createPayment['status'] == true) {
+                return response()->json(["status"       => true,
+                                         "message"      => "Data berhasil di inputkan ke JurnalID",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $createPayment['message']
+                                        ],200);
+              }
+              return $createPayment;
         } else {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {
@@ -241,7 +242,7 @@ class JurnalController extends Controller
       }else{
         $dataDiskon   = 0;
       }
-      
+
       $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = Carbon::now()->toDatestring();
@@ -323,11 +324,11 @@ class JurnalController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id]);
+              $message = json_encode($dataResponse->sales_order->transaction_lines_attributes);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
 
               $response = array("status" =>true,
-                                "id"     => $dataResponse->sales_order->id,
-                                "message"=> $dataResponse->sales_order->transaction_lines_attributes);
+                                "id"     => $dataResponse->sales_order->id);
           }
           else{
 
@@ -338,10 +339,11 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function SalesOrdertoInvoice($getDataTransaksi,$sales_id,$sales_atribute){
+    public function SalesOrdertoInvoice($getDataTransaksi){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
+      $sales_atribute = json_decode($getDataTransaksi['order_message']);
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   
@@ -362,7 +364,7 @@ class JurnalController extends Controller
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/".$sales_id."/convert_to_invoice",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id']."/convert_to_invoice",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,

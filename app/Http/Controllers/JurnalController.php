@@ -106,7 +106,7 @@ class JurnalController extends Controller
                                  ->where('person_id','!=','')
                                  ->where(function($q) {
                                             $q->where('memo_id', '!=', '')
-                                            ->orWhere('sales_invoice_id','!=','');
+                                            ->orWhere('order_message','!=','');
                                         })
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')

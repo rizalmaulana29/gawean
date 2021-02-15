@@ -64,7 +64,7 @@ class ToolsController extends Controller
 
     private function history($id_kantor,$id_transaksi,$qty,$id_tool){
         // dd($id_tool);
-        $historystok = StockToolHistory::create([;
+        $historystok = StockToolHistory::create([
                     'id_tools'         => $id_tool,
                     'id_kantor'        => $id_kantor,
                     'id_produk_parent' => 22,

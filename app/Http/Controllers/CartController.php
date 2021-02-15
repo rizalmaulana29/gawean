@@ -34,6 +34,15 @@ class CartController extends Controller
     
     public function cart(Request $request){
       // return response()->json(['status' => true]);
+      $this->validate($request, [
+            'id_payment'    => 'required',
+            'nama'          => 'required',
+            'alamat'        => 'required',
+            'tgl_kirim'     => 'required',
+            'waktu_kirim'   => 'required',
+            'email'         => 'required|email',
+            'hp'            => 'required'
+        ]);
       //test
       $req = $request->all();
       $now = Carbon::now();

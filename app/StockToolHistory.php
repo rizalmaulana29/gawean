@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StockTool extends Model 
+class StockToolHistory extends Model 
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class StockTool extends Model
      * @var array
      */
     protected $primaryKey = 'id';
-    protected $table = 'ra_stok_tools';
+    protected $table = 'ra_inout_stok_tools';
     protected $guarded = [];
     // protected $casts = [
     //     'id_bank' => 'string'

@@ -7,6 +7,8 @@ use App\Kantor;
 use App\Produk;
 use App\Payment;
 use App\Order;
+use Carbon\Carbon;
+use App\StockToolHistory;
 use App\StockTool;
 
 class ToolsController extends Controller
@@ -21,11 +23,17 @@ class ToolsController extends Controller
 
         if ($getNamaProduk == 'Ordinary') {
 
-            $qtyBento = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->value('jumlah_stock');
-            $updateBento = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->update(['jumlah_out' => $qty,'jumlah_stock' => $qtyBento - $qty]);
+            $tools = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->get();
+            $qtyBento = $tools['jumlah_stock'];
+            $id_tool = $tools['id'];
+            $history = $this->history($request,$qty,$id_tool);
+            $updateBento = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->update(['jumlah_stock' => $qtyBento - $qty]);
+
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Perlengkapan')->get();
             foreach ($getQtyTool as $key => $dataTool) {
-                $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Perlengkapan')->update(['jumlah_out' => $qty,'jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
+                $id_tool = $dataTool['id'];
+                $history = $this->history($request,$qty,$id_tool);
+                $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Perlengkapan')->update(['jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
             if ($updateBento) {
                 $response = "Data Bento berhasil di update";
@@ -36,6 +44,8 @@ class ToolsController extends Controller
         } else {
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->get();
             foreach ($getQtyTool as $key => $dataTool) {
+                $id_tool = $dataTool['id'];
+                $history = $this->history($request,$qty,$id_tool);
                 $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->update(['jumlah_out' => $qty,'jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
             if ($updateStock) {
@@ -49,6 +59,19 @@ class ToolsController extends Controller
                                  "Data Response"=> $response
                                 ],200);
         
+    }
+
+    private function history($request,$qty,$id_tool){
+
+        $historystok                   = new StockToolHistory;
+        $hystorystok->id_tools         = ;
+        $hystorystok->id_kantor        = $request['id_kantor'] ;
+        $hystorystok->id_produk_parent = 22;
+        $hystorystok->jumlah_out       = $qty;
+        $hystorystok->tgl              = Carbon::now()->format('Y-m-d');
+        $hystorystok->keterangan       = "Pengurangan dari Transaksi ".$request['id_transaksi'];
+        $hystorystok->dtu              = Carbon::now();
+        $hystorystok->save();
     }
 
 }

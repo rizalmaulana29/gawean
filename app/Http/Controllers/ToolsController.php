@@ -25,6 +25,7 @@ class ToolsController extends Controller
 
             $tools = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->get();
             $qtyBento = $tools['jumlah_stock'];
+            dd($qtyBento);
             $id_tool = $tools['id'];
             $history = $this->history($request,$qty,$id_tool);
             $updateBento = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->update(['jumlah_stock' => $qtyBento - $qty]);

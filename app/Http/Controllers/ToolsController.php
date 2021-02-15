@@ -64,7 +64,7 @@ class ToolsController extends Controller
     private function history($request,$qty,$id_tool){
 
         $historystok                   = new StockToolHistory;
-        $hystorystok->id_tools         = ;
+        $hystorystok->id_tools         = $id_tool;
         $hystorystok->id_kantor        = $request['id_kantor'] ;
         $hystorystok->id_produk_parent = 22;
         $hystorystok->jumlah_out       = $qty;

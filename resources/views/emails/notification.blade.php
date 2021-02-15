@@ -75,7 +75,7 @@
 
                             <tr>
                             	<td style="font-size:14px;color:#8a93a7;padding:15px 3px 3px">
-                            		Total Pembayaran
+                            		Status Pembayaran
                             	</td>
                             	<td style="font-size:14px;color:#8a93a7;padding:15px 3px 3px">
                             		Account Holder Name
@@ -83,7 +83,7 @@
                             </tr>
 
                             <tr>
-                            	<td style="font-size:16px;padding:0 3px;color:#0064d2;font-weight:bold">IDR {{ number_format($transdata['nominal_bayar']) }}</td>
+                            	<td style="font-size:16px;padding:0 3px;color:#0064d2;font-weight:bold"><span style="color: blue;">LUNAS</span></td>
                             	<td style="font-size:14px;padding:0 3px"><a style="color:#000000;text-decoration:none">RUMAHAQIQAH.CO.ID</a></td>
                             </tr>
                         </tbody>

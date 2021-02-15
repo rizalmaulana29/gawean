@@ -46,7 +46,7 @@ class ToolsController extends Controller
             foreach ($getQtyTool as $key => $dataTool) {
                 $id_tool = $dataTool['id'];
                 $history = $this->history($request,$qty,$id_tool);
-                $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->update(['jumlah_out' => $qty,'jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
+                $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->update(['jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
             if ($updateStock) {
                 $response = "Data Box berhasil di update";

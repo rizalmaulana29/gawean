@@ -21,6 +21,8 @@ class ToolsController extends Controller
         $qty = Order::where('id_order',$request['id_transaksi'])->where('id_produk_parent','22')->value('quantity');
         $getNamaProduk = Harga::where('id',$getIdProduk)->value('nama_produk');
 
+        var_dump($getNamaProduk);
+
         if ($getNamaProduk == 'Ordinary') {
 
             $tools    = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->first();

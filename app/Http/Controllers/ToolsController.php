@@ -44,6 +44,7 @@ class ToolsController extends Controller
             
         } else {
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->get();
+            dd($getQtyTool);
             foreach ($getQtyTool as $key => $dataTool) {
                 $id_tool = $dataTool['id'];
                 $history = $this->history($request,$qty,$id_tool);

@@ -63,7 +63,7 @@ class ToolsController extends Controller
     }
 
     private function history($id_kantor,$id_transaksi,$qty,$id_tool){
-
+        dd($id_tool);
         $historystok                   = new StockToolHistory;
         $hystorystok->id_tools         = $id_tool;
         $hystorystok->id_kantor        = $id_kantor;

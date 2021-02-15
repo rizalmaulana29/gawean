@@ -26,6 +26,7 @@ class ToolsController extends Controller
             $tools    = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->first();
             $qtyBento = $tools->jumlah_stock;
             $id_tool  = $tools->id;
+            dd($request);
             $history  = $this->history($request,$qty,$id_tool);
             $updateBento = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->update(['jumlah_stock' => $qtyBento - $qty]);
 
@@ -43,7 +44,6 @@ class ToolsController extends Controller
             
         } else {
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->get();
-            
             foreach ($getQtyTool as $key => $dataTool) {
                 $id_tool = $dataTool['id'];
                 $history = $this->history($request,$qty,$id_tool);

@@ -26,14 +26,13 @@ class ToolsController extends Controller
             $tools    = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->first();
             $qtyBento = $tools->jumlah_stock;
             $id_tool  = $tools->id;
-            // dd($request);
-            $history  = $this->history($request,$qty,$id_tool);
+            $history  = $this->history($request['id_kantor'],$request['id_transaksi'],$qty,$id_tool);
             $updateBento = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->update(['jumlah_stock' => $qtyBento - $qty]);
 
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Perlengkapan')->get();
             foreach ($getQtyTool as $key => $dataTool) {
                 $id_tool = $dataTool['id'];
-                $history = $this->history($request,$qty,$id_tool);
+                $history = $this->history($request['id_kantor'],$request['id_transaksi'],$qty,$id_tool);
                 $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Perlengkapan')->update(['jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
             if ($updateBento) {
@@ -46,7 +45,7 @@ class ToolsController extends Controller
             $getQtyTool = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->get();
             foreach ($getQtyTool as $key => $dataTool) {
                 $id_tool = $dataTool['id'];
-                $history = $this->history($request,$qty,$id_tool);
+                $history = $this->history($request['id_kantor'],$request['id_transaksi'],$qty,$id_tool);
                 $updateStock = StockTool::where('id_kantor',$request['id_kantor'])->whereIn('keterangan', ['Perlengkapan', 'Box'])->update(['jumlah_stock' => $dataTool['jumlah_stock'] - $qty]);
             }
             if ($updateStock) {
@@ -62,15 +61,15 @@ class ToolsController extends Controller
         
     }
 
-    private function history(Request $request,$qty,$id_tool){
+    private function history($id_kantor,$id_transaksi,$qty,$id_tool){
 
         $historystok                   = new StockToolHistory;
         $hystorystok->id_tools         = $id_tool;
-        $hystorystok->id_kantor        = $request['id_kantor'] ;
+        $hystorystok->id_kantor        = $id_kantor;
         $hystorystok->id_produk_parent = 22;
         $hystorystok->jumlah_out       = $qty;
         $hystorystok->tgl              = Carbon::now()->format('Y-m-d');
-        $hystorystok->keterangan       = "Pengurangan dari Transaksi ".$request['id_transaksi'];
+        $hystorystok->keterangan       = "Pengurangan dari Transaksi ".$id_transaksi;
         $hystorystok->dtu              = Carbon::now();
         $hystorystok->save();
     }

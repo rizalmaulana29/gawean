@@ -64,15 +64,15 @@ class ToolsController extends Controller
 
     private function history($id_kantor,$id_transaksi,$qty,$id_tool){
         // dd($id_tool);
-        $historystok                   = new StockToolHistory;
-        $hystorystok->id_tools         = $id_tool;
-        $hystorystok->id_kantor        = $id_kantor;
-        $hystorystok->id_produk_parent = 22;
-        $hystorystok->jumlah_out       = $qty;
-        $hystorystok->tgl              = Carbon::now()->format('Y-m-d');
-        $hystorystok->keterangan       = "Pengurangan dari Transaksi ".$id_transaksi;
-        $hystorystok->dtu              = Carbon::now();
-        $hystorystok->save();
+        $historystok = StockToolHistory::create([;
+                    'id_tools'         => $id_tool,
+                    'id_kantor'        => $id_kantor,
+                    'id_produk_parent' => 22,
+                    'jumlah_out'       => $qty,
+                    'tgl'              => Carbon::now()->format('Y-m-d'),
+                    'keterangan'       => "Pengurangan dari Transaksi ".$id_transaksi,
+                    'dtu'              => Carbon::now(),
+        ]);
     }
 
 }

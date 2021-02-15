@@ -24,6 +24,7 @@ class ToolsController extends Controller
         if ($getNamaProduk == 'Ordinary') {
 
             $tools    = StockTool::where('id_kantor',$request['id_kantor'])->where('keterangan','Bento')->first();
+            dd($tools);
             $qtyBento = $tools->jumlah_stock;
             $id_tool  = $tools->id;
             $history  = $this->history($request['id_kantor'],$request['id_transaksi'],$qty,$id_tool);

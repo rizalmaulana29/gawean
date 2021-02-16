@@ -145,7 +145,7 @@ class JurnalPOController extends Controller
       $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
       $kantor       = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = $getDataTransaksiPO['tgl_po'];
 
       if ($getDataTransaksiPO['static_data'] == 20) {
         $keterangan = "Pembelian Hewan";
@@ -241,7 +241,7 @@ class JurnalPOController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = $getDataTransaksiPO['tgl_po'];
 
       $dataRaw = [
                 "purchase_order"  => [ 

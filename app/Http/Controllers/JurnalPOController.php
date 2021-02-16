@@ -154,7 +154,7 @@ class JurnalPOController extends Controller
       }
       
 
-      $dataOrderPo   = PO_detail::where('id_po_detail',$request['id'])->get();
+      $dataOrderPo   = PO_detail::where('id_po_detail',$getDataTransaksiPO['id'])->get();
       $detail_produk = [];
       foreach ($dataOrderPo as $key => $orderPO) {
         $get_produk   = Pendapatan::where('id',$orderPO['ra_produk_harga_po_id'])->value('ra_produk_harga_id');

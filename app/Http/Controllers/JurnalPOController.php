@@ -141,7 +141,7 @@ class JurnalPOController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
-      $id_transaksi = PO_detail::where('id_po_detail',$request['id'])->first();
+      $id_transaksi = PO_detail::where('id_po_detail',$getDataTransaksiPO['id'])->first();
       $namaCustomer = Payment::where('id_transaksi',$id_transaksi->id_order)->value('nama_customer');
       $kantor       = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 

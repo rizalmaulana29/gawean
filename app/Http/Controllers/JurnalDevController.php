@@ -282,7 +282,7 @@ class JurnalDevController extends Controller
       }
       $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = date_format(date_create($getDataTransaksi['tgl_transaksi']),"Y-m-d");
 
       if ($getDataTransaksi['id_entitas'] == 'PDN') {
         $wh_name = $kantor;
@@ -386,7 +386,7 @@ class JurnalDevController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = date_format(date_create($getDataTransaksi['tgl_transaksi']),"Y-m-d");
 
       $dataRaw = [
                 "sales_order"  => [ 

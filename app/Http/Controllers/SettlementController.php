@@ -22,8 +22,31 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SettlementController extends Controller
 {
-    public function settlementNP (){
+    public function MIDDate(){
 
+        $dataMID = AdminEntitas::select('merchant_id','passwd')->get();
+        foreach ($dataMID as $key => $mid) {
+            $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
+        }
+        $response = array("status"=>true,"message"=>$getSettlement);
+        
+        return $response;
+
+    }
+
+    public function settlementNP ($mid,$passwd){
+
+        $date = Carbon::now()->format('Ymd');
+        
+        $Data = [
+            "mid" => $mid,
+            "passwd"=>$passwd,
+            "settlmntdt"=> $date,
+            "startno"=>"1",
+            "endno"=>"100"
+        ];
+
+        $encodeData = json_encode($Data);
 
         $curl = curl_init();
 
@@ -36,13 +59,7 @@ class SettlementController extends Controller
           CURLOPT_FOLLOWLOCATION => true,
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>'{
-            "mid": "RMHAQIQAH2",
-            "passwd": "bUP7eVTVXlkUcugu6sv38Wsrs006x4GRoiS7GA4+0vRyTac7Ad8GgdDpvij9WqHuPlFWy4MCMKr2dY8n9Qr6eQ==",
-            "settlmntdt": "20210113",
-            "startno": "1",
-            "endno": "50"
-        }',
+          CURLOPT_POSTFIELDS =>$encodeData,
           CURLOPT_HTTPHEADER => array(
             'Content-Type: application/json'
           ),
@@ -78,7 +95,7 @@ class SettlementController extends Controller
                 }
                 else{
 
-                  $response = array("status"=>false,"message"=> "create vendor".$response);
+                  $response = array("status"=>false,"message"=>$response);
                 }
             }
           

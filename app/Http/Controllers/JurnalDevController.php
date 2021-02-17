@@ -153,7 +153,7 @@ class JurnalDevController extends Controller
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id')
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id','sales_order')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
@@ -169,23 +169,34 @@ class JurnalDevController extends Controller
                                  ->first();
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-          if ($salesOrder['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-              if ($salesOrdertoInvoice['status'] == true) {
-                $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
-                if ($applyMemo['status'] == true) {
-                  return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke Apply MEMO",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $applyMemo['message']
-                                      ],200);
+        if ($getDataTransaksi['sales_order'] != null || $getDataTransaksi['sales_order'] != " ") {
+          $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+            if ($salesOrder['status'] == true) {
+              $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+                if ($salesOrdertoInvoice['status'] == true) {
+                  $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
+                  if ($applyMemo['status'] == true) {
+                    return response()->json(["status"       => true,
+                                         "message"      => "Data berhasil di inputkan ke Apply MEMO",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $applyMemo['message']
+                                        ],200);
+                  }
+                  return $applyMemo;
                 }
-                return $applyMemo;
-              }
-              return $salesOrdertoInvoice;
+                return $salesOrdertoInvoice;
+            }
+            return $salesOrder;
+        }
+        $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
+          if ($applyMemo['status'] == true) {
+            return response()->json(["status"       => true,
+                                 "message"      => "Data berhasil di inputkan ke Apply MEMO",
+                                 "Data Request" => $getDataTransaksi,
+                                 "Data Response"=> $applyMemo['message']
+                                ],200);
           }
-          return $salesOrder;
+          return $applyMemo;
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"

@@ -447,7 +447,7 @@ class JurnalDevController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,

@@ -153,7 +153,7 @@ class JurnalDevController extends Controller
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id')
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')

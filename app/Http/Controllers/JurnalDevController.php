@@ -153,7 +153,7 @@ class JurnalDevController extends Controller
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id','sales_order')
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id','sales_order_id','sales_invoice_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
@@ -169,7 +169,7 @@ class JurnalDevController extends Controller
                                  ->first();
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        if ($getDataTransaksi['sales_order'] != null || $getDataTransaksi['sales_order'] != " ") {
+        if ($getDataTransaksi['sales_order_id'] != null || $getDataTransaksi['sales_order_id'] != " ") {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
             if ($salesOrder['status'] == true) {
               $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
@@ -188,7 +188,7 @@ class JurnalDevController extends Controller
             }
             return $salesOrder;
         }
-        $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
+        $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$getDataTransaksi['sales_invoice_id']);
           if ($applyMemo['status'] == true) {
             return response()->json(["status"       => true,
                                  "message"      => "Data berhasil di inputkan ke Apply MEMO",

@@ -22,12 +22,12 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SettlementController extends Controller
 {
-    public function MIDDate($date){
+    public function MIDDate(){
 
         $dataMID = AdminEntitas::select('merchant_id','passwd')->where('merchant_id','!=','')->get();
 
         foreach ($dataMID as $key => $mid) {
-            $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd'],$date);
+            $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
         }
         $response = array("status"=>true,"message"=>$getSettlement);
         
@@ -35,9 +35,9 @@ class SettlementController extends Controller
 
     }
 
-    private function settlementNP ($mid,$passwd,$date){
+    private function settlementNP ($mid,$passwd){
 
-        // $date = Carbon::now()->format('Ymd');
+        $date = Carbon::now()->format('Ymd');
 
         $Data = [
             "mid" => $mid,
@@ -72,35 +72,35 @@ class SettlementController extends Controller
         curl_close($curl);
 
         $searchResponse = stripos($response, 'DATA');
-        // dd($response);
 
-            if ($err) {
-                $response = array("status"=>"failed","message"=>$err.$mid);
-            } 
-            else {
-                if ($searchResponse !== false){
-                  $dataResponse = json_decode($response);
-                  foreach ($dataResponse->DATA as $key => $data) {
-                      $checkSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->value('tgl_settlement');
-                      if (!$checkSettlement || $checkSettlement == null || $checkSettlement == '') {
+        if ($err) {
+            $response = array("status"=>"failed","message"=>$err.$mid);
+        } 
+        else {
+
+            if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              foreach ($dataResponse->DATA as $key => $data) {
+                  $checkSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->value('tgl_settlement');
+                  if (!$checkSettlement || $checkSettlement == null || $checkSettlement == '') {
+                      continue;
+                  }else{
+                      if ($checkSettlement == '0000-00-00' || $checkSettlement == null ) {
+                          $tgl_settlement = date_format(date_create($data->SETTLMNT_DT),"Y-m-d");
+                          $updateSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->
+                                                       update(['tgl_settlement' => $tgl_settlement]);
+                      } else {
                           continue;
-                      }else{
-                          if ($checkSettlement == '0000-00-00' || $checkSettlement == null ) {
-                              $tgl_settlement = date_format(date_create($data->SETTLMNT_DT),"Y-m-d");
-                              $updateSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->
-                                                           update(['tgl_settlement' => $tgl_settlement]);
-                          } else {
-                              continue;
-                          }
                       }
                   }
-                  $response = array("status"=>true,"message"=> $dataResponse);
-                }
-                else{
-
-                  $response = array("status"=>false,"message"=>$response, "data"=>$mid);
-                }
+              }
+              $response = array("status"=>true,"message"=> $dataResponse);
             }
+            else{
+
+              $response = array("status"=>false,"message"=>$response, "data"=>$mid);
+            }
+        }
           
         return $response;
     }

@@ -146,8 +146,8 @@ class JurnalDevController extends Controller
 
     public function transaksiCiPelDev (){ //CiPel = Cicilan dan Pelunasan
       
-      $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->firstOfMonth()->toDateTimestring();
+      $endDate = Carbon::today()->addHour(1)->toDateTimestring();
+      $start = Carbon::now()->firstOfMonth()->toDatestring();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
                                           'ra_payment_dua.tgl_transaksi',
@@ -164,7 +164,7 @@ class JurnalDevController extends Controller
                                             $q->where('tunai', '=', 'Cicilan')
                                             ->orWhereNull('tunai');
                                         })
-                                 ->where([["ra_payment_dua.tgl_kirim", ">=", $start],["ra_payment_dua.tgl_kirim", "<=", $endDate->toDateTimestring()]])
+                                 ->where([["ra_payment_dua.tgl_kirim", ">=", $start],["ra_payment_dua.tgl_kirim", "<=", $endDate]])
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
       dd($getDataTransaksi);

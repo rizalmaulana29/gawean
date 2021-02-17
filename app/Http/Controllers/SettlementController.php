@@ -60,10 +60,12 @@ class SettlementController extends Controller
             else {
                 if ($searchResponse == true){
                   $dataResponse = json_decode($response);
-                  // $updateCmsUser = CmsUser::where('id',$checkVendorId['id'])->update(['vendor_id' => $dataResponse->vendor->id]);
-                  // foreach ($dataResponse->DATA as $key => $data) {
-                  //     dd($data->ORDER_NO);
-                  // }
+                  foreach ($dataResponse->DATA as $key => $data) {
+                      $checkSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->value('tgl_settlement');
+                      var_dump($checkSettlement);
+                      dd($data->ORDER_NO);
+                      SETTLMNT_DT
+                  }
                   $response = array("status"=>true,"message"=> $dataResponse->DATA);
                 }
                 else{

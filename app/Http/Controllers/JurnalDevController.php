@@ -316,7 +316,7 @@ class JurnalDevController extends Controller
                                   "tags"               => [$getDataTransaksi['tgl'],$getDataTransaksi['jenis'],$getDataTransaksi['tunai'],$kantor,$agen],
                                   "email"              => $getDataTransaksi['email'],
                                   "transaction_no"     => $getDataTransaksi['id_transaksi'],
-                                  "custom_id"          => $getDataTransaksi['id_transaksi']
+                                  "custom_id"          => rand(9999,1)
                                   ]
                   ];
       

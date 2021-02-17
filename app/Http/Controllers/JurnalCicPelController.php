@@ -77,11 +77,11 @@ class JurnalCicPelController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
-      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
+      $getDataTransaksi = Payment::selectselect('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas')
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id','sales_order_id','sales_invoice_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
@@ -447,7 +447,7 @@ class JurnalCicPelController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,

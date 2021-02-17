@@ -78,7 +78,7 @@ class SettlementController extends Controller
                 $response = array("status"=>"failed","message"=>$err.$mid);
             } 
             else {
-                if ($searchResponse == true){
+                if ($searchResponse !== false){
                   $dataResponse = json_decode($response);
                   foreach ($dataResponse->DATA as $key => $data) {
                       $checkSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->value('tgl_settlement');

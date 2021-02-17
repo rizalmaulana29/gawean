@@ -39,7 +39,7 @@ class SettlementController extends Controller
           CURLOPT_POSTFIELDS =>'{
             "mid": "RMHAQIQAH2",
             "passwd": "bUP7eVTVXlkUcugu6sv38Wsrs006x4GRoiS7GA4+0vRyTac7Ad8GgdDpvij9WqHuPlFWy4MCMKr2dY8n9Qr6eQ==",
-            "settlmntdt": "20200113",
+            "settlmntdt": "20210113",
             "startno": "1",
             "endno": "50"
         }',

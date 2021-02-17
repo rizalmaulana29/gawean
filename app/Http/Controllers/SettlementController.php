@@ -62,9 +62,16 @@ class SettlementController extends Controller
                   $dataResponse = json_decode($response);
                   foreach ($dataResponse->DATA as $key => $data) {
                       $checkSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->value('tgl_settlement');
-                      var_dump($checkSettlement);
-                      dd($data->ORDER_NO);
-                      // SETTLMNT_DT
+                      if (!$checkSettlement || $checkSettlement == null || $checkSettlement == '') {
+                          continue;
+                      }else{
+                          if ($checkSettlement == '0000-00-00') {
+                              $tgl_settlement = date_format(date_create($data->SETTLMNT_DT),"Y-m-d");
+                              $updateSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->update(['tgl_settlement'->$tgl_settlement]);
+                          } else {
+                              continue;
+                          }
+                      }
                   }
                   $response = array("status"=>true,"message"=> $dataResponse->DATA);
                 }

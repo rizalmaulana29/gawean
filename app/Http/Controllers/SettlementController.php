@@ -25,8 +25,8 @@ class SettlementController extends Controller
     public function MIDDate(){
 
         $dataMID = AdminEntitas::select('merchant_id','passwd')->get();
-        dd($dataMID);
-        
+        var_dump($dataMID);
+
         foreach ($dataMID as $key => $mid) {
             dd($mid);
             $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);

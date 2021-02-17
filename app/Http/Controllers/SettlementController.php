@@ -28,7 +28,7 @@ class SettlementController extends Controller
         var_dump($dataMID);
 
         foreach ($dataMID as $key => $mid) {
-            dd($mid);
+            dd($mid['merchant_id']);
             $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
         }
         $response = array("status"=>true,"message"=>$getSettlement);

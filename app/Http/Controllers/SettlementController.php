@@ -72,7 +72,7 @@ class SettlementController extends Controller
         curl_close($curl);
 
         $searchResponse = stripos($response, 'DATA');
-        dd($response);
+        // dd($response);
 
             if ($err) {
                 $response = array("status"=>"failed","message"=>$err.$mid);

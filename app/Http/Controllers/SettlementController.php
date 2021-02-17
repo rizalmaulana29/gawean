@@ -49,7 +49,7 @@ class SettlementController extends Controller
 
         $encodeData = json_encode($Data);
         // dd($encodeData);
-        
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -72,6 +72,7 @@ class SettlementController extends Controller
         curl_close($curl);
 
         $searchResponse = stripos($response, 'DATA');
+        dd($searchResponse);
 
             if ($err) {
                 $response = array("status"=>"failed","message"=>$err.$mid);

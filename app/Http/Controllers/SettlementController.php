@@ -59,12 +59,13 @@ class SettlementController extends Controller
             } 
             else {
                 if ($searchResponse == true){
-                    // $updateCmsUser = CmsUser::where('id',$checkVendorId['id'])->update(['vendor_id' => $dataResponse->vendor->id]);
-                    $response = array("status"=>true,"message"=> $response->DATA);
+                  $dataResponse = json_decode($response);
+                  // $updateCmsUser = CmsUser::where('id',$checkVendorId['id'])->update(['vendor_id' => $dataResponse->vendor->id]);
+                  $response = array("status"=>true,"message"=> $dataResponse->DATA);
                 }
                 else{
 
-                    $response = array("status"=>false,"message"=> "create vendor".$response);
+                  $response = array("status"=>false,"message"=> "create vendor".$response);
                 }
             }
           

@@ -462,16 +462,18 @@ class JurnalDevController extends Controller
 
         $nominal       = $getDataTransaksi['nominal_total'];
 
+      }else{
+
+        if ($sisaBayar == $getDataTransaksi['nominal_total']) {
+
+          $nominal       = $getDataTransaksi['nominal_bayar'];
+        } else {
+
+          $nominal       = $getDataTransaksi['nominal_bayar'] - $sisaBayar;
+        }
       }
 
-      if ($sisaBayar == $getDataTransaksi['nominal_total']) {
-
-        $nominal       = $getDataTransaksi['nominal_bayar'];
-      } else {
-
-        $nominal       = $getDataTransaksi['nominal_bayar'] - $sisaBayar;
-      }
-      
+      dd($nominal);
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [

@@ -37,7 +37,7 @@ class SettlementController extends Controller
     public function settlementNP ($mid,$passwd){
 
         $date = Carbon::now()->format('Ymd');
-        
+
         $Data = [
             "mid" => $mid,
             "passwd"=>$passwd,
@@ -72,7 +72,7 @@ class SettlementController extends Controller
         $searchResponse = stripos($response, 'DATA');
 
             if ($err) {
-                $response = array("status"=>"failed","message"=>$err);
+                $response = array("status"=>"failed","message"=>$err.$mid);
             } 
             else {
                 if ($searchResponse == true){
@@ -95,7 +95,7 @@ class SettlementController extends Controller
                 }
                 else{
 
-                  $response = array("status"=>false,"message"=>$response);
+                  $response = array("status"=>false,"message"=>$response.$mid);
                 }
             }
           

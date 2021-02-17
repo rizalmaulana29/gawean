@@ -24,7 +24,7 @@ class SettlementController extends Controller
 {
     public function MIDDate(){
 
-        $dataMID = AdminEntitas::select('merchant_id','passwd')->get();
+        $dataMID = AdminEntitas::select('merchant_id','passwd')->where('merchant_id','!=','')->get();
 
         foreach ($dataMID as $key => $mid) {
             $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
@@ -48,7 +48,7 @@ class SettlementController extends Controller
         ];
 
         $encodeData = json_encode($Data);
-        
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

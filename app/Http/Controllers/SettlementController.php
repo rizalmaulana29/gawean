@@ -22,12 +22,12 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SettlementController extends Controller
 {
-    public function MIDDate(){
+    public function MIDDate($date){
 
         $dataMID = AdminEntitas::select('merchant_id','passwd')->where('merchant_id','!=','')->get();
 
         foreach ($dataMID as $key => $mid) {
-            $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
+            $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd'],$date);
         }
         $response = array("status"=>true,"message"=>$getSettlement);
         
@@ -35,9 +35,9 @@ class SettlementController extends Controller
 
     }
 
-    private function settlementNP ($mid,$passwd){
+    private function settlementNP ($mid,$passwd,$date){
 
-        $date = Carbon::yesterday()->format('Ymd');
+        // $date = Carbon::now()->format('Ymd');
 
         $Data = [
             "mid" => $mid,

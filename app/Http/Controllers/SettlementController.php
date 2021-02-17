@@ -64,7 +64,7 @@ class SettlementController extends Controller
                       $checkSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->value('tgl_settlement');
                       var_dump($checkSettlement);
                       dd($data->ORDER_NO);
-                      SETTLMNT_DT
+                      // SETTLMNT_DT
                   }
                   $response = array("status"=>true,"message"=> $dataResponse->DATA);
                 }

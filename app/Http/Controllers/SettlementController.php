@@ -49,8 +49,25 @@ class SettlementController extends Controller
         ));
 
         $response = curl_exec($curl);
-
+        $err = curl_error($curl);
         curl_close($curl);
-        echo $response;
+
+        $searchResponse = stripos($response, 'DATA');
+
+            if ($err) {
+                $response = array("status"=>"failed","message"=>$err);
+            } 
+            else {
+                if ($searchResponse == true){
+                    // $updateCmsUser = CmsUser::where('id',$checkVendorId['id'])->update(['vendor_id' => $dataResponse->vendor->id]);
+                    $response = array("status"=>true,"message"=> $response->DATA);
+                }
+                else{
+
+                    $response = array("status"=>false,"message"=> "create vendor".$response);
+                }
+            }
+          
+        return $response;
     }
 }

@@ -61,6 +61,9 @@ class SettlementController extends Controller
                 if ($searchResponse == true){
                   $dataResponse = json_decode($response);
                   // $updateCmsUser = CmsUser::where('id',$checkVendorId['id'])->update(['vendor_id' => $dataResponse->vendor->id]);
+                  foreach ($dataResponse->DATA as $key => $data) {
+                      dd($data->ORDER_NO);
+                  }
                   $response = array("status"=>true,"message"=> $dataResponse->DATA);
                 }
                 else{

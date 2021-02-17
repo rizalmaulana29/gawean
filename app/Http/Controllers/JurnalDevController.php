@@ -169,7 +169,7 @@ class JurnalDevController extends Controller
                                  ->first();
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        if ($getDataTransaksi['sales_order_id'] != null || $getDataTransaksi['sales_order_id'] != " ") {
+        if ($getDataTransaksi['sales_order_id'] == null || $getDataTransaksi['sales_order_id'] == " ") {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
             if ($salesOrder['status'] == true) {
               $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);

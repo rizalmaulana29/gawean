@@ -484,7 +484,7 @@ class JurnalDevController extends Controller
         }
       }
 
-      dd($transaction_no);
+      // dd($transaction_no)
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [

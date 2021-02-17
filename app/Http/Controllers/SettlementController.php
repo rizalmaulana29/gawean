@@ -37,7 +37,7 @@ class SettlementController extends Controller
 
     private function settlementNP ($mid,$passwd){
 
-        $date = Carbon::now()->format('Ymd');
+        $date = Carbon::yesterday()->format('Ymd');
 
         $Data = [
             "mid" => $mid,

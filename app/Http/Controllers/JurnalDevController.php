@@ -167,7 +167,7 @@ class JurnalDevController extends Controller
                                  ->where([["ra_payment_dua.tgl_kirim", ">=", $start],["ra_payment_dua.tgl_kirim", "<=", $endDate->toDateTimestring()]])
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getgetDataTransaksi);
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {

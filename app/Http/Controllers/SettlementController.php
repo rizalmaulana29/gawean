@@ -26,6 +26,7 @@ class SettlementController extends Controller
 
         $dataMID = AdminEntitas::select('merchant_id','passwd')->get();
         foreach ($dataMID as $key => $mid) {
+            dd($mid);
             $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
         }
         $response = array("status"=>true,"message"=>$getSettlement);

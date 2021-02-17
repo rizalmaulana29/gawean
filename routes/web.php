@@ -38,7 +38,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 	$router->get('filterDev', 	['uses' => 'JurnalDevController@Filtering']);
 	$router->get('filterDev/bedabulan', 	['uses' => 'JurnalDevController@transaksiBedaBulan']);
-	$router->get('filter/transaksiCiPelDev', 	['uses' => 'JJurnalDevController@transaksiCiPel']);
+	$router->get('filter/transaksiCiPelDev', 	['uses' => 'JurnalDevController@transaksiCiPel']);
 	$router->get('settlementNP', 	['uses' => 'SettlementController@MIDDate']);
 	
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);

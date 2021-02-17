@@ -93,7 +93,7 @@ class JurnalCicPelController extends Controller
                                             ->orWhereNull('tunai');
                                         })
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
-                                 ->orderBy('tgl_transaksi','ASC')
+                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
       
       if (isset($getDataTransaksi)) {

@@ -48,8 +48,7 @@ class SettlementController extends Controller
         ];
 
         $encodeData = json_encode($Data);
-        dd($encodeData);
-
+        
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

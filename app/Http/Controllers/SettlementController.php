@@ -37,7 +37,6 @@ class SettlementController extends Controller
 
     private function settlementNP ($mid,$passwd){
 
-        dd($mid);
         $date = Carbon::now()->format('Ymd');
 
         $Data = [
@@ -49,6 +48,7 @@ class SettlementController extends Controller
         ];
 
         $encodeData = json_encode($Data);
+        dd($encodeData);
 
         $curl = curl_init();
 

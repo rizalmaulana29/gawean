@@ -25,10 +25,8 @@ class SettlementController extends Controller
     public function MIDDate(){
 
         $dataMID = AdminEntitas::select('merchant_id','passwd')->get();
-        var_dump($dataMID);
 
         foreach ($dataMID as $key => $mid) {
-            dd($mid['merchant_id']);
             $getSettlement = $this->settlementNP($mid['merchant_id'],$mid['passwd']);
         }
         $response = array("status"=>true,"message"=>$getSettlement);
@@ -37,8 +35,9 @@ class SettlementController extends Controller
 
     }
 
-    public function settlementNP ($mid,$passwd){
+    private function settlementNP ($mid,$passwd){
 
+        dd($mid);
         $date = Carbon::now()->format('Ymd');
 
         $Data = [

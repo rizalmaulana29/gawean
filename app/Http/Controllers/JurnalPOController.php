@@ -308,8 +308,6 @@ class JurnalPOController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
-      $paymentMethode =  Paymeth::where('id_kantor',$getDataTransaksiPO['id_kantor'])->first();
-
       if ($getDataTransaksiPO['payment_method'] != 'Kas') {
 
         if ($getDataTransaksiPO['id_entitas'] == 'PDN') {
@@ -317,6 +315,7 @@ class JurnalPOController extends Controller
           $payment_method_id   = "1539636";
           $deposit_to_name     = "Mandiri 1310012793792";
         } else {
+          $paymentMethode =  Paymeth::where('id_kantor',$getDataTransaksiPO['id_kantor'])->where('parent_id','26')->first();
           $payment_method_name = "Transfer Bank";
           $payment_method_id   = $paymentMethode->methode_id_jurnal;
           $deposit_to_name     = $paymentMethode->methode_po_jurnal;
@@ -328,6 +327,7 @@ class JurnalPOController extends Controller
           $payment_method_id   = "1539634";
           $deposit_to_name     = "Kas";
         } else {
+          $paymentMethode =  Paymeth::where('id_kantor',$getDataTransaksiPO['id_kantor'])->where('parent_id','31')->first();
           if ($getDataTransaksiPO['id_entitas'] == 'ANA') {
           $payment_method_name = "Cash";
           } else {

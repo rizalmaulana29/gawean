@@ -67,7 +67,8 @@ class SettlementController extends Controller
                       }else{
                           if ($checkSettlement == '0000-00-00') {
                               $tgl_settlement = date_format(date_create($data->SETTLMNT_DT),"Y-m-d");
-                              $updateSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->update(['tgl_settlement'->$tgl_settlement]);
+                              $updateSettlement = Payment::where('id_transaksi',$data->ORDER_NO)->
+                                                           update(['tgl_settlement' => $tgl_settlement]);
                           } else {
                               continue;
                           }

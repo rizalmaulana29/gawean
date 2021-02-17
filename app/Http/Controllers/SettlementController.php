@@ -95,7 +95,7 @@ class SettlementController extends Controller
                 }
                 else{
 
-                  $response = array("status"=>false,"message"=>$response.$mid);
+                  $response = array("status"=>false,"message"=>$response, "data"=>$mid);
                 }
             }
           

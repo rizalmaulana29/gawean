@@ -39,7 +39,7 @@ class JurnalPOController extends Controller
                                  ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
-      dd($getDataTransaksiPO);
+
       if (isset($getDataTransaksiPO)) {
         $checkVendorId = CmsUser::where('id',$getDataTransaksiPO['id_vendor'])->first();
         
@@ -138,7 +138,7 @@ class JurnalPOController extends Controller
     }
 
     public function PurchaseOrder($getDataTransaksiPO,$vendor_id){ 
-      dd($getDataTransaksiPO['id_entitas']);
+      
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
       $id_transaksi = PO_detail::where('id_po_detail',$getDataTransaksiPO['id'])->first();

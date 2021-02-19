@@ -138,7 +138,7 @@ class JurnalPOController extends Controller
     }
 
     public function PurchaseOrder($getDataTransaksiPO,$vendor_id){ 
-
+      dd($getDataTransaksiPO['id_entitas']);
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
 
       $id_transaksi = PO_detail::where('id_po_detail',$getDataTransaksiPO['id'])->first();

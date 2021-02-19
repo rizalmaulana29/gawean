@@ -39,7 +39,7 @@ class JurnalPOController extends Controller
                                  ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
-      
+      dd($getDataTransaksiPO);
       if (isset($getDataTransaksiPO)) {
         $checkVendorId = CmsUser::where('id',$getDataTransaksiPO['id_vendor'])->first();
         

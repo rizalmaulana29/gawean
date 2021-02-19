@@ -441,7 +441,7 @@ class JurnalController extends Controller
           $payment_method_id   = "1539634";
           $deposit_to_name     = "Kas";
         } else {
-          if ($getDataTransaksi['id_kantor'] == 6 || $getDataTransaksi['id_kantor'] == 17) {
+          if ($getDataTransaksi['id_entitas'] == 'ANA') {
           $payment_method_name = "Cash";
           } else {
             $payment_method_name = "Kas Tunai";

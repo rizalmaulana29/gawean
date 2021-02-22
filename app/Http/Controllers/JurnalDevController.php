@@ -368,6 +368,7 @@ class JurnalDevController extends Controller
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
+          $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed");
       } 
       else {
           if ($searchResponse == true){
@@ -443,6 +444,7 @@ class JurnalDevController extends Controller
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
+          $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed"]);
       } 
       else {
           if ($searchResponse == true){
@@ -543,6 +545,12 @@ class JurnalDevController extends Controller
                                 "message"=> $dataResponse->customer_apply_credit_memo);
               } else {
                 $recievepayment = $this->receivePayment($getDataTransaksi,$dataResponse->customer_apply_credit_memo->transaction_no);
+                if ($recievepayment['status'] == true) {
+                  return response()->json(["status"       => true,
+                                         "message"      => $createPayment['message']
+                                        ],200);
+                }
+                $response = array("status"=>false,"message"=> "recieve payment".$response);
               }
           }
           else{

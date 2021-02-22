@@ -77,13 +77,14 @@ class JurnalCicPelController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
+      
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
                                           'ra_payment_dua.tgl_transaksi',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
                                           'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id','sales_order_id','sales_invoice_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
-                                 ->where('ra_payment_dua.status','paid')
+                                 ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')
@@ -92,28 +93,39 @@ class JurnalCicPelController extends Controller
                                             $q->where('tunai', '=', 'Cicilan')
                                             ->orWhereNull('tunai');
                                         })
-                                 ->where('ra_payment_dua.tgl_kirim','=',$start)
+                                 ->where("ra_payment_dua.tgl_kirim", "=", $start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      
+      // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-          if ($salesOrder['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
-              if ($salesOrdertoInvoice['status'] == true) {
-                $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
-                if ($applyMemo['status'] == true) {
-                  return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke Apply MEMO",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $applyMemo['message']
-                                      ],200);
+        if ($getDataTransaksi['sales_order_id'] == null || $getDataTransaksi['sales_order_id'] == " ") {
+          $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+            if ($salesOrder['status'] == true) {
+              $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+                if ($salesOrdertoInvoice['status'] == true) {
+                  $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
+                  if ($applyMemo['status'] == true) {
+                    return response()->json(["status"       => true,
+                                         "message"      => "Data berhasil di inputkan ke Apply MEMO",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $applyMemo['message']
+                                        ],200);
+                  }
+                  return $applyMemo;
                 }
-                return $applyMemo;
-              }
-              return $salesOrdertoInvoice;
+                return $salesOrdertoInvoice;
+            }
+            return $salesOrder;
+        }
+        $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$getDataTransaksi['sales_invoice_id']);
+          if ($applyMemo['status'] == true) {
+            return response()->json(["status"       => true,
+                                 "message"      => "Data berhasil di inputkan ke Apply MEMO",
+                                 "Data Request" => $getDataTransaksi,
+                                 "Data Response"=> $applyMemo['message']
+                                ],200);
           }
-          return $salesOrder;
+          return $applyMemo;
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"

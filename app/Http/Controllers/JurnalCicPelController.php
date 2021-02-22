@@ -83,7 +83,7 @@ class JurnalCicPelController extends Controller
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
                                           'tunai','ra_order_dua.id_entitas as id_entitas','person_id','memo_id','sales_order_id','sales_invoice_id')
                                  ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
-                                 ->where('status','paid')
+                                 ->where('ra_payment_dua.status','paid')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
                                  ->where('memo_id','!=','')

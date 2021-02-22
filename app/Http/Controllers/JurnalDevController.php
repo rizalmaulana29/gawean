@@ -368,7 +368,7 @@ class JurnalDevController extends Controller
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
-          $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed");
+          $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed"]);
       } 
       else {
           if ($searchResponse == true){

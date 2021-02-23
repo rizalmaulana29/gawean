@@ -239,7 +239,7 @@ class JurnalController extends Controller
         $agen = CmsUser::where('id',$getDataTransaksi['id_agen'])->value('name');
       }
 
-      if ($getDataTransaksi['nominal_diskon'] != null) {
+      if ($getDataTransaksi['nominal_diskon'] != null || $getDataTransaksi['nominal_diskon'] != " ") {
         $dataDiskon = $getDataTransaksi['nominal_diskon'];
       }else{
         $dataDiskon   = 0;

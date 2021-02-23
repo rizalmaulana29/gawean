@@ -544,7 +544,7 @@ class JurnalDevController extends Controller
                 $response = array("status" => true,
                                 "message"=> $dataResponse->customer_apply_credit_memo);
               } else {
-                $recievepayment = $this->receivePayment($getDataTransaksi,$dataResponse->customer_apply_credit_memo->transaction_no);
+                $recievepayment = $this->receivePayment($sisaBayar,$getDataTransaksi,$dataResponse->customer_apply_credit_memo->transaction_no);
                 if ($recievepayment['status'] == true) {
                   return response()->json(["status"       => true,
                                          "message"      => $createPayment['message']
@@ -562,7 +562,7 @@ class JurnalDevController extends Controller
       return $response;     
     }
 
-    public function receivePayment($getDataTransaksi,$transaction_no){
+    public function receivePayment($getDataTransaksi,$transaction_no,$sisaBayar){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
@@ -586,7 +586,7 @@ class JurnalDevController extends Controller
           $payment_method_id   = "1539634";
           $deposit_to_name     = "Kas";
         } else {
-          if ($getDataTransaksi['id_kantor'] == 6 || $getDataTransaksi['id_kantor'] == 17) {
+          if ($getDataTransaksi['id_entitas'] == 'ANA') {
           $payment_method_name = "Cash";
           } else {
             $payment_method_name = "Kas Tunai";
@@ -602,7 +602,7 @@ class JurnalDevController extends Controller
                 "receive_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
                                         "records_attributes"  => [[ "transaction_no" => $transaction_no,
-                                                                    "amount"         => $getDataTransaksi['nominal_total']]],
+                                                                    "amount"         => $sisaBayar]],
                                         "custom_id"           => $getDataTransaksi['id_transaksi'],
                                         "payment_method_name" => $payment_method_name,
                                         "payment_method_id"   => $payment_method_id,

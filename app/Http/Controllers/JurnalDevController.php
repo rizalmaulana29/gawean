@@ -570,7 +570,7 @@ class JurnalDevController extends Controller
 
       $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
 
-      if (in_array($paymentMethode->parent_id, $transfer)) {
+      if (in_array($paymentMethode['parent_id'], $transfer)) {
         if ($getDataTransaksi['id_entitas'] == 'PDN') {
           $payment_method_name = "Transfer Bank";
           $payment_method_id   = "1539636";

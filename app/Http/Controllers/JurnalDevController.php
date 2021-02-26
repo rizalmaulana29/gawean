@@ -577,8 +577,8 @@ class JurnalDevController extends Controller
           $deposit_to_name     = "Mandiri 1310012793792";
         } else {
           $payment_method_name = "Transfer Bank";
-          $payment_method_id   = $paymentMethode->methode_id_jurnal;
-          $deposit_to_name     = $paymentMethode->methode_jurnal;
+          $payment_method_id   = $paymentMethode['methode_id_jurnal'];
+          $deposit_to_name     = $paymentMethode['methode_jurnal'];
         }
       } else {
         if ($getDataTransaksi['id_entitas'] == 'PDN') {
@@ -591,8 +591,8 @@ class JurnalDevController extends Controller
           } else {
             $payment_method_name = "Kas Tunai";
           }
-          $payment_method_id   = $paymentMethode->methode_id_jurnal;
-          $deposit_to_name     = $paymentMethode->methode_jurnal;
+          $payment_method_id   = $paymentMethode['methode_id_jurnal'];
+          $deposit_to_name     = $paymentMethode['methode_jurnal'];
         }
       }
       

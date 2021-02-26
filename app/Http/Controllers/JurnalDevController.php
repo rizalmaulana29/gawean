@@ -367,8 +367,8 @@ class JurnalDevController extends Controller
       $searchResponse = stripos($response, 'sales_order');
 
       if ($err) {
-          $response = array("status"=>"failed","message"=>$err);
           $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed"]);
+          $response = array("status"=>"failed","message"=>$err);
       } 
       else {
           if ($searchResponse == true){
@@ -380,7 +380,7 @@ class JurnalDevController extends Controller
                                 "message"=> $dataResponse->sales_order->transaction_lines_attributes);
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed"]);
               $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
@@ -456,7 +456,7 @@ class JurnalDevController extends Controller
                                 "message"=> $dataResponse->sales_invoice->transaction_no);
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed"]);
               $response = array("status"=>false,"message"=> "sales invoice".$response);
           }
       }
@@ -554,7 +554,7 @@ class JurnalDevController extends Controller
               }
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => "failed"]);
               $response = array("status"=>false,"message"=> "customer apply credit memo".$response);
           }
       }

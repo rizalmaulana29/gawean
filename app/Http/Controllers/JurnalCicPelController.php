@@ -72,7 +72,7 @@ class JurnalCicPelController extends Controller
 
     }
 
-    public function transaksiCiPelDev (){ //CiPel = Cicilan dan Pelunasan
+    public function transaksiCiPel (){ //CiPel = Cicilan dan Pelunasan
       
       $endDate = Carbon::today()->addHour(1)->toDateTimestring();
       $start = Carbon::now()->firstOfMonth()->toDatestring();

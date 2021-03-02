@@ -223,7 +223,7 @@ class JurnalPOController extends Controller
                                 "message"=> $dataResponse->purchase_order->transaction_lines_attributes);
           }
           else{
-
+              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_order_id' => 'failed']);
               $response = array("status"=>false,"message"=> "purchase order".$response);
           }
       }

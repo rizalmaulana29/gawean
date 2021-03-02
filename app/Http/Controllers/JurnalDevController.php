@@ -450,7 +450,7 @@ class JurnalDevController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,
@@ -545,13 +545,13 @@ class JurnalDevController extends Controller
                 $response = array("status" => true,
                                 "message"=> $dataResponse->customer_apply_credit_memo);
               } else {
-                $apply2 = $this->ApllyCreditMemo2($getDataTransaksi,$transaction_no,$sisaBayar);
-                if ($apply2['status'] == true) {
+                $receivePayment = $this->receivePayment($getDataTransaksi,$sisaBayar);
+                if ($receivePayment['status'] == true) {
                   return response()->json(["status"     => true,
-                                         "message"      => $apply2['message']
+                                           "message"    => $receivePayment['message']
                                         ],200);
                 }
-                $response = array("status"=>false,"message"=> "apply credit memo 2".$response);
+                $response = array("status"=>false,"message"=> "recieve payment".$response);
               }
           }
           else{
@@ -563,30 +563,62 @@ class JurnalDevController extends Controller
       return $response;     
     }
 
-    public function ApllyCreditMemo2 ($getDataTransaksi,$transaction_no,$sisaBayar){
+    public function receivePayment($getDataTransaksi,$sisaBayar){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
-      $nominal       = $sisaBayar;
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
 
-      // dd($transaction_no)
+      $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
+
+      if (in_array($paymentMethode->parent_id, $transfer)) {
+        if ($getDataTransaksi['id_entitas'] == 'PDN') {
+          $payment_method_name = "Transfer Bank";
+          $payment_method_id   = "1539636";
+          $deposit_to_name     = "Mandiri 1310012793792";
+        } else {
+          $payment_method_name = "Transfer Bank";
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
+        }
+      } else {
+        if ($getDataTransaksi['id_entitas'] == 'PDN') {
+          $payment_method_name = "Kas Tunai";
+          $payment_method_id   = "1539634";
+          $deposit_to_name     = "Kas";
+        } else {
+          if ($getDataTransaksi['id_entitas'] == 'ANA') {
+          $payment_method_name = "Cash";
+          } else {
+            $payment_method_name = "Kas Tunai";
+          }
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
+        }
+      }
+      
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
-                "customer_apply_credit_memo"  => [ 
-                                                  "person_id"              => $getDataTransaksi['person_id'],
-                                                  "selected_credit_memo_id"=> $getDataTransaksi['memo_id'],
-                                                  "records_attributes"     => [[ "transaction_id"=> $transaction_no,
-                                                                                 "amount" => $nominal]]
-                                                ]
-                  ];  
-      var_dump($dataRaw);
+                "receive_payment"  => [ 
+                                        "transaction_date"    => $tglTransaksi,
+                                        "records_attributes"  => [[ "transaction_no" => $getDataTransaksi['sales_invoice_id'],
+                                                                    "amount"         => $sisaBayar]],
+                                        "custom_id"           => $getDataTransaksi['id_transaksi'],
+                                        "payment_method_name" => $payment_method_name,
+                                        "payment_method_id"   => $payment_method_id,
+                                        "is_draft"            => false,
+                                        "deposit_to_name"     => $deposit_to_name,
+                                      ]
+                  ];
+
+
       $encodedataRaw = json_encode($dataRaw);
-      var_dump($encodedataRaw);
+
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/customer_apply_credit_memo",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/receive_payments",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,
@@ -599,7 +631,7 @@ class JurnalDevController extends Controller
                                         "apikey: ".$jurnalKoneksi['jurnal_key'],
                                         "Authorization: ".$jurnalKoneksi['jurnal_auth'],
                                         "Content-Type: application/json; charset=utf-8",
-                                        "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; incap_ses_956_1892526=PV4+bT4OPmmys22YG2VEDUti2F8AAAAAxxOSJglDvTynnT2DtUC2Xg==; nlbi_1892526=swSXL5ITyjseS65LKezQ4QAAAACk4+Rxw/6k0udeObF0BXEI; incap_ses_962_1892526=VQ9FJ6/WYhZ+5dcXGLZZDeL02l8AAAAA/WbrlUVFbEocG5UqQCMVsw=="
+                                        "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
                                       ),
       ));
       $response = curl_exec($curl);
@@ -607,14 +639,14 @@ class JurnalDevController extends Controller
 
       $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
                                         'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action' => "Apply Credit Memo2",
+                                        'action' => "receivePayment",
                                         'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,
                                         'response_body' => $response
                                         ]);
 
-      $findString    = 'customer_apply_credit_memo';
-      $searchResponse = stripos($response, 'customer_apply_credit_memo');
+      $findString    = 'receive_payment';
+      $searchResponse = stripos($response, 'receive_payment');
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
@@ -622,123 +654,19 @@ class JurnalDevController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => $dataResponse->customer_apply_credit_memo->id]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => $dataResponse->receive_payment->id]);
               $response = array("status" => true,
-                              "message"=> $dataResponse->customer_apply_credit_memo);
+                                "id"     => $dataResponse->receive_payment->id,
+                                "message"=> $dataResponse->receive_payment->transaction_no);
           }
           else{
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => "failed"]);
-              $response = array("status"=>false,"message"=> "apply credit memo 2".$response);
+
+              $response = array("status"=>false,"message"=> "recieve payment ".$response);
           }
       }
 
-      return $response;     
+      return $response;
     }
-
-    // public function receivePayment($getDataTransaksi,$transaction_no,$sisaBayar){
-
-    //   $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
-
-    //   $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
-
-    //   $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
-
-    //   if (in_array($paymentMethode->parent_id, $transfer)) {
-    //     if ($getDataTransaksi['id_entitas'] == 'PDN') {
-    //       $payment_method_name = "Transfer Bank";
-    //       $payment_method_id   = "1539636";
-    //       $deposit_to_name     = "Mandiri 1310012793792";
-    //     } else {
-    //       $payment_method_name = "Transfer Bank";
-    //       $payment_method_id   = $paymentMethode->methode_id_jurnal;
-    //       $deposit_to_name     = $paymentMethode->methode_jurnal;
-    //     }
-    //   } else {
-    //     if ($getDataTransaksi['id_entitas'] == 'PDN') {
-    //       $payment_method_name = "Kas Tunai";
-    //       $payment_method_id   = "1539634";
-    //       $deposit_to_name     = "Kas";
-    //     } else {
-    //       if ($getDataTransaksi['id_entitas'] == 'ANA') {
-    //       $payment_method_name = "Cash";
-    //       } else {
-    //         $payment_method_name = "Kas Tunai";
-    //       }
-    //       $payment_method_id   = $paymentMethode->methode_id_jurnal;
-    //       $deposit_to_name     = $paymentMethode->methode_jurnal;
-    //     }
-    //   }
-      
-    //   $tglTransaksi = Carbon::now()->toDatestring();
-
-    //   $dataRaw = [
-    //             "receive_payment"  => [ 
-    //                                     "transaction_date"    => $tglTransaksi,
-    //                                     "records_attributes"  => [[ "transaction_no" => $transaction_no,
-    //                                                                 "amount"         => $sisaBayar]],
-    //                                     "custom_id"           => $getDataTransaksi['id_transaksi'],
-    //                                     "payment_method_name" => $payment_method_name,
-    //                                     "payment_method_id"   => $payment_method_id,
-    //                                     "is_draft"            => false,
-    //                                     "deposit_to_name"     => $deposit_to_name,
-    //                                   ]
-    //               ];
-
-
-    //   $encodedataRaw = json_encode($dataRaw);
-
-    //   $curl = curl_init();
-
-    //   curl_setopt_array($curl, array(
-    //     CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/receive_payments",
-    //     CURLOPT_RETURNTRANSFER => true,
-    //     CURLOPT_ENCODING       => "",
-    //     CURLOPT_MAXREDIRS      => 10,
-    //     CURLOPT_TIMEOUT        => 0,
-    //     CURLOPT_FOLLOWLOCATION => true,
-    //     CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-    //     CURLOPT_CUSTOMREQUEST  => "POST",
-    //     CURLOPT_POSTFIELDS     => $encodedataRaw,
-    //     CURLOPT_HTTPHEADER     => array(
-    //                                     "apikey: ".$jurnalKoneksi['jurnal_key'],
-    //                                     "Authorization: ".$jurnalKoneksi['jurnal_auth'],
-    //                                     "Content-Type: application/json; charset=utf-8",
-    //                                     "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; nlbi_1892526=8trIdrnO9S4KHtCQKezQ4QAAAAC1Ln3MtHQzDOiZP5/QXp4v; incap_ses_959_1892526=3SwTKPUwzU0bAScrnA1PDc+i0V8AAAAA2wbKV6ShlqO9SQ9NTtMN7g=="
-    //                                   ),
-    //   ));
-    //   $response = curl_exec($curl);
-    //   $err = curl_error($curl);
-
-    //   $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
-    //                                     'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-    //                                     'action' => "receivePayment",
-    //                                     'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
-    //                                     'request_body' => $encodedataRaw,
-    //                                     'response_body' => $response
-    //                                     ]);
-
-    //   $findString    = 'receive_payment';
-    //   $searchResponse = stripos($response, 'receive_payment');
-
-    //   if ($err) {
-    //       $response = array("status"=>"failed","message"=>$err);
-    //   } 
-    //   else {
-    //       if ($searchResponse == true){
-    //           $dataResponse = json_decode($response);
-    //           $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => $dataResponse->receive_payment->id]);
-    //           $response = array("status" => true,
-    //                             "id"     => $dataResponse->receive_payment->id,
-    //                             "message"=> $dataResponse->receive_payment->transaction_no);
-    //       }
-    //       else{
-
-    //           $response = array("status"=>false,"message"=> "recieve payment ".$response);
-    //       }
-    //   }
-
-    //   return $response;
-    // }
 
     private function Entitas($id_entitas,$requester){
       

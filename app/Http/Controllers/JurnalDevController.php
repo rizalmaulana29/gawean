@@ -294,7 +294,7 @@ class JurnalDevController extends Controller
 
 
       dd($dataDiskon);
-      
+
       $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = date_format(date_create($getDataTransaksi['tgl_transaksi']),"Y-m-d");
@@ -325,8 +325,8 @@ class JurnalDevController extends Controller
                                   "is_shipped"         => true,
                                   "address"            => substr($getDataTransaksi['alamat'],0,255),
                                   "due_date"           => $getDataTransaksi['tgl_kirim'],
+                                  "discount_unit"      => $dataDiskon,
                                   "discount_type_name" => "Value",
-                                  "discount_type_value"=> $dataDiskon,
                                   "person_id"          => $person_id,
                                   "tags"               => [$getDataTransaksi['tgl'],$getDataTransaksi['jenis'],$getDataTransaksi['tunai'],$kantor,$agen],
                                   "email"              => $getDataTransaksi['email'],

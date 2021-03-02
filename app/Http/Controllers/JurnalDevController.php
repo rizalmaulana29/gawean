@@ -564,10 +564,10 @@ class JurnalDevController extends Controller
     }
 
     public function receivePayment($getDataTransaksi,$sisaBayar){
-      dd($getDataTransaksi);
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
-      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
+      $transactionNo = Payment::where('id',$getDataTransaksi['id'])->value('sales_invoice_id');
+      $paymentMethode= Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
 
       $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
 
@@ -602,7 +602,7 @@ class JurnalDevController extends Controller
       $dataRaw = [
                 "receive_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
-                                        "records_attributes"  => [[ "transaction_no" => $getDataTransaksi['sales_invoice_id'],
+                                        "records_attributes"  => [[ "transaction_no" => $transactionNo,
                                                                     "amount"         => $sisaBayar]],
                                         "custom_id"           => $getDataTransaksi['id_transaksi'],
                                         "payment_method_name" => $payment_method_name,

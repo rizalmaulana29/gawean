@@ -291,10 +291,7 @@ class JurnalDevController extends Controller
       }else{
         $dataDiskon   = 0;
       }
-
-
-      dd($dataDiskon);
-
+      
       $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
       $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
       $tglTransaksi = date_format(date_create($getDataTransaksi['tgl_transaksi']),"Y-m-d");

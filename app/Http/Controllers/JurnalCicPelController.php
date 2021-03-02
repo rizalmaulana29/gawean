@@ -133,10 +133,7 @@ class JurnalCicPelController extends Controller
 
     public function CreateCustomer ($getDataTransaksi){
       //Tambahkan looping (mis:foreach) jika data lebih dari satu
-      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_kantor'],$requester = 'koneksi');
-
-      var_dump($jurnalKoneksi['jurnal_key']);
-      var_dump($jurnalKoneksi['jurnal_auth']);
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $dataRaw = [
                     "customer"  => ["first_name"     => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5), //nama lengkap dengan id_transaksi
@@ -177,10 +174,10 @@ class JurnalCicPelController extends Controller
       curl_close($curl);
 
       $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
-                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action' => "CreateCustomer",
-                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                                        'request_body' => $encodedataRaw,
+                                        'id_transaksi'  =>$getDataTransaksi['id_transaksi'],
+                                        'action'        => "CreateCustomer",
+                                        'insert_at'     => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body'  => $encodedataRaw,
                                         'response_body' => $response
                                         ]);
 
@@ -203,6 +200,92 @@ class JurnalCicPelController extends Controller
       }
       
       return $response;
+    }
+
+    public function creditMemo ($getDataTransaksi,$person_id){
+      
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
+
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
+
+      if ($getDataTransaksi['tunai'] == "Tunai") {
+        $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
+        $nominal       = $getDataTransaksi['nominal_total'];
+      }else{
+        $tipeTransaksi = "Dp".$getDataTransaksi['id_transaksi'];
+        $nominal       = $getDataTransaksi['nominal_bayar'];
+      }
+
+      $tglTransaksi = Carbon::now()->toDatestring();
+
+      $dataRaw = [
+                "credit_memo"  => [ 
+                                        "person_id"          => $person_id,
+                                        "person_name"        => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5),
+                                        "person_type"        => "customer",
+                                        "transaction_date"   => $tglTransaksi,
+                                        "transaction_no"     => $getDataTransaksi['id_transaksi'],
+                                        "transaction_account_lines_attributes" => [[ "account_name"=> $paymentMethode,
+                                                                                     "description" => $tipeTransaksi,
+                                                                                     "debit"       => $nominal]],
+                                        "memo"               => $tipeTransaksi,
+                                        "custom_id"          => $getDataTransaksi['id_transaksi']
+                                      ]
+                  ];  
+        
+
+      $encodedataRaw = json_encode($dataRaw);
+
+      $curl = curl_init();
+
+      curl_setopt_array($curl, array(
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/credit_memos",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING       => "",
+        CURLOPT_MAXREDIRS      => 10,
+        CURLOPT_TIMEOUT        => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST  => "POST",
+        CURLOPT_POSTFIELDS     => $encodedataRaw,
+        CURLOPT_HTTPHEADER     => array(
+                                        "apikey: ".$jurnalKoneksi['jurnal_key'],
+                                        "Authorization: ".$jurnalKoneksi['jurnal_auth'],
+                                        "Content-Type: application/json; charset=utf-8",
+                                        "Cookie: visid_incap_1892526=sSSXIkPcR2OGEG8EIsR1kvKfq18AAAAAQUIPAAAAAAAbLIHIENx0sm8jw/V3q49p; incap_ses_956_1892526=PV4+bT4OPmmys22YG2VEDUti2F8AAAAAxxOSJglDvTynnT2DtUC2Xg==; nlbi_1892526=swSXL5ITyjseS65LKezQ4QAAAACk4+Rxw/6k0udeObF0BXEI; incap_ses_962_1892526=VQ9FJ6/WYhZ+5dcXGLZZDeL02l8AAAAA/WbrlUVFbEocG5UqQCMVsw=="
+                                      ),
+      ));
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+
+      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
+                                        'action' => "Credit Memo",
+                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                                        'request_body' => $encodedataRaw,
+                                        'response_body' => $response
+                                        ]);
+
+      $findString    = 'credit_memo';
+      $searchResponse = stripos($response, 'credit_memo');
+
+      if ($err) {
+          $response = array("status"=>"failed","message"=>$err);
+      } 
+      else {
+          if ($searchResponse == true){
+              $dataResponse = json_decode($response);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['memo_id' => $dataResponse->credit_memo->id]);
+              $response = array("status" => true,
+                                "message"=> $dataResponse->credit_memo->id);
+          }
+          else{
+
+              $response = array("status"=>false,"message"=> "credit memo".$response);
+          }
+      }
+
+      return $response;     
     }
 
     public function SalesOrder($getDataTransaksi,$person_id){ 

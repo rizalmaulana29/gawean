@@ -547,9 +547,8 @@ class JurnalDevController extends Controller
               } else {
                 $receivePayment = $this->receivePayment($getDataTransaksi,$sisaBayar);
                 if ($receivePayment['status'] == true) {
-                  return response()->json(["status"     => true,
-                                           "message"    => $receivePayment['message']
-                                        ],200);
+                  $response = array("status" => true,
+                                    "message"    => $receivePayment['message']);
                 }
                 $response = array("status"=>false,"message"=> "recieve payment".$response);
               }

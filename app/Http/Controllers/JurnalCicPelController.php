@@ -95,7 +95,7 @@ class JurnalCicPelController extends Controller
                                  ->where([["ra_payment_dua.tgl_kirim", ">=", $start],["ra_payment_dua.tgl_kirim", "<=", $endDate]])
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+      // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['sales_order_id'] == null || $getDataTransaksi['sales_order_id'] == " ") {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);

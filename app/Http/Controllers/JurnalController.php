@@ -371,7 +371,7 @@ class JurnalController extends Controller
       if ($getDataTransaksi['sales_order_id'] != " ") {
         $salesOrderId = $getDataTransaksi['sales_order_id'];
       } else {
-        $salesOrderId = $sales_atribute = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('sales_order_id');
+        $salesOrderId = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('sales_order_id');
       }
       
 

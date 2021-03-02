@@ -344,8 +344,12 @@ class JurnalController extends Controller
     public function SalesOrdertoInvoice($getDataTransaksi){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
-
-      $sales_atribute = json_decode($getDataTransaksi['order_message']);
+      if ($getDataTransaksi['order_message'] != " ") {
+        $sales_atribute = json_decode($getDataTransaksi['order_message']);
+      } else {
+        $sales_atribute = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('order_message');
+      }
+      
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   
@@ -363,10 +367,17 @@ class JurnalController extends Controller
 
       $encodedataRaw = json_encode($dataRaw);
 
+      if ($getDataTransaksi['sales_order_id'] != " ") {
+        $salesOrderId = $getDataTransaksi['sales_order_id'];
+      } else {
+        $salesOrderId = $sales_atribute = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('sales_order_id');
+      }
+      
+
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/".$getDataTransaksi['sales_order_id']."/convert_to_invoice",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/sales_orders/".$salesOrderId."/convert_to_invoice",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,

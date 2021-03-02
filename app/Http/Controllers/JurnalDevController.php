@@ -564,7 +564,7 @@ class JurnalDevController extends Controller
     }
 
     public function receivePayment($getDataTransaksi,$sisaBayar){
-
+      dd($getDataTransaksi);
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();

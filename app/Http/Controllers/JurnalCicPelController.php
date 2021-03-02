@@ -560,8 +560,9 @@ class JurnalCicPelController extends Controller
                 if ($receivePayment['status'] == true) {
                   $response = array("status" => true,
                                     "message"    => $receivePayment['message']);
+                }else{
+                  $response = array("status"=>false,"message"=> "recieve payment".$receivePayment);
                 }
-                $response = array("status"=>false,"message"=> "recieve payment".$response);
               }
           }
           else{

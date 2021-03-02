@@ -622,12 +622,12 @@ class JurnalDevController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment' => $dataResponse->customer_apply_credit_memo->id]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => $dataResponse->customer_apply_credit_memo->id]);
               $response = array("status" => true,
                               "message"=> $dataResponse->customer_apply_credit_memo);
           }
           else{
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment' => "failed"]);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['recieve_payment_id' => "failed"]);
               $response = array("status"=>false,"message"=> "apply credit memo 2".$response);
           }
       }

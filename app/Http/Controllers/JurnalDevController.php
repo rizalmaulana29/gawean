@@ -167,7 +167,7 @@ class JurnalDevController extends Controller
                                  ->where([["ra_payment_dua.tgl_kirim", ">=", $start],["ra_payment_dua.tgl_kirim", "<=", $endDate]])
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      // dd($getDataTransaksi);
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['sales_order_id'] == null || $getDataTransaksi['sales_order_id'] == " ") {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
@@ -544,7 +544,7 @@ class JurnalDevController extends Controller
                 $response = array("status" => true,
                                 "message"=> $dataResponse->customer_apply_credit_memo);
               } else {
-                $recievepayment = $this->receivePayment($sisaBayar,$getDataTransaksi,$dataResponse->customer_apply_credit_memo->transaction_no);
+                $recievepayment = $this->receivePayment($getDataTransaksi,$dataResponse->customer_apply_credit_memo->transaction_no,$sisaBayar);
                 if ($recievepayment['status'] == true) {
                   return response()->json(["status"       => true,
                                          "message"      => $createPayment['message']
@@ -564,23 +564,21 @@ class JurnalDevController extends Controller
 
     public function receivePayment($getDataTransaksi,$transaction_no,$sisaBayar){
 
-      dd($getDataTransaksi);
-
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
 
       $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
 
-      if (in_array($paymentMethode['parent_id'], $transfer)) {
+      if (in_array($paymentMethode->parent_id, $transfer)) {
         if ($getDataTransaksi['id_entitas'] == 'PDN') {
           $payment_method_name = "Transfer Bank";
           $payment_method_id   = "1539636";
           $deposit_to_name     = "Mandiri 1310012793792";
         } else {
           $payment_method_name = "Transfer Bank";
-          $payment_method_id   = $paymentMethode['methode_id_jurnal'];
-          $deposit_to_name     = $paymentMethode['methode_jurnal'];
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
       } else {
         if ($getDataTransaksi['id_entitas'] == 'PDN') {
@@ -593,8 +591,8 @@ class JurnalDevController extends Controller
           } else {
             $payment_method_name = "Kas Tunai";
           }
-          $payment_method_id   = $paymentMethode['methode_id_jurnal'];
-          $deposit_to_name     = $paymentMethode['methode_jurnal'];
+          $payment_method_id   = $paymentMethode->methode_id_jurnal;
+          $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
       }
       

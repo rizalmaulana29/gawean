@@ -347,7 +347,8 @@ class JurnalController extends Controller
       if ($getDataTransaksi['order_message'] != " ") {
         $sales_atribute = json_decode($getDataTransaksi['order_message']);
       } else {
-        $sales_atribute = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('order_message');
+        $data = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('order_message');
+        $sales_atribute = json_decode($data);
       }
       
       $detail_atribute = [];

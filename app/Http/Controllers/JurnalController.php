@@ -119,7 +119,7 @@ class JurnalController extends Controller
                                  ->first();
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
-        if ($getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
+        if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
           $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
             if ($salesOrdertoInvoice['status'] == true){
               $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);

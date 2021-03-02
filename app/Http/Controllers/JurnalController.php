@@ -137,7 +137,7 @@ class JurnalController extends Controller
         } else {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['id'],$salesOrder['message']);
+            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
               if ($salesOrdertoInvoice['status'] == true) {
                 $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
                 if ($applyMemo['status'] == true) {

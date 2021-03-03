@@ -345,6 +345,8 @@ class JurnalController extends Controller
     public function SalesOrdertoInvoice($getDataTransaksi,$message){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
+
+      dd($message);
       if ($message = 0 && $getDataTransaksi['order_message'] != " ") {
         $sales_atribute = json_decode($getDataTransaksi['order_message']);
       } else {

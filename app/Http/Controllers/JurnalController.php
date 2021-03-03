@@ -351,7 +351,7 @@ class JurnalController extends Controller
       } else {
         $sales_atribute = $message;
       }
-      
+
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   
@@ -369,11 +369,13 @@ class JurnalController extends Controller
 
       $encodedataRaw = json_encode($dataRaw);
 
-      if ($getDataTransaksi['sales_order_id'] != " ") {
+      if ($message == 0 && $getDataTransaksi['sales_order_id'] != " ") {
         $salesOrderId = $getDataTransaksi['sales_order_id'];
       } else {
         $salesOrderId = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('sales_order_id');
       }
+
+      dd($salesOrderId);
       
 
       $curl = curl_init();

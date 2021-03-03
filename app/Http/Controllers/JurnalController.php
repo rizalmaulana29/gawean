@@ -350,7 +350,7 @@ class JurnalController extends Controller
       } else {
         $sales_atribute = $message;
       }
-      
+      dd($sales_atribute);
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   

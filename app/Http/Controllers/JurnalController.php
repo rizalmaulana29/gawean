@@ -330,7 +330,8 @@ class JurnalController extends Controller
               $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
 
               $response = array("status" =>true,
-                                "id"     => $dataResponse->sales_order->id);
+                                "id"     => $dataResponse->sales_order->id,
+                                "message"=> $dataResponse->sales_order->transaction_lines_attributes);
           }
           else{
 
@@ -349,6 +350,8 @@ class JurnalController extends Controller
       } else {
         $data = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('order_message');
         $sales_atribute = json_decode($data);
+        var_dump($data);
+        var_dump($sales_atribute);
       }
       
       $detail_atribute = [];

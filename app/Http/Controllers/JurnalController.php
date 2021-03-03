@@ -346,15 +346,12 @@ class JurnalController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
-      var_dump($message);
-
       if ($message == 0 && $getDataTransaksi['order_message'] != " ") {
         $sales_atribute = json_decode($getDataTransaksi['order_message']);
       } else {
         $sales_atribute = $message;
       }
-
-      dd($sales_atribute);
+      
       $detail_atribute = [];
       foreach ($sales_atribute as $key => $atribute) {
   

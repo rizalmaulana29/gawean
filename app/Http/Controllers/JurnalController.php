@@ -375,9 +375,6 @@ class JurnalController extends Controller
         $salesOrderId = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('sales_order_id');
       }
 
-      dd($salesOrderId);
-      
-
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

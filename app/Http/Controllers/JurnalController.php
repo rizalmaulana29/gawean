@@ -703,13 +703,7 @@ class JurnalController extends Controller
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
 
-      if ($getDataTransaksi['tunai'] == "Tunai") {
-
-        $nominal       = $getDataTransaksi['nominal_total'];
-
-      }
-
-      $nominal       = $getDataTransaksi['nominal_bayar'];
+      $nominal       = $getDataTransaksi['nominal_total'];
 
       $tglTransaksi = Carbon::now()->toDatestring();
 

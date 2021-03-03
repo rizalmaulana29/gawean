@@ -120,7 +120,7 @@ class JurnalController extends Controller
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
-          $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
+          $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$message = 0);
             if ($salesOrdertoInvoice['status'] == true){
               $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
               if ($createPayment['status'] == true) {
@@ -137,7 +137,7 @@ class JurnalController extends Controller
         } else {
           $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
           if ($salesOrder['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi);
+            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['message']);
               if ($salesOrdertoInvoice['status'] == true) {
                 $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
                 if ($applyMemo['status'] == true) {
@@ -342,16 +342,13 @@ class JurnalController extends Controller
       return $response;
     }
 
-    public function SalesOrdertoInvoice($getDataTransaksi){
+    public function SalesOrdertoInvoice($getDataTransaksi,$message){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['id_entitas'],$requester = 'konektor');
-      if ($getDataTransaksi['order_message'] != " ") {
+      if ($message = 0 && $getDataTransaksi['order_message'] != " ") {
         $sales_atribute = json_decode($getDataTransaksi['order_message']);
       } else {
-        $data = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->value('order_message');
-        $sales_atribute = json_decode($data);
-        var_dump($data);
-        var_dump($sales_atribute);
+        $sales_atribute = $message;
       }
       
       $detail_atribute = [];

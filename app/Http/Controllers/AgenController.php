@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\CmsUser; //File Model
 use Illuminate\Http\Request;
+use App\CmsUser; //File Model
 
 class AgenController extends Controller
 {

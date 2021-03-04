@@ -24,6 +24,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('code',	['uses' =>'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 
+	$router->post('/signup/agen', ['uses' =>'AgenController@store']);
+
 	$router->post('create/customer', 		['uses' => 'JurnalController@CreateCustomer']);
 	$router->post('create/salesorder', 		['uses' => 'JurnalController@SalesOrder']);
 	$router->get('filter', 					['uses' => 'JurnalController@Filtering']);

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Agen; //File Model
+use App\CmsUser; //File Model
 use Illuminate\Http\Request;
 
 class AgenController extends Controller
@@ -17,19 +17,19 @@ class AgenController extends Controller
 
     public function index()
     {
-        $data = Agen::all();
+        $data = CmsUser::all();
         return response($data);
     }
 
     public function show($id)
     {
-        $data = Agen::where('id', $id)->get();
+        $data = CmsUser::where('id', $id)->get();
         return response($data);
     }
 
     public function store(Request $request)
     {
-        $data = new Agen();
+        $data = new CmsUser();
         $data->name = $request->input('nama');
         $data->email = $request->input('emailReseller');
         $data->password = $request->input('password');
@@ -42,7 +42,7 @@ class AgenController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = Agen::where('id', $id)->first();
+        $data = CmsUser::where('id', $id)->first();
         $data->name = $request->input('nama');
         $data->email = $request->input('emailReseller');
         $data->password = $request->input('password');
@@ -55,7 +55,7 @@ class AgenController extends Controller
 
     public function destroy($id)
     {
-        $data = Agen::where('id', $id)->first();
+        $data = CmsUser::where('id', $id)->first();
         $data->delete();
 
         return response('Berhasil Menghapus Data');

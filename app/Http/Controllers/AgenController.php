@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\CmsUser; //File Model
+use Illuminate\Support\Facades\Hash;
 
 class AgenController extends Controller
 {
@@ -31,7 +32,7 @@ class AgenController extends Controller
         $data = new CmsUser();
         $data->name = $request->input('nama');
         $data->email = $request->input('emailReseller');
-        $data->password = $request->input('password');
+        $data->password = Hash::make($request->input('password'));
         // $data->description = $request->input('noHpReseller');
         $data->id_kantor = $request->input('kotaKantor');
         $data->save();

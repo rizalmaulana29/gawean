@@ -33,6 +33,7 @@ class AgenController extends Controller
         $data->name = $request->input('nama');
         $data->email = $request->input('emailReseller');
         $data->password = Hash::make($request->input('password'));
+        dd($data->password);
         // $data->description = $request->input('noHpReseller');
         $data->id_kantor = $request->input('kotaKantor');
         $data->save();

@@ -36,6 +36,7 @@ class AgenController extends Controller
         dd($data->password);
         // $data->description = $request->input('noHpReseller');
         $data->id_kantor = $request->input('kotaKantor');
+        $data->id_cms_privilege = $request->input('id_cms_privilege', '4');
         $data->save();
 
         return response('Berhasil Tambah Data');

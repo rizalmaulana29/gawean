@@ -17,9 +17,8 @@ class AgenController extends Controller
         $agen->email = $request['emailReseller'];
         $agen->password = Hash::make($request['password']);
         $agen->id_kantor = $request['kotaKantor'];
-        $agen->id_cms_privilege = '4';
+        $agen->id_cms_privileges = '4';
         $agen->created_at = Carbon::now();
-        $agen->id_cms_privilege = '4';
 
         $agen->save();
 

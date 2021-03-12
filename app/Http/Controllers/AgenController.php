@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\CmsUser; //File Model
 use Carbon\Carbon;
 use App\Mail\AgenMail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 
 class AgenController extends Controller

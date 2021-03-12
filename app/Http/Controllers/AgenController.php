@@ -3,46 +3,34 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\CmsUser; //File Model
+use Carbon\Carbon;
+use App\Mail\AgenMail;
 use Illuminate\Support\Facades\Hash;
 
 class AgenController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    { }
-
-    public function index()
+   
+    public function signup(Request $request)
     {
-        $data = CmsUser::all();
-        return response($data);
-    }
+        $agen = new CmsUser();
+        $agen->name = $request['nama'];
+        $agen->email = $request['emailReseller'];
+        $agen->password = Hash::make($request['password']);
+        $agen->id_kantor = $request['kotaKantor'];
+        $agen->id_cms_privilege = '4';
+        $agen->created_at = Carbon::now();
+        $agen->id_cms_privilege = '4';
 
-    public function show($id)
-    {
-        $data = CmsUser::where('id', $id)->get();
-        return response($data);
-    }
+        $agen->save();
 
-    public function store(Request $request)
-    {
-        $data = new CmsUser();
-        $data->name = $request->input('nama');
-        $data->email = $request->input('emailReseller');
-        $data->password = Hash::make($request->input('password'));
-        dd($data->password);
-        // $data->description = $request->input('noHpReseller');
-        $data->id_kantor = $request->input('kotaKantor');
-        $data->id_cms_privilege = $request->input('id_cms_privilege', '4');
-        $data->save();
+        $hasil = Mail::send(
+            (new AgenMail($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
+        );
 
         return response('Berhasil Tambah Data');
     }
 
-    public function update(Request $request, $id)
+    public function forgotPassword(Request $request, $id)
     {
         $data = CmsUser::where('id', $id)->first();
         $data->name = $request->input('nama');

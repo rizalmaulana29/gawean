@@ -12,7 +12,7 @@ class Kontak extends Model
      * @var array
      */
     protected $primaryKey = 'id';
-    protected $table = 'ra_ontak';
+    protected $table = 'ra_kontak';
     protected $guarded = [];
     // protected $casts = [
     //     'id_order' => 'string'

@@ -27,7 +27,7 @@ class AgenController extends Controller
 
         $updateCMS  = $this->userCms($request);
 
-        $to_address = $request['emailReseller'];
+        $to_address = $request['email'];
         $nama       = $request['nama'];
 
         $hasil = Mail::send(

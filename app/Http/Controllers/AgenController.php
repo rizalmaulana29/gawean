@@ -28,7 +28,7 @@ class AgenController extends Controller
         $updateCMS  = $this->userCms($request);
 
         $to_address = $request['emailReseller'];
-        $nama       = $request['nama']
+        $nama       = $request['nama'];
 
         $hasil = Mail::send(
             (new AgenMail($to_address,$nama))->build()
@@ -62,7 +62,7 @@ class AgenController extends Controller
             $insertUser->name = $request['nama'];
             $insertUser->email = $request['email'];
             $insertUser->password = Hash::make($request['password']);
-            $insertUser->id_kantor = $request['kotaKantor']
+            $insertUser->id_kantor = $request['kotaKantor'];
             $insertUser->id_cms_privileges = 4;
             $insertUser->created_at = Carbon::now();
             $insertUser->status = 'inActive';

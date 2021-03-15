@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\CmsUser; //File Model
+use App\Kontak;
 use Carbon\Carbon;
 use App\Mail\AgenMail;
 use Illuminate\Support\Facades\DB;
@@ -14,21 +15,71 @@ class AgenController extends Controller
    
     public function signup(Request $request)
     {
-        $agen = new CmsUser();
-        $agen->name = $request['nama'];
-        $agen->email = $request['emailReseller'];
-        $agen->password = Hash::make($request['password']);
-        $agen->id_kantor = $request['kotaKantor'];
-        $agen->id_cms_privileges = '4';
-        $agen->created_at = Carbon::now();
+        $agen              = new Kontak();
+        $agen->nama_kontak = $request['nama'];
+        $agen->email       = $request['email'];
+        $agen->hp          = $request['hp'];
+        $agen->status      = 'Agen';
+        $agen->id_kantor   = $request['kotaKantor'];
+        $agen->tgl_reg     = Carbon::now();
 
         $agen->save();
 
+        $updateCMS  = $this->userCms($request);
+
+        $to_address = $request['emailReseller'];
+        $nama       = $request['nama']
+
         $hasil = Mail::send(
-            (new AgenMail($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
+            (new AgenMail($to_address,$nama))->build()
         );
 
         return response('Berhasil Tambah Data');
+    }
+
+    private function userCMS($request){
+        $checkUser = CmsUser::where('name', $request['nama'])
+                            ->where('id_cms_privileges',4)
+                            ->where('id_kantor',$request['kotaKantor'])
+                            ->first();
+        if ($checkUser || $checkUser != null) {
+            $password   = Hash::make($request['password']);
+            $updateUser = CmsUser::where('name', $request['nama'])
+                            ->where('id_cms_privileges',4)
+                            ->where('id_kantor',$request['kotaKantor'])
+                            ->update(['password' => $password, 'status'=>'inActive']);
+
+            if (!$updateUser) {
+                $response = ["status" =>False,
+                             "message"=> 'Gagal Mengupdate Data ke CMS User'];
+            } else {
+                $response = ["status" =>true,
+                             "message"=> 'Berhasil Mengupdate Data ke CMS User'];
+            }
+
+        } else {
+            $insertUser       = new CmsUser();
+            $insertUser->name = $request['nama'];
+            $insertUser->email = $request['email'];
+            $insertUser->password = Hash::make($request['password']);
+            $insertUser->id_kantor = $request['kotaKantor']
+            $insertUser->id_cms_privileges = 4;
+            $insertUser->created_at = Carbon::now();
+            $insertUser->status = 'inActive';
+            $insertUser->save();
+
+            if (!$insertUser) {
+                $response = ["status" =>False,
+                             "message"=> 'Gagal Menambahkan Data ke CMS User'];
+            } else {
+                $response = ["status" =>true,
+                             "message"=> 'Berhasil Menambahkan Data ke CMS User'];
+            }
+            
+        }
+
+        return $response;
+        
     }
 
     public function forgotPassword(Request $request, $id)

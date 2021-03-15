@@ -14,17 +14,17 @@ class AgenMail extends Mailable
      * @return void
      */
     
-    public function __construct($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title)
+    public function __construct($to_address,$nama)
     {
         $this->to_address  = $to_address;
-        $this->transdata   = $transdata;
-        $this->orderdata   = $orderdata;
+        // $this->transdata   = $transdata;
+        // $this->orderdata   = $orderdata;
         $this->nama        = $nama;
-        $this->alamat      = $alamat;
-        $this->email       = $email;
-        $this->hp          = $hp;
-        $this->parent_id   = $parent_id;
-        $this->number      = $number;
+        // $this->alamat      = $alamat;
+        // $this->email       = $email;
+        // $this->hp          = $hp;
+        // $this->parent_id   = $parent_id;
+        // $this->number      = $number;
         
     }
 
@@ -41,14 +41,14 @@ class AgenMail extends Mailable
             ->view('emails.signup')
             ->with(
                 [
-                    'transdata'     => $this->transdata,
-                    'orderdata'     => $this->orderdata,
+                    // 'transdata'     => $this->transdata,
+                    // 'orderdata'     => $this->orderdata,
                     'nama'          => $this->nama,
-                    'alamat'        => $this->alamat,
-                    'email'         => $this->email,
-                    'hp'            => $this->hp,
-                    'parent_id'     => $this->parent_id,
-                    'number'        => $this->number,
+                    // 'alamat'        => $this->alamat,
+                    // 'email'         => $this->email,
+                    // 'hp'            => $this->hp,
+                    // 'parent_id'     => $this->parent_id,
+                    // 'number'        => $this->number,
                 ]
             );
     }

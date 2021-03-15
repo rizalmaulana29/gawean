@@ -14,29 +14,44 @@
 </head>
 <body>
 	<table style="border-collapse:collapse;width:100%">
-
-		<tbody>
-			<tr>
-				<td style="padding:15px 16px"><img src="https://order.rumahaqiqah.co.id/images/logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
-			</tr>
-
-			<tr>
-				<td style="padding:15px 16px">
-					<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%">
-						<tbody>
-							<tr>
-								<td>
-									<h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
-									<p style="margin:0;font-size:16px;line-height:24px">Selamat Bergabung di Agro Grup</b></p>
-								</td>
+        <tbody>
+            
+            <tr>
+                <td style="padding:15px 16px"><img src="https://order.rumahaqiqah.co.id/images/logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
+            </tr>
+            <tr>
+                <td style="padding:8px 16px">
+                    <div>
+                        <h2 style="color: blue;">Informasi Pendaftaran</h2>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:15px 16px">
+                    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%">
+                        <tbody>
+                            <tr>
                                 <td>
-                                    <h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Berikut adalah detail Akun anda :</h1>
+                                    <h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
+                                    <p style="margin:0;font-size:16px;line-height:24px">Selamat anda telah bergabung dengan Agro Grup</b></p>
+                                    <p style="margin:0;font-size:16px;line-height:24px">Untuk Aktivasi Akun Anda Silahkan Melakukan Pembayaran di bawah ini : </b></p>
                                 </td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:12px 16px">
+                    <h2 style="background:#f5f6fa;font-size:16px;line-height:24px;margin:0;padding:8px 16px;border-color:#dee2ee;border-style:solid;border-width:1px 1px 0;border-radius:8px 8px 0 0">
+                        Informasi Pembayaran
+                    </h2>
+                    <div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
+                        
+                    </div>
+                </td>
+            </tr>
 
 			
         	<tr>

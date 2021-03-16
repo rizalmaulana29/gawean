@@ -15,6 +15,7 @@ use App\Anak;
 use App\Instruction;
 use App\Mail\Invoice;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -128,10 +129,16 @@ class CartDevController extends Controller
         if(isset($request->file('foto_anak')[$key])) {
           $image = $request->file('foto_anak')[$key];
           $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
-          $storeDatabase = $url. "/" .$imageName;
-          $path= "/uploads/online/";
-          $image->storeAs($path,$imageName);
-          $result[1]->foto = $storeDatabase;
+          // $storeDatabase = $url. "/" .$imageName;
+          // $path= "/uploads/online/";
+          // $image->storeAs($path,$imageName);
+
+          // Store File
+          $disk = Storage::disk('gcs');
+          // create a file
+          $disk->putFileAs('foto', $request->file('foto_anak')[$key], $imageName);
+
+          $result[1]->foto = $disk->url('foto/$imageName');;
 
         }elseif (!isset($request->file('foto_anak')[$key])) {
           $result[1]->foto = 'https://backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';

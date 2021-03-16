@@ -25,11 +25,13 @@ $app->withFacades();
 $app->withEloquent();
 
 // $app->configure('cors');
-$app->configure('filesystems');
+
 
 $app->configure('image');
 
 $app->configure('mail');
+$app->configure('filesystems');
+$app->alias('Storage',Illuminate\Support\Facades\Storage::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
@@ -56,7 +58,12 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->singleton('filesystem', function ($app) { return $app->loadComponent('filesystems', 'Illuminate\Filesystem\FilesystemServiceProvider', 'filesystem'); });
+$app->singleton(
+Illuminate\Contracts\Filesystem\Factory::class,
+function ($app) {
+return new Illuminate\Filesystem\FilesystemManager($app);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -105,6 +112,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Intervention\Image\ImageServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
+$app->register(App\Providers\GoogleCloudStorageServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

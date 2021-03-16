@@ -25,6 +25,8 @@ $app->withFacades();
 $app->withEloquent();
 
 // $app->configure('cors');
+$app->configure('filesystems');
+
 $app->configure('image');
 
 $app->configure('mail');
@@ -102,6 +104,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Intervention\Image\ImageServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

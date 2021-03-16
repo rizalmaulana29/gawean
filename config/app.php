@@ -29,6 +29,10 @@ return [
                         "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan
                 ]
-        ) ? true : false)
+        ) ? true : false),
+
+        'providers' => [
+        Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,
+        ],
 
 ];

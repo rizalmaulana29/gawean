@@ -43,6 +43,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('filter/transaksiCiPelDev', 	['uses' => 'JurnalDevController@transaksiCiPelDev']);
 	$router->get('settlementNP', 	['uses' => 'SettlementController@MIDDate']);
 	
+	$router->get('filter/adjustmentDev', 		['uses' => 'JurnalDevController@AdjustmentTransaksi']);
 	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
 	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
 

@@ -140,9 +140,7 @@ class JurnalPOController extends Controller
     public function PurchaseOrder($getDataTransaksiPO,$vendor_id){ 
       
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['id_entitas'],$requester = 'konektor');
-
-      $id_transaksi = PO_detail::where('id_po_detail',$getDataTransaksiPO['id'])->first();
-      $namaCustomer = Payment::where('id_transaksi',$id_transaksi['id_order'])->value('nama_customer');
+      //get id_transaksi dan looping 
       $kantor       = Kantor::where('id',$getDataTransaksiPO['id_kantor'])->value('kantor');
 
       $tglTransaksi = $getDataTransaksiPO['tgl_po'];
@@ -158,6 +156,7 @@ class JurnalPOController extends Controller
       $detail_produk = [];
       foreach ($dataOrderPo as $key => $orderPO) {
         $get_produk   = Pendapatan::where('id',$orderPO['ra_produk_harga_po_id'])->value('ra_produk_harga_id');
+        $namaCustomer = Payment::where('id_transaksi',$orderPO['id_order'])->value('nama_customer');
         $produk_harga = Harga::where('id',$get_produk)->first();
         $produk       = ["quantity" => $orderPO['quantity'], "rate"=> $orderPO['hpp'],"product_id"=> $produk_harga['jurnal_product_id'],"description"=>$keterangan.' '.$orderPO['quantity'].' '.$produk_harga['nama_produk'].' '.'an. '.$namaCustomer];
         array_push($detail_produk,$produk);

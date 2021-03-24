@@ -126,25 +126,25 @@ class CartDevController extends Controller
         $result[1]->id_order       = $result[2]->id_transaksi;
 
         // dd($request->file('foto_anak') );
-        if(isset($request->file('foto_anak')[$key])) {
-          $image = $request->file('foto_anak')[$key];
-          $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
-          // $storeDatabase = $url. "/" .$imageName;
-          // $path= "/uploads/online/";
-          // $image->storeAs($path,$imageName);
+        // if(isset($request->file('foto_anak')[$key])) {
+        //   $image = $request->file('foto_anak')[$key];
+        //   $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
+        //   // $storeDatabase = $url. "/" .$imageName;
+        //   // $path= "/uploads/online/";
+        //   // $image->storeAs($path,$imageName);
 
-          // Store File
-          $disk = Storage::disk('gcs');
-          // create a file
-          $disk->putFileAs('foto', $request->file('foto_anak')[$key], $imageName);
+        //   // Store File
+        //   $disk = Storage::disk('gcs');
+        //   // create a file
+        //   $disk->putFileAs('foto', $request->file('foto_anak')[$key], $imageName);
 
-          $result[1]->foto = $disk->url('foto/$imageName');;
+        //   $result[1]->foto = $disk->url('foto/$imageName');;
 
-        }elseif (!isset($request->file('foto_anak')[$key])) {
-          $result[1]->foto = 'https://backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
-        } else {
-          return response()->json(["Status" => "Field Foto is Not file"]);
-        }
+        // }elseif (!isset($request->file('foto_anak')[$key])) {
+        //   $result[1]->foto = 'https://backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
+        // } else {
+        //   return response()->json(["Status" => "Field Foto is Not file"]);
+        // }
         $result[1]->save();
       }
 

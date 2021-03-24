@@ -12,5 +12,5 @@ deploy:
     - ssh-keyscan -p 2023 128.199.218.8 >> ~/.ssh/known_hosts
   script:
     - ssh -p 2023 gitlab@128.199.218.8 "cd /var/docker/api.rumahaqikah.co.id && git pull"
-    - ssh -p 2023 gitlab@128.199.218.8 "cd /docker/api.rumahaqikah.co.id  && docker-compose restart"
+    - ssh -p 2023 gitlab@128.199.218.8 "cd /var/docker/api.rumahaqikah.co.id  && docker-compose restart"
 #stage 3

@@ -2,6 +2,8 @@ stages:
   - deploy
 
 deploy:
+  variables:
+    GIT_STRATEGY: none
   image: ubuntu:latest
   stage: deploy
   before_script:

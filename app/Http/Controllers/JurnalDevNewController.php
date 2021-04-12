@@ -111,7 +111,7 @@ class JurnalDevNewController extends Controller
 
     }
 
-    public function AdjustmentTransaksi (){
+    public function AdjustmentToInvoice (){
 
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::now()->toDatestring();
@@ -131,6 +131,54 @@ class JurnalDevNewController extends Controller
                                             $q->where('memo_id', '!=', '')
                                             ->orWhere('order_message','!=','');
                                         })
+                                 ->where('sales_invoice_id','=','')
+                                 ->where('apply_memo_id','=','')
+                                 ->Where('recieve_payment_id','=','')
+                                 // ->where(function($q) {
+                                 //            $q->where('sisa_pembayaran', '=', 0)
+                                 //            ->orWhereNull('sisa_pembayaran');
+                                 //        })
+                                 ->where('ra_payment_dua.tgl_kirim','=',$start)
+                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
+                                 ->first();
+      // dd($getDataTransaksi);
+      if (isset($getDataTransaksi)) {
+          $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$message = 0);
+            if ($salesOrdertoInvoice['status'] == true){
+                return response()->json(["status"       => true,
+                                         "message"      => "Transaksi berhasil di rubah ke invoice di JurnalID",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $salesOrdertoInvoice['message']
+                                        ],200);
+            }
+            return $salesOrdertoInvoice;
+      }
+      return response()->json(["status"       => false,
+                               "message"      => "Tidak ada Data yang dirubah ke Invoice di JurnalID"
+                              ],200);
+    }
+
+    public function AdjustmentTransaksi (){
+
+      $endDate = Carbon::now()->endOfMonth();
+      $start = Carbon::now()->toDatestring();
+
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat','person_id',
+                                          'ra_payment_dua.tgl_transaksi','ra_payment_dua.id_pt as entitas',
+                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
+                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
+                                          'tunai','ra_order_dua.id_entitas as id_entitas','sales_invoice_id','si_transaction','memo_id',
+                                          'recieve_payment_id','sales_order_id','order_message','apply_memo_id')
+                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
+                                 ->where('status','paid')
+                                 ->where('tunai','Tunai')
+                                 ->where('ra_payment_dua.lunas','y')
+                                 ->where('person_id','!=','')
+                                 ->where(function($q) {
+                                            $q->where('memo_id', '!=', '')
+                                            ->orWhere('order_message','!=','');
+                                        })
+                                 ->where('sales_invoice_id','!=','')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
                                  // ->where(function($q) {
@@ -143,38 +191,28 @@ class JurnalDevNewController extends Controller
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
-          $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$message = 0);
-            if ($salesOrdertoInvoice['status'] == true){
-              $createPayment = $this->receivePayment($getDataTransaksi,$salesOrdertoInvoice['message']);
-              if ($createPayment['status'] == true) {
-                return response()->json(["status"       => true,
-                                         "message"      => "Data berhasil di inputkan ke JurnalID",
-                                         "Data Request" => $getDataTransaksi,
-                                         "Data Response"=> $createPayment['message']
-                                        ],200);
-              }
-              return $createPayment;
-            }
-            return $salesOrdertoInvoice; 
+
+          $createPayment = $this->receivePayment($getDataTransaksi);
+          if ($createPayment['status'] == true) {
+            return response()->json(["status"       => true,
+                                     "message"      => "Data berhasil di inputkan ke JurnalID",
+                                     "Data Request" => $getDataTransaksi,
+                                     "Data Response"=> $createPayment['message']
+                                    ],200);
+          }
+          return $createPayment;
 
         } else {
-          $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-          if ($salesOrder['status'] == true) {
-            $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$salesOrder['message']);
-              if ($salesOrdertoInvoice['status'] == true) {
-                $applyMemo = $this->ApllyCreditMemo($getDataTransaksi,$salesOrdertoInvoice['id']);
-                if ($applyMemo['status'] == true) {
-                  return response()->json(["status"       => true,
-                                       "message"      => "Data berhasil di inputkan ke Apply MEMO",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $applyMemo['message']
-                                      ],200);
-                }
-                return $applyMemo;
-              }
-              return $salesOrdertoInvoice;
+          
+          $applyMemo = $this->ApllyCreditMemo($getDataTransaksi);
+          if ($applyMemo['status'] == true) {
+            return response()->json(["status"       => true,
+                                 "message"      => "Data berhasil di inputkan ke Apply MEMO",
+                                 "Data Request" => $getDataTransaksi,
+                                 "Data Response"=> $applyMemo['message']
+                                ],200);
           }
-          return $salesOrder;
+          return $applyMemo;
         }
       }
       return response()->json(["status"       => false,
@@ -526,7 +564,7 @@ class JurnalDevNewController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => '$dataResponse->sales_invoice->id' ,'si_transaction'=> $dataResponse->sales_invoice->transaction_no]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,
@@ -541,7 +579,7 @@ class JurnalDevNewController extends Controller
       return $response;
     }
 
-    public function ApllyCreditMemo ($getDataTransaksi,$transaction_no){
+    public function ApllyCreditMemo ($getDataTransaksi){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
 
@@ -562,6 +600,7 @@ class JurnalDevNewController extends Controller
       }
 
       $tglTransaksi = Carbon::now()->toDatestring();
+      $transaction_no = $getDataTransaksi['sales_invoice_id'];
 
       $dataRaw = [
                 "customer_apply_credit_memo"  => [ 
@@ -626,7 +665,7 @@ class JurnalDevNewController extends Controller
       return $response;     
     }
 
-    public function receivePayment($getDataTransaksi,$transaction_no){
+    public function receivePayment($getDataTransaksi){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
 
@@ -661,6 +700,7 @@ class JurnalDevNewController extends Controller
       }
       
       $tglTransaksi = Carbon::now();
+      $transaction_no = $getDataTransaksi['si_transaction'];
 
       $dataRaw = [
                 "receive_payment"  => [ 

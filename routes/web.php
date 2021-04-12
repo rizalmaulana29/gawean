@@ -35,9 +35,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('filter/PO', 				['uses' => 'JurnalPOController@FilteringPO']);
 	$router->post('jurnal/transaksi/delete',['uses' => 'JurnalDeleteController@DeleteDataJurnal']);
 
-	#DEV
-	$router->get('filter/dev', 					['uses' => 'JurnalDevNewController@Filtering']);
-	$router->get('filter/adjustment/dev', 		['uses' => 'JurnalDevNewController@AdjustmentTransaksi']);
+	//Devel new concept
+	$router->get('filter/devNew', 					['uses' => 'JurnalDevNewController@Filtering']);
+	$router->get('filter/adjustment/invoice/devNew',['uses' => 'JurnalDevNewController@AdjustmentToInvoice']);
+	$router->get('filter/adjustment/devNew', 		['uses' => 'JurnalDevNewController@AdjustmentTransaksi']);
 
 	$router->post('create/customer', 	['uses' => 'JurnalDevController@CreateCustomer']);
 	$router->post('create/salesorder', 	['uses' => 'JurnalDevController@SalesOrder']);

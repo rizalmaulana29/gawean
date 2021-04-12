@@ -24,7 +24,7 @@ return [
                         "116.206.15.32", // id hp Rivan!
                         "36.65.240.185", //IP InsMul
                         "61.94.89.125", //IP InsMUl di IC
-                        "116.206.14.12", //hp sandi
+                        "116.206.14.59", //hp sandi
                         "36.72.0.142",//Insan Mulia
                         "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan

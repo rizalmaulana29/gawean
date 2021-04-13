@@ -38,7 +38,6 @@ class JurnalDeliveryController extends Controller
                                  ->where('delivery_id','=','')
                                  ->orderBy('ra_pengiriman.tgl_kirim','ASC')
                                  ->first();
-      var_dump($getDataTransaksi);
 
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
@@ -97,7 +96,6 @@ class JurnalDeliveryController extends Controller
                   ];
       
       $encodedataRaw = json_encode($dataRaw);
-      var_dump($encodedataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
@@ -118,12 +116,10 @@ class JurnalDeliveryController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
 
-      var_dump($err);
-      dd($response);
 
       $insertTolog = JurnalLog::insert(['ra_payment_id'=> $getDataTransaksi['id'],
-                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action'       => "SalesOrder",
+                                        'id_transaksi' =>$getDataTransaksi['id_order'],
+                                        'action'       => "SalesDelivery",
                                         'insert_at'    => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,
                                         'response_body'=> $response
@@ -138,8 +134,7 @@ class JurnalDeliveryController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $message = json_encode($dataResponse->sales_delivery->transaction_lines_attributes);
-              $updatePayment= Pengiriman::where('id',$getDataTransaksi['id'])->update(['delivery_id' => $dataResponse->sales_order->id]);
+              $updatePayment= Pengiriman::where('id',$getDataTransaksi['id'])->update(['delivery_id' => $dataResponse->sales_delivery->id]);
 
               $response = array("status" =>true,
                                 "id"     => $dataResponse->sales_delivery->id,
@@ -147,7 +142,7 @@ class JurnalDeliveryController extends Controller
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales order".$response);
+              $response = array("status"=>false,"message"=> "sales delivery".$response);
           }
       }
       

@@ -44,7 +44,7 @@ class JurnalDevNewController extends Controller
                                  ->first();
 
       if (isset($getDataTransaksi)) {
-        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
+        $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
           if ($getDataTransaksi['person_id'] == " ") {
             $createCustomer = $this->CreateCustomer($getDataTransaksi);

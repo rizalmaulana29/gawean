@@ -8,6 +8,8 @@ use App\Produk;
 use App\Order;
 use App\CmsUser;
 use App\Payment;
+use App\Pengiriman;
+use App\PengirimanDetail;
 use App\Pendapatan;
 use App\JurnalLog;
 use App\Paymeth;
@@ -26,80 +28,34 @@ class JurnalDeliveryController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
-      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt as entitas','id_transaksi',
-                                          'ra_payment_dua.nama_customer','ra_payment_dua.jenis_transaksi','ra_payment_dua.alamat',
-                                          'ra_payment_dua.tgl_transaksi','ra_payment_dua.person_id'
-                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
-                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'ra_payment_dua.tunai','ra_order_dua.id_entitas as id_entitas')
-                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
-                                 ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
-                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 // ->where('tunai','Tunai')
-                                 // ->where('status','paid')
-                                 // ->where('varian','!=','Aqiqah')
-                                 // ->where('ra_payment_dua.lunas','y')
-                                 // ->where('person_id','=','')
+      $getDataTransaksi = Pengiriman::select('ra_pengiriman.id as id','ra_pengiriman.id_po','ra_pengiriman.grand_total_harga',
+                                          'ra_pengiriman.id_order','ra_pengiriman.jenis_transaksi','ra_pengiriman.alamat',
+                                          'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id',
+                                          'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',
+                                          'ra_payment_dua.person_id','ra_payment_dua.entitas','ra_payment_dua.sales_order_id')
+                                 ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id_transaksi')
+                                 ->where('delivery_id','=','')
                                  ->where(function($q) {
                                             $q->where('memo_id', '=', '')
                                             ->orWhere('order_message','=','');
                                         })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-                                 // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
-                                 // ->get();
+      dd($getDataTransaksi);
 
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
-          if ($getDataTransaksi['person_id'] == " ") {
-            $createCustomer = $this->CreateCustomer($getDataTransaksi);
-            if ($createCustomer['status'] == true) {
-              if ($getDataTransaksi['jenis_transaksi'] == "Receive_Payment") {
-                $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-                  if ($salesOrder['status'] == true) {
-                          return response()->json(["status"       => true,
-                                                   "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
-                                                   "Data Request" => $getDataTransaksi,
-                                                   "Data Response"=> $salesOrdertoInvoice['message']
-                                                  ],200);
-                     
-                  }
-                  return $salesOrder;
-              }else{
-                $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
-                if ($creditMemo['status'] == true) {
-                  $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-                  if ($salesOrder['status'] == true) {
-                          return response()->json(["status"       => true,
-                                                   "message"      => "Data sales order di CM berhasil di inputkan ke JurnalID",
-                                                   "Data Request" => $getDataTransaksi,
-                                                   "Data Response"=> $salesOrder['message']
-                                                  ],200);
-                     
-                  }
-                  return $salesOrder;
-                }
-                return $creditMemo;
-              }
-            } 
-            return $createCustomer;
-          } else {
-            $creditMemo = $this->creditMemo($getDataTransaksi,$getDataTransaksi['person_id']);
-            if ($creditMemo['status'] == true) {
-              $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-              if ($salesOrder['status'] == true) {
-                      return response()->json(["status"       => true,
-                                               "message"      => "Data sales order di pelunasan berhasil di inputkan ke JurnalID",
-                                               "Data Request" => $getDataTransaksi,
-                                               "Data Response"=> $salesOrder['message']
-                                              ],200);
-                 
-              }
-              return $salesOrder;
+          $salesDelivery = $this->SalesDelivery($getDataTransaksi,$createCustomer['message']);
+            if ($salesDelivery['status'] == true) {
+                    return response()->json(["status"       => true,
+                                             "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
+                                             "Data Request" => $getDataTransaksi,
+                                             "Data Response"=> $salesDelivery['message']
+                                            ],200);
+               
             }
-            return $creditMemo;
-          }
+            return $salesOrder;
         }
         return response()->json(["status"       => false,
                                  "message"      => "Entitas / Kantor belum terdaftar di Jurnal"
@@ -115,37 +71,31 @@ class JurnalDeliveryController extends Controller
 
     public function SalesDelivery($getDataTransaksi){ 
 
-      // $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
+      $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
 
-      $dataOrder    = Pendapatan::where('id_order',$getDataTransaksi['id_transaksi'])->get();
+      $dataOrder    = PengirimanDetail::where('id_pengiriman',$getDataTransaksi['id'])->get();
       $tglTransaksi = Carbon::now()->toDatestring();
-
-      if ($getDataTransaksi['entitas'] == 'PDN') {
-        $wh_name = $kantor;
-      } else {
-        $wh_name = "";
-      }
 
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
 
-        $produk_harga        = Harga::where('id',$order['ra_produk_harga_id'])->value('jurnal_product_id');
-        $nama_produk         = Harga::where('id',$order['ra_produk_harga_id'])->value('nama_produk');
+        $produk_harga        = Harga::where('id',$order['id_produk'])->value('jurnal_product_id');
+        $nama_produk         = Harga::where('id',$order['id_produk'])->value('nama_produk');
         $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }
 
       $dataRaw = [
                 "sales_delivery"  => [ 
-                                  "person_id"          => $person_id,
-                                  "email"              => ,
+                                  "person_id"          => $getDataTransaksi['person_id'],
+                                  "email"              => $getDataTransaksi['email'],
                                   "is_shipped"         => true,
                                   "shipping_address"   => substr($getDataTransaksi['alamat'],0,250),
                                   "transaction_date"   => $tglTransaksi,
+                                  "transaction_no"     => $getDataTransaksi['id_order'],
+                                  "selected_po_id"     => $getDataTransaksi['sales_order_id'],
                                   "transaction_lines_attributes" => $detail_produk,
-                                  "shipping_price"     => $ambilditambahanongkir,
-                                  "email"              => $getDataTransaksi['email'],
-                                  "transaction_no"     => $getDataTransaksi['id_transaksi'],
+                                  "shipping_price"     => $getDataTransaksi['tambahan_ongkir']
                                   ]
                   ];
       
@@ -179,8 +129,8 @@ class JurnalDeliveryController extends Controller
                                         'response_body'=> $response
                                         ]);
 
-      $findString     = 'sales_order';
-      $searchResponse = stripos($response, 'sales_order');
+      $findString     = 'sales_delivery';
+      $searchResponse = stripos($response, 'sales_delivery');
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
@@ -188,12 +138,12 @@ class JurnalDeliveryController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $message = json_encode($dataResponse->sales_order->transaction_lines_attributes);
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
+              $message = json_encode($dataResponse->sales_delivery->transaction_lines_attributes);
+              $updatePayment= Pengiriman::where('id',$getDataTransaksi['id'])->update(['delivery_id' => $dataResponse->sales_order->id]);
 
               $response = array("status" =>true,
-                                "id"     => $dataResponse->sales_order->id,
-                                "message"=> $dataResponse->sales_order->transaction_lines_attributes);
+                                "id"     => $dataResponse->sales_delivery->id,
+                                "message"=> $dataResponse->sales_delivery->transaction_lines_attributes);
           }
           else{
 

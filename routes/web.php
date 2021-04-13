@@ -39,18 +39,19 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('filter/devNew', 					['uses' => 'JurnalDevNewController@Filtering']);
 	$router->get('filter/adjustment/invoice/devNew',['uses' => 'JurnalDevNewController@AdjustmentToInvoice']);
 	$router->get('filter/adjustment/devNew', 		['uses' => 'JurnalDevNewController@AdjustmentTransaksi']);
+	$router->get('filter/delivery/dev', 			['uses' => 'JurnalDeliveryController@Filtering']);
 
 	$router->post('create/customer', 	['uses' => 'JurnalDevController@CreateCustomer']);
 	$router->post('create/salesorder', 	['uses' => 'JurnalDevController@SalesOrder']);
 
-	$router->get('filterDev', 	['uses' => 'JurnalDevController@Filtering']);
-	$router->get('filterDev/bedabulan', 	['uses' => 'JurnalDevController@transaksiBedaBulan']);
+	$router->get('filterDev', 					['uses' => 'JurnalDevController@Filtering']);
+	$router->get('filterDev/bedabulan', 		['uses' => 'JurnalDevController@transaksiBedaBulan']);
 	$router->get('filter/transaksiCiPelDev', 	['uses' => 'JurnalDevController@transaksiCiPelDev']);
-	$router->get('settlementNP', 	['uses' => 'SettlementController@MIDDate']);
+	$router->get('settlementNP', 				['uses' => 'SettlementController@MIDDate']);
 	
-	$router->get('filter/adjustmentDev', 		['uses' => 'JurnalDevController@AdjustmentTransaksi']);
-	$router->post('cartDev', 	['uses' => 'CartDevController@cart']);
-	$router->post('TestWA', 	['uses' => 'CartDevController@sendWa']);
+	$router->get('filter/adjustmentDev',['uses' => 'JurnalDevController@AdjustmentTransaksi']);
+	$router->post('cartDev', 			['uses' => 'CartDevController@cart']);
+	$router->post('TestWA', 			['uses' => 'CartDevController@sendWa']);
 
 	$router->post('TestNotif', 	['uses' => 'CartDevController@notifTransaksi']);
 	$router->post('testing', 	['uses' => 'CartDevController@testing_aja']);
@@ -59,7 +60,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 	$router->group(['middleware' => 'all.cors'], function () use ($router) {
 		$router->post('check/number', 	['uses' => 'CartController@checkNumber']);
-		$router->options('check/number', 	['uses' => 'CartController@checkNumber']);
+		$router->options('check/number',['uses' => 'CartController@checkNumber']);
 	});
 
 	$router->post('notifications', 		['uses' => 'NotificationsController@dbProcess']);

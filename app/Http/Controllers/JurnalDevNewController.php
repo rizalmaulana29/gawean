@@ -48,7 +48,7 @@ class JurnalDevNewController extends Controller
                                  ->first();
                                  // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
                                  // ->get();
-
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
@@ -142,7 +142,7 @@ class JurnalDevNewController extends Controller
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      // dd($getDataTransaksi);
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
           $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$message = 0);
             if ($salesOrdertoInvoice['status'] == true){
@@ -189,7 +189,7 @@ class JurnalDevNewController extends Controller
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      // dd($getDataTransaksi);
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
 
@@ -472,20 +472,20 @@ class JurnalDevNewController extends Controller
       $searchResponse = stripos($response, 'sales_order');
 
       if ($err) {
+          $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed"]);
           $response = array("status"=>"failed","message"=>$err);
       } 
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $message = json_encode($dataResponse->sales_order->transaction_lines_attributes);
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id]);
 
               $response = array("status" =>true,
                                 "id"     => $dataResponse->sales_order->id,
                                 "message"=> $dataResponse->sales_order->transaction_lines_attributes);
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed"]);
               $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
@@ -561,18 +561,19 @@ class JurnalDevNewController extends Controller
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
+          $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed"]);
       } 
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => '$dataResponse->sales_invoice->id' ,'si_transaction'=> $dataResponse->sales_invoice->transaction_no]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,
                                 "message"=> $dataResponse->sales_invoice->transaction_no);
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed",'receive_payment_id' => "failed"]);
               $response = array("status"=>false,"message"=> "sales invoice".$response);
           }
       }
@@ -658,7 +659,7 @@ class JurnalDevNewController extends Controller
                                 "message"=> $dataResponse->customer_apply_credit_memo);
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['apply_memo_id' => "failed"]);
               $response = array("status"=>false,"message"=> "customer apply credit memo".$response);
           }
       }
@@ -783,7 +784,7 @@ class JurnalDevNewController extends Controller
         }
       } else {
         if ($requester != 'konektor') {
-          $update = Payment::where('id_transaksi',$requester)->update(['person_id' => 'none','sales_order_id' => 'none','sales_invoice_id' => 'none','recieve_payment_id' => 'none','memo_id' => 'none','apply_memo_id' => 'none']);
+          $update = Payment::where('id_transaksi',$requester)->update(['person_id' => 'no key jurnal','sales_order_id' => 'no key jurnal','sales_invoice_id' => 'no key jurnal','recieve_payment_id' => 'no key jurnal','memo_id' => 'no key jurnal','apply_memo_id' => 'no key jurnal']);
           $response = array("status"=>false,"message"=> "belum ada key jurnal");
         } else {
           $response = array("status"=>false,"message"=> "belum ada key jurnal");

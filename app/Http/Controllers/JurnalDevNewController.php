@@ -42,7 +42,7 @@ class JurnalDevNewController extends Controller
                                         })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+      dd($getDataTransaksi['person_id']);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {

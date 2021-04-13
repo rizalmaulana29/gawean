@@ -35,7 +35,7 @@ class JurnalDeliveryController extends Controller
                                           'ra_payment_dua.person_id','ra_payment_dua.id_pt as entitas','ra_payment_dua.sales_order_id')
                                  ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id_transaksi')
                                  ->where('delivery_id','=','')
-                                 ->orderBy('ra_pengiriman.tgl_insert','ASC')
+                                 ->orderBy('ra_pengiriman.tgl_kirim','ASC')
                                  ->first();
       dd($getDataTransaksi);
 

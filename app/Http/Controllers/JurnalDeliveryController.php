@@ -29,18 +29,19 @@ class JurnalDeliveryController extends Controller
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Pengiriman::select('ra_pengiriman.id as id','ra_pengiriman.id_po','ra_pengiriman.grand_total_harga',
-                                          'ra_pengiriman.id_order','ra_pengiriman.alamat',
+                                          'ra_pengiriman.id_order','ra_pengiriman.alamat','admin_entitas.id_entitas as entitas',
                                           'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id',
                                           'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',
-                                          'ra_payment_dua.person_id','ra_payment_dua.id_pt as entitas','ra_payment_dua.sales_order_id')
+                                          'ra_payment_dua.person_id','ra_payment_dua.id_pt','ra_payment_dua.sales_order_id')
                                  ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id_transaksi')
+                                 ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
                                  ->where('delivery_id','=','')
                                  ->orderBy('ra_pengiriman.tgl_kirim','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+      var_dump($getDataTransaksi);
 
       if (isset($getDataTransaksi)) {
-        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
+        $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
           $salesDelivery = $this->SalesDelivery($getDataTransaksi,$createCustomer['message']);
             if ($salesDelivery['status'] == true) {
@@ -96,7 +97,7 @@ class JurnalDeliveryController extends Controller
                   ];
       
       $encodedataRaw = json_encode($dataRaw);
-
+      var_dump($encodedataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
@@ -116,6 +117,9 @@ class JurnalDeliveryController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
+      
+      var_dump($err);
+      dd($response);
 
       $insertTolog = JurnalLog::insert(['ra_payment_id'=> $getDataTransaksi['id'],
                                         'id_transaksi' =>$getDataTransaksi['id_transaksi'],

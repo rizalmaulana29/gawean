@@ -35,20 +35,13 @@ class JurnalDevNewController extends Controller
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 // ->where('tunai','Tunai')
-                                 // ->where('status','paid')
-                                 // ->where('varian','!=','Aqiqah')
-                                 // ->where('ra_payment_dua.lunas','y')
-                                 // ->where('person_id','=','')
                                  ->where(function($q) {
                                             $q->where('memo_id', '=', '')
                                             ->orWhere('order_message','=','');
                                         })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-                                 // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
-                                 // ->get();
-      dd($getDataTransaksi);
+
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
@@ -135,14 +128,10 @@ class JurnalDevNewController extends Controller
                                  ->where('sales_invoice_id','=','')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
-                                 // ->where(function($q) {
-                                 //            $q->where('sisa_pembayaran', '=', 0)
-                                 //            ->orWhereNull('sisa_pembayaran');
-                                 //        })
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+                                 
       if (isset($getDataTransaksi)) {
           $salesOrdertoInvoice = $this->SalesOrdertoInvoice($getDataTransaksi,$message = 0);
             if ($salesOrdertoInvoice['status'] == true){
@@ -182,14 +171,10 @@ class JurnalDevNewController extends Controller
                                  ->where('sales_invoice_id','!=','')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
-                                 // ->where(function($q) {
-                                 //            $q->where('sisa_pembayaran', '=', 0)
-                                 //            ->orWhereNull('sisa_pembayaran');
-                                 //        })
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
 

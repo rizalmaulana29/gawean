@@ -43,7 +43,7 @@ class JurnalDeliveryController extends Controller
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {
-          $salesDelivery = $this->SalesDelivery($getDataTransaksi,$createCustomer['message']);
+          $salesDelivery = $this->SalesDelivery($getDataTransaksi);
             if ($salesDelivery['status'] == true) {
                     return response()->json(["status"       => true,
                                              "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
@@ -117,7 +117,7 @@ class JurnalDeliveryController extends Controller
       ));
       $response = curl_exec($curl);
       $err = curl_error($curl);
-      
+
       var_dump($err);
       dd($response);
 

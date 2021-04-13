@@ -32,7 +32,7 @@ class JurnalDeliveryController extends Controller
                                           'ra_pengiriman.id_order','ra_pengiriman.alamat',
                                           'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id',
                                           'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',
-                                          'ra_payment_dua.person_id','ra_payment_dua.entitas','ra_payment_dua.sales_order_id')
+                                          'ra_payment_dua.person_id','ra_payment_dua.id_pt as entitas','ra_payment_dua.sales_order_id')
                                  ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id_transaksi')
                                  ->where('delivery_id','=','')
                                  ->where(function($q) {

@@ -30,7 +30,7 @@ class JurnalDeliveryController extends Controller
 
       $getDataTransaksi = Pengiriman::select('ra_pengiriman.id as id','ra_pengiriman.id_po','ra_pengiriman.grand_total_harga',
                                           'ra_pengiriman.id_order','ra_pengiriman.alamat','admin_entitas.id_entitas as entitas',
-                                          'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id','ra_pengiriman.email'
+                                          'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id','ra_pengiriman.email',
                                           'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',
                                           'ra_payment_dua.person_id','ra_payment_dua.id_pt','ra_payment_dua.sales_order_id')
                                  ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id')

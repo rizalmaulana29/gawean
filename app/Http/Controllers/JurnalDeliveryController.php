@@ -33,7 +33,7 @@ class JurnalDeliveryController extends Controller
                                           'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id',
                                           'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',
                                           'ra_payment_dua.person_id','ra_payment_dua.id_pt','ra_payment_dua.sales_order_id')
-                                 ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id_transaksi')
+                                 ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id')
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
                                  ->where('delivery_id','=','')
                                  ->orderBy('ra_pengiriman.tgl_kirim','ASC')
@@ -76,8 +76,8 @@ class JurnalDeliveryController extends Controller
       $detail_produk = [];
       foreach ($dataOrder as $key => $order) {
 
-        $produk_harga        = Harga::where('id',$order['id_produk'])->value('jurnal_product_id');
-        $nama_produk         = Harga::where('id',$order['id_produk'])->value('nama_produk');
+        $produk_harga        = Harga::where('id',$order['id_produk_harga'])->value('jurnal_product_id');
+        $nama_produk         = Harga::where('id',$order['id_produk_harga'])->value('nama_produk');
         $produk              = ["quantity" => $order['quantity'], "rate"=> $order['harga'],"product_id"=> $produk_harga,"description" =>$nama_produk];
         array_push($detail_produk,$produk);
       }

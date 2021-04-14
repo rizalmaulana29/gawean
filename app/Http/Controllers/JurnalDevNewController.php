@@ -36,10 +36,12 @@ class JurnalDevNewController extends Controller
                                  // ->where('varian','=','Project') //sementara untuk testing
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 ->where(function($q) {
-                                            $q->where('memo_id', '=', '')
-                                            ->orWhere('order_message','=','');
-                                        })
+                                 ->where('memo_id', '=', '')
+                                 ->Where('order_message','=','')
+                                 // ->where(function($q) {
+                                 //            $q->where('memo_id', '=', '')
+                                 //            ->orWhere('order_message','=','');
+                                 //        })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  // ->first();
                                  ->get();

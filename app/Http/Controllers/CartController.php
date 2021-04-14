@@ -56,7 +56,7 @@ class CartController extends Controller
       $x = [];
       $n = 0;
       $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
-      $adminentitas = AdminEntitas::where('id_entitas',$id_entitas])->value('id');
+      $adminentitas = AdminEntitas::where('id_entitas',$id_entitas)->value('id');
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),

@@ -55,6 +55,8 @@ class CartController extends Controller
       $id = [];
       $x = [];
       $n = 0;
+      $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
+      $adminentitas = AdminEntitas::where('id_entitas',$id_entitas])->value('id');
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
@@ -64,6 +66,7 @@ class CartController extends Controller
           'email'       => $request->input('email'),
           'varian'      => 'Aqiqah',
           'id_kantor' => $request->input('id_kantor'),
+          'id_pt'     => $adminentitas,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('nominal'),
           'nominal_total' => $request->input('total'),
@@ -100,7 +103,7 @@ class CartController extends Controller
           $order->approve = 'y';
           $order->keterangan = 'Tunai';
           $order->nik_input = $request->input('nik_input');
-          $order->id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
+          $order->id_entitas = $id_entitas;
           $order->cur = "IDR";
           // $id_produk_parent = Produk::select('id_produk_parent')->where('id_produk',$id_produk)->first();
           if($request['id_produk_parent'][$key] == 89 || $request['id_produk_parent'][$key] == 20){

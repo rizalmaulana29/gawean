@@ -24,7 +24,7 @@ class JurnalDevNewController extends Controller
 {
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
+      $start = Carbon::yesterday()->addHour(1)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi',
                                           'ra_payment_dua.nama_customer','ra_payment_dua.jenis_transaksi','ra_payment_dua.alamat',
@@ -35,7 +35,7 @@ class JurnalDevNewController extends Controller
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
                                  // ->where('varian','=','Project') //sementara untuk testing
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
-                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
                                  ->where('memo_id', '=', '')
                                  ->Where('order_message','=','')
                                  // ->where(function($q) {

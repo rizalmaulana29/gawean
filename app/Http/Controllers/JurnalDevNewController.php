@@ -24,7 +24,7 @@ class JurnalDevNewController extends Controller
 {
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::today()->addHour(1)->toDateTimestring();
+      $start = Carbon::yesterday()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi',
                                           'ra_payment_dua.nama_customer','ra_payment_dua.jenis_transaksi','ra_payment_dua.alamat',

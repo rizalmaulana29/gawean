@@ -33,7 +33,7 @@ class JurnalDevNewController extends Controller
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
                                           'ra_payment_dua.tunai','admin_entitas.id_entitas as entitas')
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
-                                 ->where('varian','=','Project') //sementara untuk testing
+                                 // ->where('varian','=','Project') //sementara untuk testing
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
                                  ->where(function($q) {
@@ -41,8 +41,9 @@ class JurnalDevNewController extends Controller
                                             ->orWhere('order_message','=','');
                                         })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
-                                 ->first();
-      // dd($getDataTransaksi['person_id']);
+                                 // ->first();
+                                 ->get();
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {

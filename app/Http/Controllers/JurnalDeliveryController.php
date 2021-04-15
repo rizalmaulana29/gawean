@@ -51,7 +51,7 @@ class JurnalDeliveryController extends Controller
                                             ],200);
                
             }
-            return $salesOrder;
+            return $salesDelivery;
         }
         return response()->json(["status"       => false,
                                  "message"      => "Entitas / Kantor belum terdaftar di Jurnal"

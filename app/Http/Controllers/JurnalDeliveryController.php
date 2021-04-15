@@ -28,7 +28,7 @@ class JurnalDeliveryController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
-      $getDataTransaksi = Pengiriman::select('ra_pengiriman.id as id','ra_pengiriman.id_po','ra_pengiriman.grand_total_harga',
+      $getDataTransaksi = Pengiriman::select('ra_pengiriman.id as id','ra_pengiriman.id_pt','ra_pengiriman.grand_total_harga',
                                           'ra_pengiriman.id_order','ra_pengiriman.alamat','admin_entitas.id_entitas as entitas',
                                           'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id','ra_payment_dua.email',
                                           'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',

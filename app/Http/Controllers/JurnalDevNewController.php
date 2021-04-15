@@ -43,8 +43,8 @@ class JurnalDevNewController extends Controller
                                  //            ->orWhere('order_message','=','');
                                  //        })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
-                                 // ->first();
-                                 ->get();
+                                 ->first();
+                                 // ->get();
       // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);

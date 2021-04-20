@@ -37,11 +37,10 @@ class JurnalDevNewController extends Controller
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
                                  ->where('memo_id', '=', '')
-                                 ->Where('order_message','=','')
-                                 // ->where(function($q) {
-                                 //            $q->where('memo_id', '=', '')
-                                 //            ->orWhere('order_message','=','');
-                                 //        })
+                                 ->where(function($q) {
+                                            $q->where('sales_order_id', '=', '')
+                                            ->orWhere('order_message','=','');
+                                        })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
                                  // ->get();
@@ -84,16 +83,11 @@ class JurnalDevNewController extends Controller
           } else {
             $creditMemo = $this->creditMemo($getDataTransaksi,$getDataTransaksi['person_id']);
             if ($creditMemo['status'] == true) {
-              $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-              if ($salesOrder['status'] == true) {
-                      return response()->json(["status"       => true,
-                                               "message"      => "Data sales order di pelunasan berhasil di inputkan ke JurnalID",
-                                               "Data Request" => $getDataTransaksi,
-                                               "Data Response"=> $salesOrder['message']
-                                              ],200);
-                 
-              }
-              return $salesOrder;
+              return response()->json(["status"       => true,
+                                       "message"      => "Data sales order di pelunasan berhasil di inputkan ke JurnalID",
+                                       "Data Request" => $getDataTransaksi,
+                                       "Data Response"=> $creditMemo['message']
+                                      ],200);
             }
             return $creditMemo;
           }
@@ -467,7 +461,8 @@ class JurnalDevNewController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id]);
+              $message = json_encode($dataResponse->sales_order->transaction_lines_attributes);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => $dataResponse->sales_order->id, 'order_message' => $message]);
 
               $response = array("status" =>true,
                                 "id"     => $dataResponse->sales_order->id,

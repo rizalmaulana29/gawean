@@ -334,7 +334,7 @@ class JurnalController extends Controller
                                 "message"=> $dataResponse->sales_order->transaction_lines_attributes);
           }
           else{
-
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed",'recieve_payment_id'=>"failed"]);
               $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }

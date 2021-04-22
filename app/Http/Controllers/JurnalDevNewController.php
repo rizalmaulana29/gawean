@@ -115,8 +115,6 @@ class JurnalDevNewController extends Controller
                                           'recieve_payment_id','sales_order_id','order_message','apply_memo_id')
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
                                  ->where('status','paid')
-                                 ->where('tunai','Tunai')
-                                 ->where('varian','!=','Project')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
                                  ->where(function($q) {

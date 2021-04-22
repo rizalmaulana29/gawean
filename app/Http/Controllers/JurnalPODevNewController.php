@@ -35,8 +35,8 @@ class JurnalPODevNewController extends Controller
                                  ->where([["tgl_po", ">=", $start],["tgl_po", "<=", $endDate->toDatestring()]])
                                  // ->where('ra_po.status','paid')
                                  ->where('purchase_order_id','')
-                                 ->where('purchase_invoice_id','')
-                                 ->where('purchase_payment_id','')
+                                 // ->where('purchase_invoice_id','')
+                                 // ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();
 
@@ -51,21 +51,94 @@ class JurnalPODevNewController extends Controller
         }
         $purchaseOrder = $this->PurchaseOrder($getDataTransaksiPO,$vendor_id);
           if ($purchaseOrder['status'] == true) {
-            $purchaseOrdertoInvoice = $this->PurchaseOrdertoInvoice($getDataTransaksiPO,$purchaseOrder['id'],$purchaseOrder['message']);
-              if ($purchaseOrdertoInvoice['status'] == true) {
-                $purchasePayment = $this->PurchasePayment($getDataTransaksiPO,$purchaseOrdertoInvoice['message']);
-                  if ($purchasePayment['status'] == true) {
-                    return response()->json(["status"       => true,
-                                             "message"      => "Data PO berhasil di inputkan ke JurnalID",
-                                             "Data Request" => $getDataTransaksiPO,
-                                             "Data Response"=> $purchasePayment['message']
-                                            ],200);
-                  }
-                  return $purchasePayment;
-              }
-              return $purchaseOrdertoInvoice;
+            return response()->json(["status"       => true,
+                                     "message"      => "Data PO berhasil di inputkan ke JurnalID",
+                                     "Data Request" => $getDataTransaksiPO,
+                                     "Data Response"=> $purchaseOrder['message']
+                                    ],200);
           }
           return $purchaseOrder;
+      }
+      return response()->json(["status"       => false,
+                               "message"      => "Tidak ada Data PO yang dapat di inputkan ke jurnalID"
+                              ],200);
+
+    }
+
+    public function FilteringPOtoInvoice(){
+      $endDate = Carbon::now()->endOfMonth();
+      $start = Carbon::yesterday()->addHour(1)->toDatestring();
+
+      $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
+                                       'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order','id_pt',
+                                       'purchase_order_id','purchase_order_message','admin_entitas.id_entitas as entitas')
+                                 ->leftjoin('admin_entitas', 'ra_po.id_pt', '=', 'admin_entitas.id')
+                                 ->where([["tgl_po", ">=", $start],["tgl_po", "<=", $endDate->toDatestring()]])
+                                 ->where('ra_po.status','paid')
+                                 ->where(function($q) {
+                                            $q->where('purchase_order_id', '!=', '')
+                                            ->orWhere('purchase_order_id','!=','failed');
+                                        })
+                                 ->where('purchase_order_message','!=','')
+                                 ->where('purchase_invoice_id','')
+                                 ->orderBy('tgl_po','ASC')
+                                 ->first();
+
+      if (isset($getDataTransaksiPO)) {
+        
+        $purchaseOrdertoInvoice = $this->PurchaseOrdertoInvoice($getDataTransaksiPO);
+          if ($purchaseOrdertoInvoice['status'] == true) {
+            
+                return response()->json(["status"       => true,
+                                         "message"      => "Data PO berhasil di inputkan ke JurnalID",
+                                         "Data Request" => $getDataTransaksiPO,
+                                         "Data Response"=> $purchaseOrdertoInvoice['message']
+                                        ],200);
+              
+          }
+          return $purchaseOrdertoInvoice;
+      }
+      return response()->json(["status"       => false,
+                               "message"      => "Tidak ada Data PO yang dapat dijadikan Invoice ke jurnalID"
+                              ],200);
+
+    }
+
+    public function FilteringPayment(){
+      $endDate = Carbon::now()->endOfMonth();
+      $start = Carbon::today()->toDatestring();
+
+      $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
+                                       'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order',
+                                       'purchase_invoice_id','ra_pendapatan_dua.id_entitas as id_entitas')
+                                 ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
+                                 ->leftjoin('ra_pendapatan_dua', 'ra_po_detail.id_order','=','ra_pendapatan_dua.id_order')
+                                 ->where("tgl_eksekusi", "=", $start)
+                                 ->where('ra_po.status','paid')
+                                 ->where(function($q) {
+                                            $q->where('purchase_order_id', '!=', '')
+                                            ->orWhere('purchase_order_id','!=','failed');
+                                        })
+                                 ->where('purchase_order_message','!=','')
+                                 ->where(function($q) {
+                                            $q->where('purchase_invoice_id', '!=', '')
+                                            ->orWhere('purchase_invoice_id','!=','failed');
+                                        })
+                                 ->where('purchase_payment_id','')
+                                 ->orderBy('tgl_po','ASC')
+                                 ->first();
+
+      if (isset($getDataTransaksiPO)) {
+        
+        $purchasePayment = $this->PurchasePayment($getDataTransaksiPO);
+          if ($purchasePayment['status'] == true) {
+            return response()->json(["status"       => true,
+                                     "message"      => "Data PO berhasil di inputkan ke JurnalID",
+                                     "Data Request" => $getDataTransaksiPO,
+                                     "Data Response"=> $purchasePayment['message']
+                                    ],200);
+          }
+          return $purchasePayment;
       }
       return response()->json(["status"       => false,
                                "message"      => "Tidak ada Data PO yang dapat di inputkan ke jurnalID"
@@ -216,7 +289,7 @@ class JurnalPODevNewController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_order_id' => $dataResponse->purchase_order->id]);
+              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_order_id' => $dataResponse->purchase_order->id,'purchase_order_message' => $dataResponse->purchase_order->transaction_lines_attributes]);
               $response = array("status" =>true,
                                 "id"     => $dataResponse->purchase_order->id,
                                 "message"=> $dataResponse->purchase_order->transaction_lines_attributes);
@@ -230,17 +303,17 @@ class JurnalPODevNewController extends Controller
       return $response;
     }
 
-    public function PurchaseOrdertoInvoice($getDataTransaksiPO,$purchase_order_id,$purchase_order_atribute){
+    public function PurchaseOrdertoInvoice($getDataTransaksiPO){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['entitas'],$requester = 'konektor');
 
       $detail_atribute = [];
-      foreach ($purchase_order_atribute as $key => $atribute) {
+      foreach ($getDataTransaksiPO['purchase_order_message'] as $key => $atribute) {
   
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tglTransaksi = $getDataTransaksiPO['tgl_po'];
+      $tglTransaksi = Carbon::now();
 
       $dataRaw = [
                 "purchase_order"  => [ 
@@ -254,7 +327,7 @@ class JurnalPODevNewController extends Controller
       $curl = curl_init();
 
       curl_setopt_array($curl, array(
-        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/purchase_orders/".$purchase_order_id."/convert_to_invoice",
+        CURLOPT_URL            => "https://api.jurnal.id/core/api/v1/purchase_orders/".$getDataTransaksiPO['purchase_order_id']."/convert_to_invoice",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING       => "",
         CURLOPT_MAXREDIRS      => 10,
@@ -289,7 +362,7 @@ class JurnalPODevNewController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_invoice_id' => $dataResponse->purchase_invoice->id]);
+              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_invoice_id' => $dataResponse->purchase_invoice->transaction_no]);
               $response = array("status" => true,
                                 "id"     => $dataResponse->purchase_invoice->id,
                                 "message"=> $dataResponse->purchase_invoice->transaction_no);
@@ -303,7 +376,7 @@ class JurnalPODevNewController extends Controller
       return $response;
     }
 
-    public function PurchasePayment($getDataTransaksiPO,$transaction_no){
+    public function PurchasePayment($getDataTransaksiPO){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['entitas'],$requester = 'konektor');
       $paymentMethode = Payment_PO::where('id',$getDataTransaksiPO['payment_method'])->first();
@@ -318,7 +391,7 @@ class JurnalPODevNewController extends Controller
       $dataRaw = [
                 "purchase_payment"  => [ 
                                         "transaction_date"    => $tglTransaksi,
-                                        "records_attributes"  => [[ "transaction_no" => $transaction_no,
+                                        "records_attributes"  => [[ "transaction_no" => $getDataTransaksiPO['purchase_invoice_id'],
                                                                     "amount"         => $getDataTransaksiPO['total_po']]],
                                         "payment_method_name" => $payment_method_name,
                                         "refund_from_name"    => $deposit_to_name,

@@ -121,10 +121,8 @@ class JurnalDevNewController extends Controller
                                             $q->where('memo_id', '!=', '')
                                             ->orWhere('order_message','!=','');
                                         })
-                                 ->where(function($q) {
-                                            $q->where('sales_order_id', '!=', '')
-                                            ->orWhere('sales_order_id','!=','failed');
-                                        })
+                                 ->where('sales_order_id', '!=', '')
+                                 ->where('sales_order_id','!=','failed')
                                  ->where('sales_invoice_id','=','')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
@@ -166,10 +164,8 @@ class JurnalDevNewController extends Controller
                                  ->where('person_id','!=','')
                                  ->where('sales_order_id', '!=', '')
                                  ->Where('order_message','!=','')
-                                 ->where(function($q) {
-                                            $q->where('sales_invoice_id','!=', '')
-                                            ->andWhere('sales_invoice_id','!=','failed');
-                                        })
+                                 ->where('sales_invoice_id','!=', '')
+                                 ->Where('sales_invoice_id','!=','failed')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)

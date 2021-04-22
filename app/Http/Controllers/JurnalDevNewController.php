@@ -165,7 +165,7 @@ class JurnalDevNewController extends Controller
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
                                  ->where(function($q) {
-                                            $q->where('memo_id', '!=', '')
+                                            $q->where('sales_order_id', '!=', '')
                                             ->orWhere('order_message','!=','');
                                         })
                                  ->where(function($q) {

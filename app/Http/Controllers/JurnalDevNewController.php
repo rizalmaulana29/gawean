@@ -164,10 +164,10 @@ class JurnalDevNewController extends Controller
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
-                                 ->where(function($q) {
-                                            $q->where('sales_order_id', '!=', '')
-                                            ->orWhere('order_message','!=','');
-                                        })
+                                 // ->where(function($q) {
+                                 //            $q->where('sales_order_id', '!=', '')
+                                 //            ->orWhere('order_message','!=','');
+                                        // })
                                  ->where(function($q) {
                                             $q->where('sales_invoice_id', '!=', '')
                                             ->orWhere('sales_invoice_id','!=','failed');
@@ -177,7 +177,7 @@ class JurnalDevNewController extends Controller
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-
+      dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
 
@@ -555,7 +555,7 @@ class JurnalDevNewController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->transaction_no]);
+              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id,'si_transaction' => $dataResponse->sales_invoice->transaction_no]);
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,

@@ -164,13 +164,11 @@ class JurnalDevNewController extends Controller
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
-                                 // ->where(function($q) {
-                                 //            $q->where('sales_order_id', '!=', '')
-                                 //            ->orWhere('order_message','!=','');
-                                        // })
+                                 ->where('sales_order_id', '!=', '')
+                                 ->Where('order_message','!=','')
                                  ->where(function($q) {
-                                            $q->where('sales_invoice_id', '!=', '')
-                                            ->orWhere('sales_invoice_id','!=','failed');
+                                            $q->where('sales_invoice_id','!=', '')
+                                            ->andWhere('sales_invoice_id','!=','failed');
                                         })
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')

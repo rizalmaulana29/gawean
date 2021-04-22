@@ -40,7 +40,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('filter/adjustment/invoice/devNew',['uses' => 'JurnalDevNewController@AdjustmentToInvoice']);
 	$router->get('filter/adjustment/devNew', 		['uses' => 'JurnalDevNewController@AdjustmentTransaksi']);
 	$router->get('filter/delivery/dev', 			['uses' => 'JurnalDeliveryController@Filtering']);
-	$router->get('filter/POnew', 					['uses' => 'JurnalPODevNewController@FilteringPO']);,
+	$router->get('filter/POnew', 					['uses' => 'JurnalPODevNewController@FilteringPO']);
 	$router->get('filter/PO/invoice', 				['uses' => 'JurnalPODevNewController@FilteringPOtoInvoice']);
 	$router->get('filter/PO/Payment', 				['uses' => 'JurnalPODevNewController@FilteringPayment']);
 

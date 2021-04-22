@@ -290,7 +290,8 @@ class JurnalPODevNewController extends Controller
       else {
           if ($searchResponse == true){
               $dataResponse = json_decode($response);
-              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_order_id' => $dataResponse->purchase_order->id,'purchase_order_message' => $dataResponse->purchase_order->transaction_lines_attributes]);
+              $message = json_encode($dataResponse->purchase_order->transaction_lines_attributes);
+              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_order_id' => $dataResponse->purchase_order->id,'purchase_order_message' => $message]);
               $response = array("status" =>true,
                                 "id"     => $dataResponse->purchase_order->id,
                                 "message"=> $dataResponse->purchase_order->transaction_lines_attributes);
@@ -307,9 +308,9 @@ class JurnalPODevNewController extends Controller
     public function PurchaseOrdertoInvoice($getDataTransaksiPO){
 
       $jurnalKoneksi = $this->Entitas($getDataTransaksiPO['entitas'],$requester = 'konektor');
-
+      $atributes = json_decode($getDataTransaksiPO['purchase_order_message']);
       $detail_atribute = [];
-      foreach ($getDataTransaksiPO['purchase_order_message'] as $key => $atribute) {
+      foreach ($atributes as $key => $atribute) {
   
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);

@@ -179,17 +179,17 @@ class JurnalDevNewController extends Controller
                                  ->first();
 
       if (isset($getDataTransaksi)) {
-        if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] == '' && $getDataTransaksi['receive_payment_id'] == '') {
+        if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
 
-          $createPayment = $this->receivePayment($getDataTransaksi);
-          if ($createPayment['status'] == true) {
+          $receivePayment = $this->receivePayment($getDataTransaksi);
+          if ($receivePayment['status'] == true) {
             return response()->json(["status"       => true,
                                      "message"      => "Data berhasil di inputkan ke JurnalID",
                                      "Data Request" => $getDataTransaksi,
-                                     "Data Response"=> $createPayment['message']
+                                     "Data Response"=> $receivePayment['message']
                                     ],200);
           }
-          return $createPayment;
+          return $receivePayment;
 
         } else {
           
@@ -205,7 +205,7 @@ class JurnalDevNewController extends Controller
         }
       }
       return response()->json(["status"       => false,
-                               "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
+                               "message"      => "Tidak ada Data yang dapat dijadikan transaksi ke jurnalID"
                               ],200);
     }
 

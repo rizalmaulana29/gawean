@@ -164,8 +164,8 @@ class JurnalDevNewController extends Controller
                                  ->where('status','paid')
                                  ->where('ra_payment_dua.lunas','y')
                                  ->where('person_id','!=','')
-                                 // ->where('sales_order_id','!=','')
-                                 // ->Where('order_message','!=','')
+                                 ->where('sales_order_id','!=','')
+                                 ->Where('order_message','!=','')
                                  ->where(function($q) {
                                             $q->where('sales_invoice_id','!=', '')
                                               ->Where('sales_invoice_id','!=','failed');
@@ -175,7 +175,7 @@ class JurnalDevNewController extends Controller
                                  ->where('ra_payment_dua.tgl_kirim','=',$start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
-      dd($getDataTransaksi);
+      // dd($getDataTransaksi);
       if (isset($getDataTransaksi)) {
         if ($getDataTransaksi['memo_id'] == '' && $getDataTransaksi['sales_order_id'] != '' && $getDataTransaksi['sales_invoice_id'] != '' && $getDataTransaksi['receive_payment_id'] == '') {
 

@@ -105,7 +105,7 @@ class JurnalDevNewController extends Controller
     public function AdjustmentToInvoice (){
 
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDatestring();
+      $start = Carbon::yesterday()->toDatestring();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','ra_payment_dua.alamat','person_id',
                                           'ra_payment_dua.tgl_transaksi','ra_payment_dua.id_pt',

@@ -33,7 +33,7 @@ class JurnalDevNewController extends Controller
                                           'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
                                           'ra_payment_dua.tunai','admin_entitas.id_entitas as entitas')
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
-                                 ->where('varian','=','Project') //sementara untuk testing
+                                 // ->where('varian','=','Project') //sementara untuk testing
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
                                  ->where('memo_id', '=', '')

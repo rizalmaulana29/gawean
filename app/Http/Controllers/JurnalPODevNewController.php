@@ -73,6 +73,7 @@ class JurnalPODevNewController extends Controller
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order','id_pt',
                                        'purchase_order_id','purchase_order_message','admin_entitas.id_entitas as entitas')
+                                 ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
                                  ->leftjoin('admin_entitas', 'ra_po.id_pt', '=', 'admin_entitas.id')
                                  ->where([["tgl_po", ">=", $start],["tgl_po", "<=", $endDate->toDatestring()]])
                                  ->where('ra_po.status','paid')
@@ -111,9 +112,9 @@ class JurnalPODevNewController extends Controller
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order',
-                                       'purchase_invoice_id','ra_pendapatan_dua.id_entitas as id_entitas')
+                                       'purchase_invoice_id','admin_entitas.id_entitas as entitas')
                                  ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
-                                 ->leftjoin('ra_pendapatan_dua', 'ra_po_detail.id_order','=','ra_pendapatan_dua.id_order')
+                                 ->leftjoin('admin_entitas', 'ra_po.id_pt', '=', 'admin_entitas.id')
                                  ->where("tgl_eksekusi", "=", $start)
                                  ->where('ra_po.status','paid')
                                  ->where(function($q) {

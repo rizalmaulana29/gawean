@@ -476,7 +476,7 @@ class JurnalDevNewController extends Controller
                                 "message"=> $dataResponse->sales_order->transaction_lines_attributes);
           }
           else{
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'apply_memo_id' => "failed"]);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_order_id' => "failed",'memo_id' => "failed",'apply_memo_id' => "failed"]);
               $response = array("status"=>false,"message"=> "sales order".$response);
           }
       }
@@ -602,10 +602,9 @@ class JurnalDevNewController extends Controller
                                                   "records_attributes"     => [[ "transaction_id"=> $transaction_no,
                                                                                  "amount" => $nominal]]
                                                 ]
-                  ];  
-      var_dump($dataRaw);
+                  ];
+                  
       $encodedataRaw = json_encode($dataRaw);
-      var_dump($encodedataRaw);
       $curl = curl_init();
 
       curl_setopt_array($curl, array(

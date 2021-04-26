@@ -68,7 +68,7 @@ class JurnalPODevNewController extends Controller
 
     public function FilteringPOtoInvoice(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::yesterday()->addHour(1)->toDatestring();
+      $start = Carbon::today()->toDatestring();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order','id_pt',
@@ -108,7 +108,7 @@ class JurnalPODevNewController extends Controller
 
     public function FilteringPayment(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::yesterday()->toDatestring();
+      $start = Carbon::today()->toDatestring();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order',

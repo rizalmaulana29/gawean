@@ -26,7 +26,7 @@ class JurnalDevNewController extends Controller
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::yesterday()->addHour(1)->toDateString();
 
-      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi',
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',
                                           'ra_payment_dua.nama_customer','ra_payment_dua.jenis_transaksi','ra_payment_dua.alamat',
                                           'ra_payment_dua.tgl_transaksi','ra_payment_dua.person_id',
                                           'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
@@ -57,7 +57,7 @@ class JurnalDevNewController extends Controller
                           return response()->json(["status"       => true,
                                                    "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
                                                    "Data Request" => $getDataTransaksi,
-                                                   "Data Response"=> $salesOrdertoInvoice['message']
+                                                   "Data Response"=> $salesOrder['message']
                                                   ],200);
                      
                   }
@@ -283,6 +283,7 @@ class JurnalDevNewController extends Controller
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
+      $id_transaksi   = $getDataTransaksi['id_transaksi'];
 
       if ($getDataTransaksi['tunai'] == "Tunai") {
         $tipeTransaksi = "Pembayaran".$getDataTransaksi['id_transaksi'];
@@ -293,14 +294,17 @@ class JurnalDevNewController extends Controller
       }else{
         $tipeTransaksi = "Pelunasan".$getDataTransaksi['id_transaksi'];
         $nominal       = $getDataTransaksi['nominal_total'];
+        $id_transaksi  = Payment::where('id',$getDataTransaksi['id_parent'])->value('id_transaksi');
       }
+
+      
 
       $tglTransaksi = Carbon::now()->toDatestring();
 
       $dataRaw = [
                 "credit_memo"  => [ 
                                         "person_id"          => $person_id,
-                                        "person_name"        => $getDataTransaksi['nama_customer'].' ID'.substr($getDataTransaksi['id_transaksi'],-5),
+                                        "person_name"        => $getDataTransaksi['nama_customer'].' ID'.substr($id_transaksi,-5),
                                         "person_type"        => "customer",
                                         "transaction_date"   => $tglTransaksi,
                                         "transaction_no"     => $getDataTransaksi['id_transaksi'],

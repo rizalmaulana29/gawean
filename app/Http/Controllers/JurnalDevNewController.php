@@ -563,7 +563,7 @@ class JurnalDevNewController extends Controller
                                 "message"=> $dataResponse->sales_invoice->transaction_no);
           }
           else{
-              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed",'receive_payment_id' => "failed"]);
+              $updatePayment= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed",'recieve_payment_id' => "failed"]);
               $response = array("status"=>false,"message"=> "sales invoice".$response);
           }
       }
@@ -581,13 +581,13 @@ class JurnalDevNewController extends Controller
 
         $nominal       = $getDataTransaksi['nominal_total'];
 
-      }elseif ($getDataTransaksi['tunai'] == " ") {
+      }elseif ($getDataTransaksi['tunai'] == "Cicilan") {
 
-        $nominal       = $getDataTransaksi['nominal_total'];
+        $nominal       = $getDataTransaksi['nominal_bayar'] - $sisaBayar;
 
       }else{
 
-          $nominal       = $getDataTransaksi['nominal_bayar'] - $sisaBayar;
+        $nominal       = $getDataTransaksi['nominal_total']; 
 
       }
 
@@ -602,7 +602,7 @@ class JurnalDevNewController extends Controller
                                                                                  "amount" => $nominal]]
                                                 ]
                   ];
-                  
+
       $encodedataRaw = json_encode($dataRaw);
       $curl = curl_init();
 

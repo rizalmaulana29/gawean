@@ -108,14 +108,14 @@ class JurnalPODevNewController extends Controller
 
     public function FilteringPayment(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::today()->toDatestring();
+      $start = Carbon::yesterday()->toDatestring();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order',
                                        'purchase_invoice_id','admin_entitas.id_entitas as entitas')
                                  ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
                                  ->leftjoin('admin_entitas', 'ra_po.id_pt', '=', 'admin_entitas.id')
-                                 ->where("tgl_eksekusi", "=", $start)
+                                 ->where([["tgl_eksekusi", ">=", $start],["tgl_eksekusi", "<=", $endDate->toDatestring()]])
                                  ->where('ra_po.status','paid')
                                  ->where(function($q) {
                                             $q->where('purchase_order_id', '!=', '')

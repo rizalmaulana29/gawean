@@ -75,7 +75,7 @@ class JurnalPODevNewController extends Controller
                                        'purchase_order_id','purchase_order_message','admin_entitas.id_entitas as entitas')
                                  ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
                                  ->leftjoin('admin_entitas', 'ra_po.id_pt', '=', 'admin_entitas.id')
-                                 ->where([["tgl_eksekusi", ">=", $start],["tgl_eksekusi", "<=", $endDate->toDatestring()]])
+                                 ->where("tgl_eksekusi", "=", $start)
                                  ->where('ra_po.status','paid')
                                  ->where(function($q) {
                                             $q->where('purchase_order_id', '!=', '')
@@ -115,7 +115,7 @@ class JurnalPODevNewController extends Controller
                                        'purchase_invoice_id','admin_entitas.id_entitas as entitas')
                                  ->leftjoin('ra_po_detail', 'ra_po.id', '=', 'ra_po_detail.id_po_detail')
                                  ->leftjoin('admin_entitas', 'ra_po.id_pt', '=', 'admin_entitas.id')
-                                 ->where([["tgl_eksekusi", ">=", $start],["tgl_eksekusi", "<=", $endDate->toDatestring()]])
+                                 ->where("tgl_eksekusi", "=", $start)
                                  ->where('ra_po.status','paid')
                                  ->where(function($q) {
                                             $q->where('purchase_order_id', '!=', '')

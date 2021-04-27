@@ -138,6 +138,7 @@ class JurnalDevNewController extends Controller
                                  ->where('memo_id', '!=', '')
                                  ->where('sales_order_id', '=', '')
                                  ->where('order_message', '=', '')
+                                 ->where("ra_payment_dua.tgl_kirim", ">=", $start)
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
                                  // ->get();

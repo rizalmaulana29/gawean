@@ -84,39 +84,40 @@ class JurnalDevNewController extends Controller
               }
             } 
             return $createCustomer;
-          }elseif ($getDataTransaksi['person_id'] != "" && $getDataTransaksi['jenis_transaksi'] == "Receive_Payment") {
-            $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-                  if ($salesOrder['status'] == true) {
-                          return response()->json(["status"       => true,
-                                                   "message"      => "Data sales order di RP berhasil di inputkan ke JurnalID",
-                                                   "Data Request" => $getDataTransaksi,
-                                                   "Data Response"=> $salesOrder['message']
-                                                  ],200);
-                     
-                  }
-                  return $salesOrder;
-
-          }elseif ($getDataTransaksi['person_id'] != "" && $getDataTransaksi['memo_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
-            $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-                  if ($salesOrder['status'] == true) {
-                          return response()->json(["status"       => true,
-                                                   "message"      => "Data sales order berhasil di inputkan ke JurnalID",
-                                                   "Data Request" => $getDataTransaksi,
-                                                   "Data Response"=> $salesOrder['message']
-                                                  ],200);
-                     
-                  }
-                  return $salesOrder;
           }else {
-            $creditMemo = $this->creditMemo($getDataTransaksi,$getDataTransaksi['person_id']);
-            if ($creditMemo['status'] == true) {
-              return response()->json(["status"       => true,
-                                       "message"      => "Data sales order di pelunasan berhasil di inputkan ke JurnalID",
-                                       "Data Request" => $getDataTransaksi,
-                                       "Data Response"=> $creditMemo['message']
-                                      ],200);
+            if ($getDataTransaksi['jenis_transaksi'] == "Receive_Payment") {
+              $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+                if ($salesOrder['status'] == true) {
+                        return response()->json(["status"       => true,
+                                                 "message"      => "Data sales order di RP berhasil di inputkan ke JurnalID",
+                                                 "Data Request" => $getDataTransaksi,
+                                                 "Data Response"=> $salesOrder['message']
+                                                ],200);
+                   
+                }
+                return $salesOrder;
+            }elseif ($getDataTransaksi['memo_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
+              $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+                if ($salesOrder['status'] == true) {
+                        return response()->json(["status"       => true,
+                                                 "message"      => "Data sales order berhasil di inputkan ke JurnalID",
+                                                 "Data Request" => $getDataTransaksi,
+                                                 "Data Response"=> $salesOrder['message']
+                                                ],200);
+                   
+                }
+                return $salesOrder;
+            }else{
+              $creditMemo = $this->creditMemo($getDataTransaksi,$getDataTransaksi['person_id']);
+              if ($creditMemo['status'] == true) {
+                return response()->json(["status"       => true,
+                                         "message"      => "Data sales order di pelunasan berhasil di inputkan ke JurnalID",
+                                         "Data Request" => $getDataTransaksi,
+                                         "Data Response"=> $creditMemo['message']
+                                        ],200);
+              }
+              return $creditMemo;
             }
-            return $creditMemo;
           }
         }
         return response()->json(["status"       => false,

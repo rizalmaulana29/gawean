@@ -96,17 +96,7 @@ class JurnalDevNewController extends Controller
                    
                 }
                 return $salesOrder;
-            }elseif ($getDataTransaksi['memo_id'] != "" && $getDataTransaksi['sales_order_id'] == '') {
-              $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
-                if ($salesOrder['status'] == true) {
-                        return response()->json(["status"       => true,
-                                                 "message"      => "Data sales order berhasil di inputkan ke JurnalID",
-                                                 "Data Request" => $getDataTransaksi,
-                                                 "Data Response"=> $salesOrder['message']
-                                                ],200);
-                   
-                }
-                return $salesOrder;
+
             }else{
               $creditMemo = $this->creditMemo($getDataTransaksi,$getDataTransaksi['person_id']);
               if ($creditMemo['status'] == true) {
@@ -119,6 +109,52 @@ class JurnalDevNewController extends Controller
               return $creditMemo;
             }
           }
+        }
+        return response()->json(["status"       => false,
+                                 "message"      => "Entitas / Kantor belum terdaftar di Jurnal"
+                                ],200);
+      }
+      return response()->json(["status"       => false,
+                               "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
+                              ],200);
+
+    }
+
+    public function FilteringEdit(){
+      $endDate = Carbon::now()->endOfMonth();
+      $start = Carbon::yesterday()->addHour(1)->toDateString();
+
+      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',
+                                          'ra_payment_dua.nama_customer','ra_payment_dua.jenis_transaksi','ra_payment_dua.alamat',
+                                          'ra_payment_dua.tgl_transaksi','ra_payment_dua.person_id',
+                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
+                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
+                                          'ra_payment_dua.tunai','admin_entitas.id_entitas as entitas')
+                                 ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
+                                 // ->where('varian','=','Project') //sementara untuk testing
+                                 ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
+                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
+                                 ->where('person_id', '!=', '')
+                                 ->where('memo_id', '!=', '')
+                                 ->where('sales_order_id', '=', '')
+                                 ->where('order_message', '=', '')
+                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
+                                 ->first();
+                                 // ->get();
+      dd($getDataTransaksi);
+      if (isset($getDataTransaksi)) {
+        $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
+        if ($validasiJurnal['status'] == true) {
+          $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+            if ($salesOrder['status'] == true) {
+                    return response()->json(["status"       => true,
+                                             "message"      => "Data sales order berhasil di inputkan ke JurnalID",
+                                             "Data Request" => $getDataTransaksi,
+                                             "Data Response"=> $salesOrder['message']
+                                            ],200);
+               
+            }
+            return $salesOrder;
         }
         return response()->json(["status"       => false,
                                  "message"      => "Entitas / Kantor belum terdaftar di Jurnal"

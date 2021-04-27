@@ -288,7 +288,19 @@ class JurnalDevNewController extends Controller
       
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
 
-      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->value('methode_jurnal');
+      $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
+
+      $deposit_to_name     = $paymentMethode->methode_jurnal;
+      $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
+
+      if ($getDataTransaksi['entitas'] == 'PDN') {
+        if (in_array($paymentMethode->parent_id, $transfer)) {
+          $deposit_to_name     = "Mandiri 1310012793792";
+        }else {
+          $deposit_to_name     = "Kas";
+        }
+      }
+      
       $id_transaksi   = $getDataTransaksi['id_transaksi'];
 
       if ($getDataTransaksi['tunai'] == "Tunai") {

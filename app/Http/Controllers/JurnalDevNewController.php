@@ -36,7 +36,7 @@ class JurnalDevNewController extends Controller
                                  // ->where('varian','=','Project') //sementara untuk testing
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
-                                 ->where('memo_id', '=', '')
+                                 // ->where('memo_id', '=', '')
                                  ->where(function($q) {
                                             $q->where('sales_order_id', '=', '')
                                             ->orWhere('sales_order_id','=','pelunasan');
@@ -96,7 +96,7 @@ class JurnalDevNewController extends Controller
                    
                 }
                 return $salesOrder;
-            }elseif ($getDataTransaksi['memo_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
+            }elseif ($getDataTransaksi['memo_id'] != "") {
               $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
                 if ($salesOrder['status'] == true) {
                         return response()->json(["status"       => true,

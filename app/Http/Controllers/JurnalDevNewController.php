@@ -133,8 +133,8 @@ class JurnalDevNewController extends Controller
                                  ->where('sales_invoice_id','=','')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
-                                 ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
-                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
+                                 ->where([["ra_payment_dua.tgl_kirim", ">=", $start],
+                                          ["ra_payment_dua.tgl_kirim", "<=", $endDate->toDateString()]])
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
 

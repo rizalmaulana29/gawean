@@ -108,7 +108,7 @@ class JurnalDevNewController extends Controller
 
     public function AdjustmentToInvoice (){
 
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::today();
       $start = Carbon::yesterday()->addHour(1)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','ra_payment_dua.alamat','person_id',
@@ -360,6 +360,7 @@ class JurnalDevNewController extends Controller
 
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
+          $updateMemo= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['memo_id' => "failed",'apply_memo_id' => "failed"]);
       } 
       else {
           if ($searchResponse == true){
@@ -371,6 +372,7 @@ class JurnalDevNewController extends Controller
           else{
 
               $response = array("status"=>false,"message"=> "credit memo".$response);
+              $updateMemo= Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['memo_id' => "failed",'apply_memo_id' => "failed"]);
           }
       }
 

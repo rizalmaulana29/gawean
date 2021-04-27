@@ -96,7 +96,7 @@ class JurnalDevNewController extends Controller
                    
                 }
                 return $salesOrder;
-            }elseif ($getDataTransaksi['memo_id'] != "") {
+            }elseif ($getDataTransaksi['memo_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
               $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
                 if ($salesOrder['status'] == true) {
                         return response()->json(["status"       => true,

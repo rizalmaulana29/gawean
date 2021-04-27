@@ -84,7 +84,30 @@ class JurnalDevNewController extends Controller
               }
             } 
             return $createCustomer;
-          } else {
+          }elseif ($getDataTransaksi['person_id'] != "" && $getDataTransaksi['jenis_transaksi'] == "Receive_Payment") {
+            $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+                  if ($salesOrder['status'] == true) {
+                          return response()->json(["status"       => true,
+                                                   "message"      => "Data sales order di RP berhasil di inputkan ke JurnalID",
+                                                   "Data Request" => $getDataTransaksi,
+                                                   "Data Response"=> $salesOrder['message']
+                                                  ],200);
+                     
+                  }
+                  return $salesOrder;
+
+          }elseif ($getDataTransaksi['person_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
+            $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
+                  if ($salesOrder['status'] == true) {
+                          return response()->json(["status"       => true,
+                                                   "message"      => "Data sales order di RP berhasil di inputkan ke JurnalID",
+                                                   "Data Request" => $getDataTransaksi,
+                                                   "Data Response"=> $salesOrder['message']
+                                                  ],200);
+                     
+                  }
+                  return $salesOrder;
+          }else {
             $creditMemo = $this->creditMemo($getDataTransaksi,$getDataTransaksi['person_id']);
             if ($creditMemo['status'] == true) {
               return response()->json(["status"       => true,
@@ -300,7 +323,7 @@ class JurnalDevNewController extends Controller
           $deposit_to_name     = "Kas";
         }
       }
-      
+
       $id_transaksi   = $getDataTransaksi['id_transaksi'];
 
       if ($getDataTransaksi['tunai'] == "Tunai") {
@@ -692,7 +715,7 @@ class JurnalDevNewController extends Controller
       $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
 
       if (in_array($paymentMethode->parent_id, $transfer)) {
-        if ($getDataTransaksi['id_entitas'] == 'PDN') {
+        if ($getDataTransaksi['entitas'] == 'PDN') {
           $payment_method_name = "Transfer Bank";
           $payment_method_id   = "1539636";
           $deposit_to_name     = "Mandiri 1310012793792";
@@ -702,12 +725,12 @@ class JurnalDevNewController extends Controller
           $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
       } else {
-        if ($getDataTransaksi['id_entitas'] == 'PDN') {
+        if ($getDataTransaksi['entitas'] == 'PDN') {
           $payment_method_name = "Kas Tunai";
           $payment_method_id   = "1539634";
           $deposit_to_name     = "Kas";
         } else {
-          if ($getDataTransaksi['id_entitas'] == 'ANA') {
+          if ($getDataTransaksi['entitas'] == 'ANA') {
           $payment_method_name = "Cash";
           } else {
             $payment_method_name = "Kas Tunai";

@@ -96,11 +96,11 @@ class JurnalDevNewController extends Controller
                   }
                   return $salesOrder;
 
-          }elseif ($getDataTransaksi['person_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
+          }elseif ($getDataTransaksi['person_id'] != "" && $getDataTransaksi['memo_id'] != "" && $getDataTransaksi['sales_order_id'] == "") {
             $salesOrder = $this->SalesOrder($getDataTransaksi,$getDataTransaksi['person_id']);
                   if ($salesOrder['status'] == true) {
                           return response()->json(["status"       => true,
-                                                   "message"      => "Data sales order di RP berhasil di inputkan ke JurnalID",
+                                                   "message"      => "Data sales order berhasil di inputkan ke JurnalID",
                                                    "Data Request" => $getDataTransaksi,
                                                    "Data Response"=> $salesOrder['message']
                                                   ],200);

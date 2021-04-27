@@ -39,7 +39,11 @@ class JurnalDevNewController extends Controller
                                  ->where('memo_id', '=', '')
                                  ->where(function($q) {
                                             $q->where('sales_order_id', '=', '')
-                                            ->orWhere('order_message','=','');
+                                            ->orWhere('sales_order_id','=','pelunasan');
+                                        })
+                                 ->where(function($q) {
+                                            $q->where('order_message', '=', '')
+                                            ->orWhere('order_message','=','pelunasan');
                                         })
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
@@ -55,7 +59,7 @@ class JurnalDevNewController extends Controller
                 $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
                   if ($salesOrder['status'] == true) {
                           return response()->json(["status"       => true,
-                                                   "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
+                                                   "message"      => "Data sales order di RP berhasil di inputkan ke JurnalID",
                                                    "Data Request" => $getDataTransaksi,
                                                    "Data Response"=> $salesOrder['message']
                                                   ],200);
@@ -105,7 +109,7 @@ class JurnalDevNewController extends Controller
     public function AdjustmentToInvoice (){
 
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->toDatestring();
+      $start = Carbon::yesterday()->addHour(1)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','ra_payment_dua.alamat','person_id',
                                           'ra_payment_dua.tgl_transaksi','ra_payment_dua.id_pt',
@@ -123,12 +127,14 @@ class JurnalDevNewController extends Controller
                                         })
                                  ->where(function($q) {
                                             $q->where('sales_order_id', '!=', '')
-                                              ->Where('sales_order_id','!=','failed');
+                                              ->Where('sales_order_id','!=','failed')
+                                              ->Where('sales_order_id','!=','pelunasan');
                                         })
                                  ->where('sales_invoice_id','=','')
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
-                                 ->where('ra_payment_dua.tgl_kirim','=',$start)
+                                 ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
+                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
                                  ->first();
 
@@ -167,7 +173,8 @@ class JurnalDevNewController extends Controller
                                  ->Where('order_message','!=','')
                                  ->where(function($q) {
                                             $q->where('sales_invoice_id','!=', '')
-                                              ->Where('sales_invoice_id','!=','failed');
+                                              ->Where('sales_invoice_id','!=','failed')
+                                              ->Where('sales_invoice_id','!=','pelunasan');
                                         })
                                  ->where('apply_memo_id','=','')
                                  ->Where('recieve_payment_id','=','')
@@ -499,7 +506,7 @@ class JurnalDevNewController extends Controller
         $produk              = ["id" => $atribute->id, "quantity"=> $atribute->quantity];
         array_push($detail_atribute,$produk);
       }
-      $tglTransaksi = Carbon::now()->toDatestring();
+      $tglTransaksi = $getDataTransaksi['tgl_kirim'];
 
       $dataRaw = [
                 "sales_order"  => [ 
@@ -552,11 +559,17 @@ class JurnalDevNewController extends Controller
       if ($err) {
           $response = array("status"=>"failed","message"=>$err);
           $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed"]);
+          if ($getDataTransaksi['tunai'] == "Cicilan") {
+             $updatePaymentChild = Payment::where('id_parent',$getDataTransaksi['id'])->update(['sales_invoice_id' => "failed",'apply_memo_id' => "failed"]);
+           } 
       } 
       else {
           if ($searchResponse == true){
               $dataResponse  = json_decode($response);
               $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id,'si_transaction' => $dataResponse->sales_invoice->transaction_no]);
+              if ($getDataTransaksi['tunai'] == "Cicilan") {
+                $updatePaymentChild = Payment::where('id_parent',$getDataTransaksi['id'])->update(['sales_invoice_id' => $dataResponse->sales_invoice->id,'si_transaction' => $dataResponse->sales_invoice->transaction_no]);
+              } 
 
               $response = array("status" => true,
                                 "id"     => $dataResponse->sales_invoice->id,

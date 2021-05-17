@@ -111,6 +111,7 @@ class JurnalDevNewController extends Controller
                                  ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
                                           ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateString()]])
                                  ->where('memo_id', '=', '')
+                                 ->where('jenis_transaksi', '!=', 'Receive_Payment')
                                  ->where('status', '=', 'paid')
                                  ->where(function($q) {
                                             $q->where('sales_order_id', '!=', '')

@@ -38,6 +38,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	//Devel new concept
 	$router->get('filter/edit', 					['uses' => 'JurnalDevNewController@FilteringEdit']);
 	$router->get('filter/devNew', 					['uses' => 'JurnalDevNewController@Filtering']);
+	$router->get('filter/paid', 					['uses' => 'JurnalDevNewController@paidTriger']);
 	$router->get('filter/adjustment/invoice/devNew',['uses' => 'JurnalDevNewController@AdjustmentToInvoice']);
 	$router->get('filter/adjustment/devNew', 		['uses' => 'JurnalDevNewController@AdjustmentTransaksi']);
 	$router->get('filter/delivery/dev', 			['uses' => 'JurnalDeliveryController@Filtering']);

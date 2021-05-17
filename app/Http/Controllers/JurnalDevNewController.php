@@ -69,6 +69,7 @@ class JurnalDevNewController extends Controller
                    
                 }
                 return $salesOrder;
+              }
             } 
             return $createCustomer;
           }else {

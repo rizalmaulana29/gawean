@@ -99,7 +99,7 @@ class JurnalDevNewController extends Controller
 
     public function paidTriger(){
       $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->subDays(3)->toDateString();
+      $start = Carbon::now()->subDays(7)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',
                                           'ra_payment_dua.nama_customer','ra_payment_dua.jenis_transaksi','ra_payment_dua.alamat',

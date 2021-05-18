@@ -372,7 +372,7 @@ class JurnalPODevNewController extends Controller
                                 "message"=> $dataResponse->purchase_invoice->transaction_no);
           }
           else{
-
+              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_invoice_id' => 'failed']);
               $response = array("status"=>false,"message"=> "purchase invoice".$response);
           }
       }
@@ -451,7 +451,7 @@ class JurnalPODevNewController extends Controller
                                 "message"=> $dataResponse->purchase_payment->transaction_no);
           }
           else{
-
+              $updatePO = PO::where('id',$getDataTransaksiPO['id'])->update(['purchase_payment_id' => 'failed']);
               $response = array("status"=>false,"message"=> "purchase payment".$response);
           }
       }

@@ -123,10 +123,11 @@ class JurnalPODevNewController extends Controller
                                             ->orWhere('purchase_order_id','!=','failed');
                                         })
                                  ->where('purchase_order_message','!=','')
-                                 ->where(function($q) {
-                                            $q->where('purchase_invoice_id', '!=', '')
-                                            ->orWhere('purchase_invoice_id','!=','failed');
-                                        })
+                                 ->where('purchase_invoice_id', '!=', '')
+                                 // ->where(function($q) {
+                                 //            $q
+                                 //            ->orWhere('purchase_invoice_id','!=','failed');
+                                 //        })
                                  ->where('purchase_payment_id','')
                                  ->orderBy('tgl_po','ASC')
                                  ->first();

@@ -55,6 +55,13 @@ class CartController extends Controller
       $id = [];
       $x = [];
       $n = 0;
+
+      if ($request->input('Kategori') == 'QA' || $request->input('Kategori') == 'QB') {
+        $varian = 'Qurban';
+      } else {
+        $varian = 'Aqiqah';
+      }
+      
       $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
       $adminentitas = AdminEntitas::where('id_entitas',$id_entitas)->value('id');
 
@@ -64,7 +71,7 @@ class CartController extends Controller
           'alamat'      => $request->input('alamat'),
           'hp'          => $request->input('hp'),
           'email'       => $request->input('email'),
-          'varian'      => 'Aqiqah',
+          'varian'      => $varian,
           'id_kantor' => $request->input('id_kantor'),
           'id_pt'     => $adminentitas,
           'id_payment_method' => $request->input('id_payment'),

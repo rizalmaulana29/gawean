@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class JurnalPODevNewController extends Controller
 {
     public function FilteringPO(){
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::now()->addDays(7);
       $start = Carbon::yesterday()->addHour(1)->toDatestring();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
@@ -67,7 +67,7 @@ class JurnalPODevNewController extends Controller
     }
 
     public function FilteringPOtoInvoice(){
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::now()->addDays(7);
       $start = Carbon::today()->toDatestring();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
@@ -107,8 +107,8 @@ class JurnalPODevNewController extends Controller
     }
 
     public function FilteringPayment(){
-      $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::now()->subDays(8)->toDateString();
+      $endDate = Carbon::now()->addDays(7);
+      $start = Carbon::now()->subDays(7)->toDateString();
 
       $getDataTransaksiPO = PO::select('ra_po.id','id_po_trans','ra_po.id_kantor','tgl_po','ra_po.id_vendor','total_po','tgl_eksekusi',
                                        'ra_po.payment_method','ra_po.status','static_data','ra_po_detail.id_order',

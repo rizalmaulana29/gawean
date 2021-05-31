@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class JurnalDevNewController extends Controller
 {
     public function Filtering(){
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::now()->addDays(7);
       $start = Carbon::yesterday()->addHour(1)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',
@@ -98,7 +98,7 @@ class JurnalDevNewController extends Controller
     }
 
     public function paidTriger(){
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::now()->addDays(7);
       $start = Carbon::now()->subDays(3)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',
@@ -148,7 +148,7 @@ class JurnalDevNewController extends Controller
     }
 
     public function FilteringEdit(){
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::now()->addDays(7);
       $start = Carbon::yesterday()->addHour(1)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',
@@ -243,7 +243,7 @@ class JurnalDevNewController extends Controller
 
     public function AdjustmentTransaksi (){
 
-      $endDate = Carbon::now()->endOfMonth();
+      $endDate = Carbon::now()->addDays(7);
       $start = Carbon::now()->toDatestring();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','ra_payment_dua.alamat','person_id',

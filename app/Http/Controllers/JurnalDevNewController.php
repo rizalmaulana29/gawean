@@ -38,10 +38,7 @@ class JurnalDevNewController extends Controller
                                  ->where('sales_order_id', '=', '')
                                  ->where('order_message', '=', '')
                                  ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
-                                 ->first();
-
-      var_dump($endDate);
-      var_dump($$start);
+                          
       if (isset($getDataTransaksi)) {
         $validasiJurnal = $this->Entitas($getDataTransaksi['entitas'],$requester = $getDataTransaksi['id_transaksi']);
         if ($validasiJurnal['status'] == true) {

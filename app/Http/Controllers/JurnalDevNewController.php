@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class JurnalDevNewController extends Controller
 {
     public function Filtering(){
-      $endDate = Carbon::now()->addDays(7);
+      $endDate = Carbon::now()->addDays(30);
       $start = Carbon::yesterday()->addHour(1)->toDateString();
 
       $getDataTransaksi = Payment::select('ra_payment_dua.id as id','ra_payment_dua.id_pt','id_transaksi','ra_payment_dua.id_parent',

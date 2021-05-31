@@ -56,7 +56,7 @@ class CartController extends Controller
       $x = [];
       $n = 0;
 
-      if ($request->input('Kategori') == 'QA' || $request->input('Kategori') == 'QB') {
+      if ($request->input('kategori') == 'QA' || $request->input('kategori') == 'QB') {
         $varian = 'Qurban';
       } else {
         $varian = 'Aqiqah';
@@ -88,7 +88,8 @@ class CartController extends Controller
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),
           'waktu_kirim' => $request->input('waktu_kirim'),
-          'expired_at' => $expired_at
+          'expired_at' => $expired_at,
+          'nama_peserta' => $request->input('atas_nama')
       ]);
 
       foreach ($req['id_produk_harga'] as $key => $id_produk) {

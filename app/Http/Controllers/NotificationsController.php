@@ -240,8 +240,8 @@ class NotificationsController extends Controller
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
 
-        dd($merData);
-        
+        dd($merData["id_entitas"]);
+
         if($payMethod == "01"){
             $authNo         = (isset($req['authNo']))?$req['authNo']:"";
             $IssueBankCd    = (isset($req['IssueBankCd']))?$req['IssueBankCd']:"";

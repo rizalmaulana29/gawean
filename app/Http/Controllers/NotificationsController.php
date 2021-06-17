@@ -231,16 +231,23 @@ class NotificationsController extends Controller
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         if($payment['varian'] == "Qurban"){
             $paymeth    = Paymeth::find($payment['id_payment_method']);
-            $merData    = AdminEntitas::find($payment['id_pt']);
+            $merData    = AdminEntitas::where('id',$payment['id_pt'])->first();
+            echo "Ini ";
         }else{
             $paymeth    = Paymeth::find($payment['id_payment_method']);
             $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+            echo "Itu ";
         }
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
+        var_dump($iMid);
+        echo "<br>";
+        var_dump($merKey);
+        echo "<br>";
+        var_dump($merData["id_entitas"]);
 
-        dd($merData["id_entitas"]);
+        dd($merData);
 
         if($payMethod == "01"){
             $authNo         = (isset($req['authNo']))?$req['authNo']:"";

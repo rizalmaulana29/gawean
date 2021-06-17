@@ -231,7 +231,7 @@ class NotificationsController extends Controller
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
         if($payment['varian'] == "Qurban"){
             $paymeth    = Paymeth::find($payment['id_payment_method']);
-            $merData    = AdminEntitas::where('id',$payment['id_pt'])->first();
+            $merData    = AdminEntitas::find($payment['id_pt']);
         }else{
             $paymeth    = Paymeth::find($payment['id_payment_method']);
             $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();

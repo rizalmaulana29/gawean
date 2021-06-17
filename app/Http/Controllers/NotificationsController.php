@@ -229,9 +229,13 @@ class NotificationsController extends Controller
 
 
         $payment    = Payment::where('id_transaksi',$referenceNo)->first();
-        $paymeth    = Paymeth::find($payment['id_payment_method']);
-
-        $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        if($payment['varian'] == "Qurban"){
+            $paymeth    = Paymeth::find($payment['id_payment_method']);
+            $merData    = AdminEntitas::where('id',$payment['id_pt'])->first();
+        }else{
+            $paymeth    = Paymeth::find($payment['id_payment_method']);
+            $merData    = AdminEntitas::where('id_entitas',$paymeth['id_entitas'])->first();
+        }
         $iMid       = Nicepay::$isProduction ? $merData['merchant_id']:$merData['mid_sand'];
         $merKey     = Nicepay::$isProduction ? $merData['merchant_key']:$merData['merkey_sand'];
 
@@ -282,7 +286,7 @@ class NotificationsController extends Controller
         $niceCatcherLog->response = addslashes(json_encode($req));
         $niceCatcherLog->status   = addslashes($status);
         $niceCatcherLog->action   = "Notification";
-        $niceCatcherLog->id_entitas = $paymeth['id_entitas'];
+        $niceCatcherLog->id_entitas = $merData['id_entitas'];# $paymeth['id_entitas'];
         $niceCatcherLog->source_data = "catcher";
         $niceCatcherLog->save();
 
@@ -319,7 +323,7 @@ class NotificationsController extends Controller
         $nicepayLog->response = addslashes(json_encode($req));
         $nicepayLog->status   = addslashes($status);
         $nicepayLog->action   = "Notification";
-        $nicepayLog->id_entitas = $paymeth['id_entitas'];
+        $nicepayLog->id_entitas = $merData['id_entitas'];
         $nicepayLog->source_data = $source_data;
         $nicepayLog->save();
 
@@ -347,7 +351,7 @@ class NotificationsController extends Controller
                 $alamat     = $payment['alamat'];
                 $email      = trim($payment['email']); 
                 $hp         = $payment['hp'];
-                $parent_id  = $paymeth['parent_id'];
+                $parent_id  = intval($payMethod);
                 
                 if ($parent_id == 2 ) {
                     $title  = "Virtual Account :";

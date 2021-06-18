@@ -19,7 +19,7 @@
 			<tr>@if($varian == 'Aqiqah')
 				<td style="padding:15px 16px"><img src="https://order.rumahaqiqah.co.id/images/logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
 				@else
-				<td style="padding:15px 16px"><img src="https://www.rumahqurban.id/wp-content/uploads/2021/03/logo-rumah-qurban.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahqurban.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
+				<td style="padding:15px 16px"><img src="https://drive.google.com/uc?export=view&id=12n6fB9B72R_Fnizt8_hQLDo7zY_Z87N8" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahqurban.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
 				@endif
 			</tr>
 

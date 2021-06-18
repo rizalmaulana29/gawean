@@ -18,7 +18,7 @@ class AdminEntitas extends Model
     //     'id_bank' => 'string'
     // ];
     public $timestamps = false;
-
+    public $incrementing = false;
     /**
      * The attributes excluded from the model's JSON form.
      *

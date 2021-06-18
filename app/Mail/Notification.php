@@ -14,7 +14,7 @@ class Notification extends Mailable
      * @return void
      */
     
-    public function __construct($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number)
+    public function __construct($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian)
     {
         $this->to_address  = $to_address;
         $this->payment   = $payment;
@@ -26,6 +26,7 @@ class Notification extends Mailable
         $this->parent_id   = $parent_id;
         $this->title       = $title;
         $this->number      = $number;
+        $this->varian      = $varian;
         
     }
 
@@ -61,6 +62,7 @@ class Notification extends Mailable
                     'parent_id'     => $this->parent_id,
                     'title'         => $this->title,
                     'number'        => $this->number,
+                    'varian'        => $this->varian
                 ]
             );
     }

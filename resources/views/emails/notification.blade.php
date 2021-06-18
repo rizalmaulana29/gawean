@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Paid Notification - Rumah Aqiqah</title>
+    <title>Paid Notification</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <?php 
         use Illuminate\Support\Facades\DB;
@@ -16,7 +16,11 @@
 		<tbody>
             
 			<tr>
+				@if($varian == 'Aqiqah')
 				<td style="padding:15px 16px"><img src="https://order.rumahaqiqah.co.id/images/logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
+				@else
+				<td style="padding:15px 16px"><img src="https://www.rumahqurban.id/wp-content/uploads/2021/03/logo-rumah-qurban.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahqurban.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
+				@endif
 			</tr>
             <tr>
                 <td style="padding:8px 16px">
@@ -84,7 +88,11 @@
 
                             <tr>
                             	<td style="font-size:16px;padding:0 3px;color:#0064d2;font-weight:bold"><span style="color: blue;">LUNAS</span></td>
+                            	@if($varian == 'Aqiqah')
                             	<td style="font-size:14px;padding:0 3px"><a style="color:#000000;text-decoration:none">RUMAHAQIQAH.CO.ID</a></td>
+                            	@else
+                            	<td style="font-size:14px;padding:0 3px"><a style="color:#000000;text-decoration:none">RUMAHQURBAN.ID</a></td>
+                            	@endif
                             </tr>
                         </tbody>
                     </table>
@@ -141,14 +149,25 @@
         	<tr>
         		<td style="padding:12px 16px">
         			<p style="font-size:14px;line-height:21px;margin:0 0 20px">
-        				Butuh bantuan? Silahkan <a href="https://api.whatsapp.com/send?phone=6281370071330&text=Assalamu%27alaikum%20Rumah%20Aqiqah">klik disini.</a>
+        				Butuh bantuan? Silahkan
+        				@if($varian == 'Aqiqah' ) 
+        				<a href="https://api.whatsapp.com/send?phone=6281370071330&text=Assalamu%27alaikum%20Rumah%20Aqiqah">klik disini.</a>
+        				@else
+        				<a href="https://api.whatsapp.com/send?phone=6281370071330&text=Assalamu%27alaikum%20Rumah%20Qurban">klik disini.</a>
+        				@endif
         				<br> Ingat Order ID: {{$transdata->id_transaksi}} Anda saat menghubungi Customer Care.
         			</p>
-
+        			@if($varian == 'Aqiqah' )
         			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Terima kasih telah memilih <a href="https://rumahaqiqah.co.id">rumahaqiqah.co.id</a></p>
 
         			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Salam,
         				<br><a href="https://rumahaqiqah.co.id">rumahaqiqah.co.id</a></p>
+        			@else
+        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Terima kasih telah memilih <a href="https://rumahqurban.id">rumahqurban.id</a></p>
+
+        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Salam,
+        				<br><a href="https://rumahqurban.id">rumahqurban.id</a></p>
+        			@endif
         			</td>
         		</tr>
 

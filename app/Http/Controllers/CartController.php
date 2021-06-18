@@ -207,9 +207,9 @@ class CartController extends Controller
       }
 
       $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title))->build()
+            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title,$varian))->build()
         );
-      $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title); 
+      $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title,$varian); 
       
 
       #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
@@ -396,7 +396,7 @@ class CartController extends Controller
     // return response()->download($path, $imageName, $header);
   }
 
-  private function sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title){
+  private function sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title,$varian){
     if (substr($hp,0,1) == 0) {
       $nohp = str_replace('0','62',$hp);
     }
@@ -449,7 +449,8 @@ class CartController extends Controller
     $key='c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
     $url='http://116.203.92.59/api/async_send_message';
 
-    $data = array("phone_no"=> $nohp,
+    if ($varian == 'Aqiqah') {
+      $data = array("phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>
                   "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
@@ -483,6 +484,43 @@ class CartController extends Controller
                   \\n'.'Terima Kasih 😊🙏'
 
                 );
+    } else {
+      $data = array("phone_no"=> $nohp,
+                  "key"   =>$key,
+                  "message" =>
+                  "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.'
+                  \\n'.'Berikut adalah tagihan transaksi Bapak/Ibu di Rumah Qurban'.'
+                  \\n'.'untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->tgl_transaksi)).'
+                  \\n'.'
+                  \\n'.'Dengan detail order sebagai berikut:'.'
+                  \\n'.' Order ID          : '.$transdata->id_transaksi.'
+                  \\n'.' Nama              : '.$nama.'
+                  \\n'.' No. Hp            : '.$hp.'
+                  \\n'.' Keterangan pesanan: '.$produk.'
+                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
+                  \\n'.'
+                  \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Bapak/Ibu menerima pesan ini,'.'
+                  \\n'.'atau pemesananan Bapak/Ibu akan di anggap gagal.'.'
+                  \\n'.'
+                  \\n'.'Metode Pembayaran:'.'
+                  \\n'.'- '.$rek.'
+                  \\n'.$bayar.'
+                  \\n'.'
+                  \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
+                  \\n'.$link.'
+                  \\n'.'
+                  \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
+                  \\n'.'wa.me/6281370071330'.'
+                  \\n'.'
+                  \\n'.'Ingat Order ID Bapak/Ibu saat menghubungi Customer Care.'.'
+                  \\n'.'
+                  \\n'.'Terima kasih telah memilih rumahqurban.id'.'
+                  \\n'.'
+                  \\n'.'Terima Kasih 😊🙏'
+
+                );
+    }
+    
     $data_string = json_encode($data);
 
     $ch = curl_init($url);

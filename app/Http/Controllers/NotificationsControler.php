@@ -149,6 +149,7 @@ class NotificationsController extends Controller
                 $to_address = trim($payment['email']);
                 $nama       = $payment['nama_customer'];
                 $alamat     = $payment['alamat'];
+                $varian     = $payment['varian'];
                 $email      = trim($payment['email']); 
                 $hp         = $payment['hp'];
                 $parent_id  = $paymeth['parent_id'];
@@ -166,10 +167,10 @@ class NotificationsController extends Controller
                 }
 
                 $hasil = Mail::send(
-                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
+                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
                 );
 
-                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
+                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian);
             }
 
             if($payment->id_parent){
@@ -537,7 +538,7 @@ class NotificationsController extends Controller
         return $randomString; 
     }
 
-    public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title){
+    public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian){
         if (substr($hp,0,1) == 0) {
         $nohp = str_replace('0','+62',$hp);
         }
@@ -575,7 +576,9 @@ class NotificationsController extends Controller
 
         $key='c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url='http://116.203.92.59/api/async_send_message';
-        $data = array(
+
+        if ($varian == 'Aqiqah') {
+            $data = array(
                     "phone_no"=> $nohp,
                     "key"   =>$key,
                     "message" =>
@@ -605,6 +608,40 @@ class NotificationsController extends Controller
                                     \\n'.'
                                     \\n'.'Terima Kasih 😊🙏'
                     );
+        } else {
+            $data = array(
+                    "phone_no"=> $nohp,
+                    "key"   =>$key,
+                    "message" =>
+                                    "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.'
+                                    \\n'.'Terima kasih atas pembayaran Bapak/Ibu'.'
+                                    \\n'.'
+                                    \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
+                                    \\n'.' Order ID          : '.$payment->id_transaksi.'
+                                    \\n'.' Nama              : '.$nama.'
+                                    \\n'.' No. Hp            : '.$hp.'
+                                    \\n'.' Keterangan pesanan: '.$produk.'
+                                    \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
+                                    \\n'.'
+                                    \\n'.'Pembayaran dilakukan melalui:'.'
+                                    \\n'.' - '.$rek.'
+                                    \\n'.$bayar.'
+                                    \\n'.'
+                                    \\n'.'
+                                    \\n'.'
+                                    \\n'.'
+                                    \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
+                                    \\n'.'wa.me/6281370071330'.'
+                                    \\n'.'
+                                    \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
+                                    \\n'.'
+                                    \\n'.'Terima kasih telah memilih rumahqurban.id'.'
+                                    \\n'.'
+                                    \\n'.'Terima Kasih 😊🙏'
+                    );
+        }
+        
+        
         $data_string = json_encode($data);
 
         $ch = curl_init($url);

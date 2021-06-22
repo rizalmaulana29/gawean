@@ -130,7 +130,7 @@ class CartController extends Controller
           $n++;
       }
 
-      if($request['id_produk_parent'][$key] == 22){
+      if($request['id_produk_parent'][$key] == 22 && $varian != 'Qurban'){
             $stockingTool = $this->stock($request->input('id_kantor'),$result[2]->id_transaksi);
       }
 

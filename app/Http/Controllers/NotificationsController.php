@@ -350,6 +350,7 @@ class NotificationsController extends Controller
                 $to_address = trim($payment['email']);
                 $nama       = $payment['nama_customer'];
                 $alamat     = $payment['alamat'];
+                $varian     = $payment['varian'];
                 $email      = trim($payment['email']); 
                 $hp         = $payment['hp'];
                 $parent_id  = intval($payMethod);
@@ -367,10 +368,10 @@ class NotificationsController extends Controller
                 }
 
                 $hasil = Mail::send(
-                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number))->build()
+                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
                 );
 
-                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title);
+                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian);
 
                 if($payment->id_parent && $payment->tipe == "pelunasan"){
                     $paymentParent    = Payment::where('id',$payment->id_parent)->first();

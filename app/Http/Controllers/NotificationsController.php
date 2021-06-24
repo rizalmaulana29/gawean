@@ -399,10 +399,9 @@ class NotificationsController extends Controller
                     $payment->lunas = "y";
                     $payment->save();
                     // }
-                }else{
-                    $payment->status = $status;
-                    $payment->save();
                 }
+                $payment->status = $status;
+                $payment->save();
                 $msg = array("status"=>"true","msg"=>"Berhasil Update Data Transaksi");
             }
             else{

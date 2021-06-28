@@ -203,7 +203,7 @@ class CartController extends Controller
 
       $virtual_office = [5,16,163,545,159,160,161,162,466];
       if (in_array($request->input('id_kantor'), $virtual_office)) {
-        $send_notif = $this->notifTransaksi($transdata, $nama, $alamat);
+        $send_notif = $this->notifTransaksi($transdata, $nama, $alamat,$varian);
       }
 
       $hasil = Mail::send(
@@ -577,7 +577,7 @@ class CartController extends Controller
     // curl_close($ch);
   }
 
-  public function notifTransaksi($transdata,$nama, $alamat){
+  public function notifTransaksi($transdata,$nama, $alamat,$varian){
     
     $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
 
@@ -595,8 +595,9 @@ class CartController extends Controller
       $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
     }
 
-    
-    $data ='Ada transaksi Customer di Rumah Aqiqah Cabang '.$kantor.'
+    $namaPerusahaan = ($varian == 'Qurban') ? 'Rumah Qurban' : 'Rumah Aqiqah' ;
+
+    $data ='Ada transaksi Customer di '.$namaPerusahaan.' Cabang '.$kantor.'
     untuk pengiriman di tanggal '.date('d M Y',strtotime($transdata->tgl_kirim)).' '.$transdata->waktu_kirim.'
     Dengan detail order sebagai berikut:'.'
       Order ID          : '.$transdata->id_transaksi.'

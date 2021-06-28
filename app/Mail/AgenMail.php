@@ -36,6 +36,7 @@ class AgenMail extends Mailable
     public function build()
     {
         return $this
+            // ->from($address = 'noreply@domain.com', $name = 'Sender name')
             ->to($this->to_address)
             ->subject('Informasi Pendaftaran')
             ->view('emails.signup')

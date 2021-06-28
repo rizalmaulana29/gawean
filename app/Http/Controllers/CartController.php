@@ -201,7 +201,7 @@ class CartController extends Controller
       $hp = $request->input('hp');
       $parent_id = $request->input('parent_id');
 
-      $virtual_office = [5,16,163,545,159,160,161,162];
+      $virtual_office = [5,16,163,545,159,160,161,162,466];
       if (in_array($request->input('id_kantor'), $virtual_office)) {
         $send_notif = $this->notifTransaksi($transdata, $nama, $alamat);
       }

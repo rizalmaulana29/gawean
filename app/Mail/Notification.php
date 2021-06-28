@@ -48,6 +48,7 @@ class Notification extends Mailable
         // $this->hp          ,
         // $this->parent_id );
         return $this
+            // ->from($address = 'noreply@domain.com', $name = 'Sender name')
             ->to($this->to_address)
             ->subject('Paid Notifikasi')
             ->view('emails.notification')

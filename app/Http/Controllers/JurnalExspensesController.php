@@ -2,14 +2,6 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Harga;
-use App\Kantor;
-use App\Produk;
-use App\Order;
-use App\CmsUser;
-use App\Payment;
-use App\Pendapatan;
-use App\JurnalLog;
 use App\Paymeth;
 use App\AdminEntitas;
 use App\Expenses;
@@ -22,77 +14,52 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class JurnalExspensesController extends Controller
 {
-    public function Filtering(){
-      $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::today()->addHour(1)->toDateTimestring();
+    public function InsertExpenses(){
 
-      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
-                                          'ra_payment_dua.tgl_transaksi',
-                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
-                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas')
-                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
-                                 ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
-                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 ->where('tunai','Tunai')
-                                 ->where('status','paid')
-                                 ->where('varian','!=','Qurban')
-                                 ->where('ra_payment_dua.lunas','y')
-                                 ->where('person_id','=','')
-                                 ->where(function($q) {
-                                            $q->where('sisa_pembayaran', '=', 0)
-                                            ->orWhereNull('sisa_pembayaran');
-                                        })
-                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
-                                 ->first();
-                                 // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
-                                 // ->get();
+      $entitas = [1,2,3,4,5,6,7,8,9,10];
 
-      if (isset($getDataTransaksi)) {
-        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
-        if ($validasiJurnal['status'] == true) {
-          $createCustomer = $this->CreateCustomer($getDataTransaksi);
-          if ($createCustomer['status'] == true) {
-            if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
-              $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-                if ($salesOrder['status'] == true) {
-                        return response()->json(["status"       => true,
-                                                 "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
-                                                 "Data Request" => $getDataTransaksi,
-                                                 "Data Response"=> $salesOrdertoInvoice['message']
-                                                ],200);
-                   
-                }
-                return $salesOrder;
+      foreach ($entitas as $key => $id) {
+        $jurnal_con = $this->Entitas($id);
+
+        if ($jurnal_con['status'] == true) {
+          $dataExpenses = $this->getExpenses();
+
+          if ($dataExpenses['status'] == true) {
+            $expenses = json_decode($dataExpenses);
+
+            $insertToTable = Expenses::insert([
+                                              'expenses_id' => $expenses->expense->id,
+                                              'expenses_transaction_no' => $expenses->expense->transaction_no,
+                                              'expenses_transaction_date' => $expenses->expense->transaction_no,
+                                              'expenses_transaction_account_lines_attributes__account__number' => ,
+                                              'expenses_transaction_account_lines_attributes__account__name' => ,
+                                              'expenses_transaction_account_lines_attributes__description' => ,
+                                              'expenses_transaction_account_lines_attributes__debit' => 
+                                              ]);
+            if ($insertToTable) {
+              $response = array("status" => true,
+                                "id"     => $expenses->expense->id,
+                                "message"=> $expenses);
             }else{
-              $creditMemo = $this->creditMemo($getDataTransaksi,$createCustomer['message']);
-              if ($creditMemo['status'] == true) {
-                return response()->json(["status"       => true,
-                                         "message"      => "Data berhasil di inputkan ke MEMO",
-                                         "Data Request" => $getDataTransaksi,
-                                         "Data Response"=> $creditMemo['message']
-                                        ],200);
-              }
-              return $creditMemo;
+              $response = array("status" => false,
+                                "message"=> $expenses);
             }
-          } 
-          return $createCustomer;
-        }
-        return response()->json(["status"       => false,
-                                 "message"      => "Entitas / Kantor belum terdaftar di Jurnal"
-                                ],200);
-      }
-      return response()->json(["status"       => false,
-                               "message"      => "Tidak ada Data yang dapat di inputkan ke jurnalID"
-                              ],200);
+          } else {
+            $response = array("status"=>false,"message"=> $dataExpenses);
+          }
 
+        } else {
+          continue;
+        }
+        
+      }
+      
+      return $response;
     }
 
 
-    private function getExpenses($getDataTransaksi){
+    private function getExpenses($jurnalKoneksi){
       
-      $tgl = strtotime($getDataTransaksi['tgl_transaksi']);
-      $tglTransaksi = date('Y-m-d',$tgl);
 
       $curl = curl_init();
 
@@ -114,14 +81,6 @@ class JurnalExspensesController extends Controller
       $response = curl_exec($curl);
       $err = curl_error($curl);
 
-      $insertTolog = JurnalLog::insert(['ra_payment_id' => $getDataTransaksi['id'],
-                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
-                                        'action' => "createExpenses",
-                                        'insert_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                                        'request_body' => $encodedataRaw,
-                                        'response_body' => $response
-                                        ]);
-
       $findString    = 'expense';
       $searchResponse = stripos($response, 'expense');
 
@@ -130,15 +89,13 @@ class JurnalExspensesController extends Controller
       } 
       else {
           if ($searchResponse == true){
-              $dataResponse = json_decode($response);
-              $updatePayment = Payment::where('id_transaksi',$getDataTransaksi['id_transaksi'])->update(['expenses_id' => $dataResponse->expense->id]);
+              $dataResponse = $response;
               $response = array("status" => true,
-                                "id"     => $dataResponse->expense->id,
-                                "message"=> $dataResponse->expense->transaction_no);
+                                "message"=> $dataResponse);
           }
           else{
 
-              $response = array("status"=>false,"message"=> "sales order".$response);
+              $response = array("status"=>false,"message"=> "Expenses ".$response);
           }
       }
 
@@ -146,22 +103,13 @@ class JurnalExspensesController extends Controller
     }
 
 
-    private function Entitas($id_entitas,$requester){
+    private function Entitas($id_entitas){
       
-      $getDataKoneksi = AdminEntitas::where('id_entitas',$id_entitas)->first();
+      $getDataKoneksi = AdminEntitas::where('id',$id_entitas)->first();
       if ($getDataKoneksi['jurnal_key'] != '' && $getDataKoneksi['jurnal_key'] != null ) {
-        if ($requester != 'konektor') {
-          $response = array("status"=>true,"message"=> "API key dan API auth terdaftar");
-        } else {
-          $response = $getDataKoneksi;
-        }
+        $response = array("status"=>true,"message"=> $getDataKoneksi);
       } else {
-        if ($requester != 'konektor') {
-          $update = Payment::where('id_transaksi',$requester)->update(['person_id' => 'none','sales_order_id' => 'none','sales_invoice_id' => 'none','recieve_payment_id' => 'none','memo_id' => 'none','apply_memo_id' => 'none']);
-          $response = array("status"=>false,"message"=> "belum ada key jurnal");
-        } else {
-          $response = array("status"=>false,"message"=> "belum ada key jurnal");
-        }
+        $response = array("status"=>false,"message"=> "belum ada key jurnal");
       }
 
       return $response;

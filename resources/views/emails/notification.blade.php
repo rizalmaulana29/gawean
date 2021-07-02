@@ -141,8 +141,10 @@
             <tr>
                 <td style="padding:8px 16px">
                 <div>
+                	@if($varian == 'Aqiqah')
                     <h3>Untuk Check pemesanan Anda, Anda bisa klik tombol link dibawah ini <br><br>
                     <a href="https://order.rumahaqiqah.co.id/tracking-order.php?id={{$transdata->id_transaksi}}" rel="noopener" style="color:#fff;background-color:#3648e8;border-radius:3px;text-transform:uppercase;text-decoration:none;font-weight:bold;padding:10px 30px" target="_blank">Check Transaksi</a></h3>
+                    @endif
                 </div>
                 </td>
             </tr>

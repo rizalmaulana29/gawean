@@ -63,7 +63,7 @@ class JurnalExspensesController extends Controller
               
             }
             
-            if ($insertToTable) {
+            if (!$expensLast && $insertToTable) {
               $response = array("status" => true,
                                 "message"=> $expenses);
             }else{

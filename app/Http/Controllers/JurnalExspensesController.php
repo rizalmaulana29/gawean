@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Paymeth;
 use App\AdminEntitas;
 use App\Expenses;
+use App\ExpensesAttribute;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -30,21 +31,24 @@ class JurnalExspensesController extends Controller
 
             foreach ($expenses->expenses as $key => $expens) {
 
-              $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
+              $expensLast = Expenses::where('id_entitas',$jurnal_con['message']['id_entitas'])
+                                    ->where('expenses_id','!=',$expens->id)
+                                    ->first();
 
               if ($expensLast == null || $expens->id != $expensLast->expenses_id ) {
 
                 $insertToTable = new Expenses;
-                $insertToTable->expenses_id = $expens->id;
-                $insertToTable->expenses_transaction_no = $expens->transaction_no;
+                $insertToTable->expenses_id               = $expens->id;
+                $insertToTable->expenses_transaction_no   = $expens->transaction_no;
                 $insertToTable->expenses_transaction_date = $expens->transaction_date;
 
                 foreach ($expens->transaction_account_lines_attributes as $key => $atribute) {
-
-                  $insertToTable->expenses_transaction_account_lines_attributes__account__number= $atribute->account->number;
-                  $insertToTable->expenses_transaction_account_lines_attributes__account__name = $atribute->account->name;
-                  $insertToTable->expenses_transaction_account_lines_attributes__description = $atribute->description;
-                  $insertToTable->expenses_transaction_account_lines_attributes__debit =  $atribute->debit;
+                  $insertAttribute = new ExpensesAttribute;
+                  $insertAttribute->expenses_id     = $expens->id;
+                  $insertAttribute->account__number = $atribute->account->number;
+                  $insertAttribute->account__name   = $atribute->account->name;
+                  $insertAttribute->description     = $atribute->description;
+                  $insertAttribute->debit           = $atribute->debit;
                 }
 
                 $insertToTable->cdt = Carbon::now();

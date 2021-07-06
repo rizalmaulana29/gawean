@@ -20,32 +20,39 @@ class JurnalExspensesController extends Controller
 
       foreach ($entitas as $key => $id) {
         $jurnal_con = $this->Entitas($id);
-        // var_dump($jurnal_con);
+        
         if ($jurnal_con['status'] == true) {
           $dataExpenses = $this->getExpenses($jurnal_con['message']);
-          // dd($dataExpenses);
+          
           if ($dataExpenses['status'] == true) {
-            $expenses = json_decode($dataExpenses['message']);
-            var_dump($expenses);
-            foreach ($expenses->expenses as $key => $expens) {
-              dd($expens);
-              $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
-              if ($expensLast == null || $expens->expenses->id != $expensLast->expenses_id ) {
-                $insertToTable = new Expenses;
-                $insertToTable->expenses_id = $expens->expenses->id;
-                $insertToTable->expenses_transaction_no = $expens->expenses->transaction_no;
-                $insertToTable->expenses_transaction_date = $expens->expenses->transaction_date;
 
-                foreach ($expens->expenses->transaction_account_lines_attributes as $key => $atribute) {
+            $expenses = json_decode($dataExpenses['message']);
+
+            foreach ($expenses->expenses as $key => $expens) {
+
+              $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
+
+              if ($expensLast == null || $expens->id != $expensLast->expenses_id ) {
+
+                $insertToTable = new Expenses;
+                $insertToTable->expenses_id = $expens->id;
+                $insertToTable->expenses_transaction_no = $expens->transaction_no;
+                $insertToTable->expenses_transaction_date = $expens->transaction_date;
+
+                foreach ($expens->transaction_account_lines_attributes as $key => $atribute) {
+
                   $insertToTable->expenses_transaction_account_lines_attributes__account__number= $atribute->account->number;
                   $insertToTable->expenses_transaction_account_lines_attributes__account__name = $atribute->account->name;
                   $insertToTable->expenses_transaction_account_lines_attributes__description = $atribute->description;
                   $insertToTable->expenses_transaction_account_lines_attributes__debit =  $atribute->debit;
                 }
+
                 $insertToTable->cdt = Carbon::now();
                 $insertToTable->id_entitas = $jurnal_con['message']['id_entitas'];
                 $insertToTable->save();
+
               } else {
+                
                 continue;
               }
               

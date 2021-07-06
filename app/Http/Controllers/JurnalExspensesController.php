@@ -28,7 +28,7 @@ class JurnalExspensesController extends Controller
             $expenses = json_decode($dataExpenses['message']);
 
             foreach ($expenses as $key => $expens) {
-              $expensLast = Expenses::orderBy('sort', 'asc')->first();
+              $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
               if ($expensLast == null || $expenses->expense->id != $expensLast->expenses_id ) {
                 $insertToTable = new Expenses;
                 $insertToTable->expenses_id = $expenses->expense->id;
@@ -41,6 +41,8 @@ class JurnalExspensesController extends Controller
                   $insertToTable->expenses_transaction_account_lines_attributes__description = $atribute->description;
                   $insertToTable->expenses_transaction_account_lines_attributes__debit =  $atribute->debit;
                 }
+                $insertToTable->cdt = Carbon::now();
+                $insertToTable->id_entitas = $jurnal_con['message']['id_entitas'];
                 $insertToTable->save();
               } else {
                 continue;

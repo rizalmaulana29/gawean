@@ -29,14 +29,13 @@ class JurnalExspensesController extends Controller
 
             foreach ($expenses as $key => $expens) {
               $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
-              if ($expensLast == null || $expens->expense->id != $expensLast->expenses_id ) {
-                dd($expens['id']);
+              if ($expensLast == null || $expens->expenses->id != $expensLast->expenses_id ) {
                 $insertToTable = new Expenses;
-                $insertToTable->expenses_id = $expens->expense->id;
-                $insertToTable->expenses_transaction_no = $expens->expense->transaction_no;
-                $insertToTable->expenses_transaction_date = $expens->expense->transaction_date;
+                $insertToTable->expenses_id = $expens->expenses->id;
+                $insertToTable->expenses_transaction_no = $expens->expenses->transaction_no;
+                $insertToTable->expenses_transaction_date = $expens->expenses->transaction_date;
 
-                foreach ($expens->expense->transaction_account_lines_attributes as $key => $atribute) {
+                foreach ($expens->expenses->transaction_account_lines_attributes as $key => $atribute) {
                   $insertToTable->expenses_transaction_account_lines_attributes__account__number= $atribute->account->number;
                   $insertToTable->expenses_transaction_account_lines_attributes__account__name = $atribute->account->name;
                   $insertToTable->expenses_transaction_account_lines_attributes__description = $atribute->description;

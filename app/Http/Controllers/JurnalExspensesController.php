@@ -52,7 +52,7 @@ class JurnalExspensesController extends Controller
                 $insertToTable->save();
 
               } else {
-                
+
                 continue;
               }
               
@@ -60,7 +60,6 @@ class JurnalExspensesController extends Controller
             
             if ($insertToTable) {
               $response = array("status" => true,
-                                "id"     => $expenses->expense->id,
                                 "message"=> $expenses);
             }else{
               $response = array("status" => false,

@@ -27,7 +27,7 @@ class JurnalExspensesController extends Controller
           if ($dataExpenses['status'] == true) {
             $expenses = json_decode($dataExpenses['message']);
             var_dump($expenses);
-            foreach ($expenses as $key => $expens) {
+            foreach ($expenses->expenses as $key => $expens) {
               dd($expens);
               $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
               if ($expensLast == null || $expens->expenses->id != $expensLast->expenses_id ) {

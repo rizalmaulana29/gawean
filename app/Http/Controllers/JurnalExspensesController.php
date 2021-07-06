@@ -25,7 +25,7 @@ class JurnalExspensesController extends Controller
           $dataExpenses = $this->getExpenses($jurnal_con['message']);
           // dd($dataExpenses);
           if ($dataExpenses['status'] == true) {
-            $expenses = json_decode($dataExpenses);
+            $expenses = json_decode($dataExpenses['message']);
 
             foreach ($$expenses as $key => $expens) {
               $expensLast = Expense::orderBy('sort', 'asc')->first();

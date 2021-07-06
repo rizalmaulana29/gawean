@@ -32,10 +32,10 @@ class JurnalExspensesController extends Controller
             foreach ($expenses->expenses as $key => $expens) {
 
               $expensLast = Expenses::where('id_entitas',$jurnal_con['message']['id_entitas'])
-                                    ->where('expenses_id','!=',$expens->id)
+                                    ->where('expenses_id',$expens->id)
                                     ->first();
 
-              if ($expensLast == null || $expens->id != $expensLast->expenses_id ) {
+              if (!$expensLast || $expensLast == null ) {
 
                 $insertToTable = new Expenses;
                 $insertToTable->expenses_id               = $expens->id;
@@ -49,6 +49,7 @@ class JurnalExspensesController extends Controller
                   $insertAttribute->account__name   = $atribute->account->name;
                   $insertAttribute->description     = $atribute->description;
                   $insertAttribute->debit           = $atribute->debit;
+                  $insertAttribute->save();
                 }
 
                 $insertToTable->cdt = Carbon::now();

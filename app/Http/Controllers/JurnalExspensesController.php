@@ -30,6 +30,7 @@ class JurnalExspensesController extends Controller
             foreach ($expenses as $key => $expens) {
               $expensLast = Expenses::orderBy('cdt', 'DESC')->first();
               if ($expensLast == null || $expens->expense->id != $expensLast->expenses_id ) {
+                dd($expens->id);
                 $insertToTable = new Expenses;
                 $insertToTable->expenses_id = $expens->expense->id;
                 $insertToTable->expenses_transaction_no = $expens->expense->transaction_no;

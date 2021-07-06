@@ -27,7 +27,7 @@ class JurnalExspensesController extends Controller
           if ($dataExpenses['status'] == true) {
             $expenses = json_decode($dataExpenses['message']);
 
-            foreach ($$expenses as $key => $expens) {
+            foreach ($expenses as $key => $expens) {
               $expensLast = Expense::orderBy('sort', 'asc')->first();
               if ($expensLast == null || $expenses->expense->id != $expensLast->expenses_id ) {
                 $insertToTable = new Expenses;

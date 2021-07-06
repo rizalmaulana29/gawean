@@ -22,20 +22,31 @@ class JurnalExspensesController extends Controller
         $jurnal_con = $this->Entitas($id);
 
         if ($jurnal_con['status'] == true) {
-          $dataExpenses = $this->getExpenses();
+          $dataExpenses = $this->getExpenses($jurnal_con['message']);
 
           if ($dataExpenses['status'] == true) {
             $expenses = json_decode($dataExpenses);
 
-            $insertToTable = Expenses::insert([
-                                              'expenses_id' => $expenses->expense->id,
-                                              'expenses_transaction_no' => $expenses->expense->transaction_no,
-                                              'expenses_transaction_date' => $expenses->expense->transaction_no,
-                                              'expenses_transaction_account_lines_attributes__account__number' => ,
-                                              'expenses_transaction_account_lines_attributes__account__name' => ,
-                                              'expenses_transaction_account_lines_attributes__description' => ,
-                                              'expenses_transaction_account_lines_attributes__debit' => 
-                                              ]);
+            foreach ($$expenses as $key => $expens) {
+              $expensLast = Expense::orderBy('sort', 'asc')->first();
+              if ($expensLast == null || $expenses->expense->id != $expensLast->expenses_id ) {
+                $insertToTable = new Expenses;
+                $insertToTable->expenses_id = $expenses->expense->id;
+                $insertToTable->expenses_transaction_no = $expenses->expense->transaction_no;
+                $insertToTable->expenses_transaction_date = $expenses->expense->transaction_date;
+
+                foreach ($expenses->expense->transaction_account_lines_attributes as $key => $atribute) {
+                  $insertToTable->expenses_transaction_account_lines_attributes__account__number= $atribute->account->number;
+                  $insertToTable->expenses_transaction_account_lines_attributes__account__name = $atribute->account->name;
+                  $insertToTable->expenses_transaction_account_lines_attributes__description = $atribute->description;
+                  $insertToTable->expenses_transaction_account_lines_attributes__debit =  $atribute->debit;
+                }
+              } else {
+                continue;
+              }
+              
+            }
+            
             if ($insertToTable) {
               $response = array("status" => true,
                                 "id"     => $expenses->expense->id,

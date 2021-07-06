@@ -354,6 +354,7 @@ class NotificationsController extends Controller
                 $email      = trim($payment['email']); 
                 $hp         = $payment['hp'];
                 $parent_id  = intval($payMethod);
+                $peserta    = ($varian == "Qurban") ? $payment['nama_peserta'] : "x" ;
                 
                 if ($parent_id == 2 ) {
                     $title  = "Virtual Account :";
@@ -371,7 +372,7 @@ class NotificationsController extends Controller
                     (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
                 );
 
-                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian);
+                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta);
 
                 if($payment->id_parent && $payment->tipe == "pelunasan"){
                     $paymentParent    = Payment::where('id',$payment->id_parent)->first();
@@ -546,7 +547,7 @@ class NotificationsController extends Controller
         return $randomString; 
     }
 
-    public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian){
+    public function sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta){
         if (substr($hp,0,1) == 0) {
         $nohp = str_replace('0','+62',$hp);
         }
@@ -592,28 +593,21 @@ class NotificationsController extends Controller
                     "message" =>
                                     "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
                                     \\n'.'Terima kasih atas pembayaran Ayah/Bunda'.'
-                                    \\n'.'
                                     \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
                                     \\n'.' Order ID          : '.$payment->id_transaksi.'
                                     \\n'.' Nama              : '.$nama.'
                                     \\n'.' No. Hp            : '.$hp.'
                                     \\n'.' Keterangan pesanan: '.$produk.'
                                     \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
-                                    \\n'.'
                                     \\n'.'Pembayaran dilakukan melalui:'.'
                                     \\n'.' - '.$rek.'
                                     \\n'.$bayar.'
-                                    \\n'.'
                                     \\n'.'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :'.'
                                     \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$payment->id_transaksi.'
-                                    \\n'.'
                                     \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
                                     \\n'.'wa.me/6281370071330'.'
-                                    \\n'.'
                                     \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
-                                    \\n'.'
                                     \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
-                                    \\n'.'
                                     \\n'.'Terima Kasih 😊🙏'
                     );
         } else {
@@ -623,28 +617,21 @@ class NotificationsController extends Controller
                     "message" =>
                                     "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.'
                                     \\n'.'Terima kasih atas pembayaran Bapak/Ibu'.'
-                                    \\n'.'
                                     \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
                                     \\n'.' Order ID          : '.$payment->id_transaksi.'
                                     \\n'.' Nama              : '.$nama.'
+                                    \\n'.' Nama Peserta      : '.$peserta.'
                                     \\n'.' No. Hp            : '.$hp.'
                                     \\n'.' Keterangan pesanan: '.$produk.'
                                     \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
-                                    \\n'.'
                                     \\n'.'Pembayaran dilakukan melalui:'.'
                                     \\n'.' - '.$rek.'
                                     \\n'.$bayar.'
                                     \\n'.'
-                                    \\n'.'
-                                    \\n'.'
-                                    \\n'.'
                                     \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
-                                    \\n'.'wa.me/6281370071330'.'
-                                    \\n'.'
+                                    \\n'.'wa.me/628112317711'.'
                                     \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
-                                    \\n'.'
                                     \\n'.'Terima kasih telah memilih rumahqurban.id'.'
-                                    \\n'.'
                                     \\n'.'Terima Kasih 😊🙏'
                     );
         }

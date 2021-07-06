@@ -20,10 +20,10 @@ class JurnalExspensesController extends Controller
 
       foreach ($entitas as $key => $id) {
         $jurnal_con = $this->Entitas($id);
-
+        var_dump($jurnal_con);
         if ($jurnal_con['status'] == true) {
           $dataExpenses = $this->getExpenses($jurnal_con['message']);
-
+          dd($dataExpenses);
           if ($dataExpenses['status'] == true) {
             $expenses = json_decode($dataExpenses);
 

@@ -68,7 +68,7 @@ class JurnalExspensesController extends Controller
                                 "message"=> $expenses);
             }else{
               $response = array("status" => false,
-                                "message"=> $expenses);
+                                "message"=> "tidak ada data yg di inputkan");
             }
           } else {
             $response = array("status"=>false,"message"=> $dataExpenses);

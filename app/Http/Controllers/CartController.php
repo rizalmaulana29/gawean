@@ -466,7 +466,7 @@ class CartController extends Controller
                   \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Ayah/Bunda menerima pesan ini,'.'
                   \\n'.'atau pemesananan Ayah/Bunda akan di anggap gagal.'.'
                   \\n'.'Metode Pembayaran:'.'
-                  \\n'.'- '.$rek.
+                  \\n'.'- '.$rek
                   .$bayar.'
                   \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
                   \\n'.$link.'
@@ -494,7 +494,7 @@ class CartController extends Controller
                   \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Bapak/Ibu menerima pesan ini,'.'
                   \\n'.'atau pemesananan Bapak/Ibu akan di anggap gagal.'.'
                   \\n'.'Metode Pembayaran:'.'
-                  \\n'.'- '.$rek.
+                  \\n'.'- '.$rek
                   .$bayar.'
                   \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
                   \\n'.$link.'

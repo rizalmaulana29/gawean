@@ -129,7 +129,7 @@
         						@endforeach
         						<tr>
         							<th colspan="4">Total</th>
-        							<th colspan="2" style="text-align: right;">Rp {{ number_format($transdata['nominal']) }}</th>
+        							<th colspan="2" style="text-align: right;">Rp {{ number_format($transdata['nominal_total']) }}</th>
         						</tr>
         					</tbody>
         				</table>

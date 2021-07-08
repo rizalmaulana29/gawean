@@ -166,8 +166,7 @@ class NotificationsController extends Controller
                     $number = $paymeth['id_rekening'];
                 }
 
-                var_dump($email);
-                if($email != null && $email != ""){
+                if($email){
                     $hasil = Mail::send(
                         (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
                     );
@@ -371,9 +370,11 @@ class NotificationsController extends Controller
                     $number = $paymeth['id_rekening'];
                 }
 
-                $hasil = Mail::send(
-                    (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
-                );
+                if($email){
+                    $hasil = Mail::send(
+                        (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
+                    );
+                }
 
                 $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta);
 

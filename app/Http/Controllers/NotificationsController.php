@@ -166,7 +166,8 @@ class NotificationsController extends Controller
                     $number = $paymeth['id_rekening'];
                 }
 
-                if($email){
+                var_dump($email);
+                if($email != null && $email != ""){
                     $hasil = Mail::send(
                         (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
                     );

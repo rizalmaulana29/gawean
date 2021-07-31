@@ -70,8 +70,8 @@ class CartController extends Controller
         $adminentitas = AdminEntitas::where('id_entitas',$id_entitas)->value('id');
       }
       
-      $realtotal = $request['nominal'] - $request['diskon'];
-      $countTotal = ($request->input('total') != $realtotal) ? $realtotal : $request->input('total') ;      
+      // $realtotal = $request['nominal'] - $request['diskon'];
+      // $countTotal = ($request->input('total') != $realtotal) ? $realtotal : $request->input('total') ;      
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),

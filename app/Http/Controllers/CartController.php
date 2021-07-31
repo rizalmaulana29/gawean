@@ -84,7 +84,7 @@ class CartController extends Controller
           'id_pt'     => $adminentitas,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('nominal'),
-          'nominal_total' => $countTotal,
+          'nominal_total' => $request->input('total'),
           'nominal_diskon' => $request->input('diskon'),
           'coa_debit' => $request->input('coa'),
           'sumber_informasi' => $request->input('sumber_info'),

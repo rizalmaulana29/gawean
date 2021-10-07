@@ -27,7 +27,7 @@ class KeagenanController extends Controller
 
     public function cronKeagenan(Request $request){
         $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.nominal_total")
-                        ->leftJoin("ra_setting_fee AS b","ON", "ra_payment_dua.id_agen = b.id_users")
+                        ->leftJoin("ra_setting_fee AS b","ra_payment_dua.id_agen","=", "b.id_users")
                         ->selectRaw("(ra_payment_dua.nominal_total * b.angka)/100 nominal_fee")
                         ->where("ra_payment_dua.status","paid")
                         ->where("ra_payment_dua.id_agen","!=","")

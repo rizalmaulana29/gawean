@@ -37,7 +37,7 @@ class KeagenanController extends Controller
                         ->where("ra_payment_dua.lunas","y")
                         ->whereNull("ra_payment_dua.hitung_fee")
                         ->where("ra_payment_dua.nominal_total",">",0)
-                        ->where("ra_payment_dua.jenis_fee",">","persentase")
+                        ->where("b.jenis_fee","=","persentase")
                         ->orderBy("ra_payment_dua.tgl_transaksi","DESC")
                         ->get();
         

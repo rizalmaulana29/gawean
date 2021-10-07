@@ -68,9 +68,9 @@ class KeagenanController extends Controller
             $savePencairanDetailKantor->save();
             # b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
         
-            $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi);
+            $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi)->first();
             $updatePayment->hitung_fee   = "y";
-            $updatePayment->update();
+            $updatePayment->save();
             # c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
         var_dump($getPayment->count());

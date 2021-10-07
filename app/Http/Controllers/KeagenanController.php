@@ -26,7 +26,7 @@ class KeagenanController extends Controller
     }
 
     public function cronKeagenan(Request $request){
-        $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.nominal_total")
+        $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.id_kantor","ra_payment_dua.nominal_total")
                         ->selectRaw("(ra_payment_dua.nominal_total * b.angka)/100 nominal_fee_agen")
                         ->selectRaw("(ra_payment_dua.nominal_total * c.angka)/100 nominal_fee_kantor")
                         ->leftJoin("ra_setting_fee AS b","ra_payment_dua.id_agen","=", "b.id_users")
@@ -41,11 +41,13 @@ class KeagenanController extends Controller
                         ->where("ra_payment_dua.nominal_total",">",0)
                         ->where("b.jenis_fee","=","persentase")
                         ->orderBy("ra_payment_dua.tgl_transaksi","DESC")
+                        ->limit(10)
                         ->get();
         $i = 0;
         foreach($getPayment as $key => $value){
             $hello[$key]["id_transaksi"]    = $value->id_transaksi;
             $hello[$key]["id_agen"]         = $value->id_agen;
+            $hello[$key]["id_kantor"]       = $value->id_kantor;
             $hello[$key]["nominal_total"]   = $value->nominal_total;
             $hello[$key]["nominal_fee_agen"]     = $value->nominal_fee_agen;
             $hello[$key]["nominal_fee_kantor"]     = $value->nominal_fee_kantor;
@@ -57,6 +59,13 @@ class KeagenanController extends Controller
             // $savePencairanDetail->nominal_total = $value->nominal_total;
             // $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
             // $savePencairanDetail->save();
+            
+            // $savePencairanDetailKantor    = new PencairanDetail;
+            // $savePencairanDetailKantor->id_transaksi  = $value->id_transaksi;
+            // $savePencairanDetailKantor->id_agen       = $value->id_kantor;
+            // $savePencairanDetailKantor->nominal_total = $value->nominal_total;
+            // $savePencairanDetailKantor->nominal_fee   = $value->nominal_fee_kantor;
+            // $savePencairanDetailKantor->save();
             // b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
         
             // $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi);

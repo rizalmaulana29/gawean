@@ -70,7 +70,7 @@ class KeagenanController extends Controller
         
             $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi);
             $updatePayment->hitung_fee   = "y";
-            $updatePayment->save();
+            $updatePayment->update();
             # c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
         var_dump($getPayment->count());

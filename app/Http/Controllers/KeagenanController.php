@@ -27,8 +27,8 @@ class KeagenanController extends Controller
 
     public function cronKeagenan(Request $request){
         $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.nominal_total")
-                        ->leftJoin("ra_setting_fee AS b","ra_payment_dua.id_agen","=", "b.id_users")
                         ->selectRaw("(ra_payment_dua.nominal_total * b.angka)/100 nominal_fee")
+                        ->leftJoin("ra_setting_fee AS b","ra_payment_dua.id_agen","=", "b.id_users")
                         ->where("ra_payment_dua.status","paid")
                         ->where("ra_payment_dua.id_agen","!=","")
                         ->whereNotNull("ra_payment_dua.id_agen")
@@ -42,25 +42,27 @@ class KeagenanController extends Controller
                         ->get();
         $i = 0;
         foreach($getPayment as $key => $value){
-            $hello[$key] = $value->id_transaksi;
-            var_dump($key);
+            $hello[$key]["id_transaksi"]    = $value->id_transaksi;
+            $hello[$key]["id_agen"]         = $value->id_agen;
+            $hello[$key]["nominal_total"]   = $value->nominal_total;
+            $hello[$key]["nominal_fee"]     = $value->nominal_fee;
             $i++;
+            
+            // $savePencairanDetail    = new PencairanDetail;
+            // $savePencairanDetail->id_transaksi  = $value->id_transaksi;
+            // $savePencairanDetail->id_agen       = $value->id_agen;
+            // $savePencairanDetail->nominal_total = $value->nominal_total;
+            // $savePencairanDetail->nominal_fee   = $value->nominal_fee;
+            // $savePencairanDetail->save();
+            // b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
+        
+            // $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi);
+            // $updatePayment->hitung_fee   = "y";
+            // $updatePayment->save();
+            // c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
+        var_dump($getPayment->count());
         dd($hello);
-
-        // $savePencairanDetail    = new PencairanDetail;
-        // $savePencairanDetail->id_order = $referenceNo;
-        // $savePencairanDetail->txid     = $tXid;
-        // $savePencairanDetail->request  = addslashes($detailTrans);
-        // $savePencairanDetail->response = addslashes($transaksiAPI);
-        // $savePencairanDetail->status   = addslashes($msgTrx);
-        // $savePencairanDetail->action   = "Inquiry";
-        // $savePencairanDetail->id_entitas = $transaksi['id_entitas'];
-        // $savePencairanDetail->source_data = "fe";
-        // $savePencairanDetail->save();
-        // b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
-
-        // c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
     }
 
 }

@@ -77,6 +77,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('mail',  ['uses' => 'CartController@sendemail']);
 	
 	$router->post('cronChecker', 		['uses' => 'NotificationsController@cronNPCheker']);
+	
+	$router->get('cron/keagenan', 		['uses' => 'KeagenanController@cronKeagenan']);
+	// $router->post('cron/keagenan', 		['uses' => 'KeagenanController@cronNPCheker']);
 });
 
 $router->group(['prefix' => 'uploads'], function() use ($router){

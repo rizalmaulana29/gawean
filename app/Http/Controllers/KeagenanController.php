@@ -40,8 +40,8 @@ class KeagenanController extends Controller
                         ->whereNull("ra_payment_dua.hitung_fee")
                         ->where("ra_payment_dua.nominal_total",">",0)
                         ->where("b.jenis_fee","=","persentase")
-                        ->orderBy("ra_payment_dua.tgl_transaksi","DESC")
-                        ->limit(10)
+                        ->orderBy("ra_payment_dua.tgl_transaksi","ASC")
+                        ->limit(5)
                         ->get();
         $i = 0;
         foreach($getPayment as $key => $value){
@@ -53,25 +53,25 @@ class KeagenanController extends Controller
             $hello[$key]["nominal_fee_kantor"]     = $value->nominal_fee_kantor;
             $i++;
             
-            // $savePencairanDetail    = new PencairanDetail;
-            // $savePencairanDetail->id_transaksi  = $value->id_transaksi;
-            // $savePencairanDetail->id_agen       = $value->id_agen;
-            // $savePencairanDetail->nominal_total = $value->nominal_total;
-            // $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
-            // $savePencairanDetail->save();
+            $savePencairanDetail    = new PencairanDetail;
+            $savePencairanDetail->id_transaksi  = $value->id_transaksi;
+            $savePencairanDetail->id_agen       = $value->id_agen;
+            $savePencairanDetail->nominal_total = $value->nominal_total;
+            $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
+            $savePencairanDetail->save();
             
-            // $savePencairanDetailKantor    = new PencairanDetail;
-            // $savePencairanDetailKantor->id_transaksi  = $value->id_transaksi;
-            // $savePencairanDetailKantor->id_agen       = $value->id_kantor;
-            // $savePencairanDetailKantor->nominal_total = $value->nominal_total;
-            // $savePencairanDetailKantor->nominal_fee   = $value->nominal_fee_kantor;
-            // $savePencairanDetailKantor->save();
-            // b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
+            $savePencairanDetailKantor    = new PencairanDetail;
+            $savePencairanDetailKantor->id_transaksi  = $value->id_transaksi;
+            $savePencairanDetailKantor->id_agen       = $value->id_kantor;
+            $savePencairanDetailKantor->nominal_total = $value->nominal_total;
+            $savePencairanDetailKantor->nominal_fee   = $value->nominal_fee_kantor;
+            $savePencairanDetailKantor->save();
+            # b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
         
-            // $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi);
-            // $updatePayment->hitung_fee   = "y";
-            // $updatePayment->save();
-            // c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
+            $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi);
+            $updatePayment->hitung_fee   = "y";
+            $updatePayment->save();
+            # c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
         var_dump($getPayment->count());
         dd($hello);

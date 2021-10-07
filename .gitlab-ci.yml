@@ -11,7 +11,7 @@ deploy:
     - eval $(ssh-agent -s)
     - echo "$SERVER_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
-    - #ssh-keyscan -p 2023 128.199.218.8 >> ~/.ssh/known_hosts
+    - ssh-keyscan -p 2023 128.199.218.8 >> ~/.ssh/known_hosts
   script:
     - ssh -p 2023 gitlab@128.199.218.8 "cd /var/docker/api.rumahaqikah.co.id && git pull"
     - ssh -p 2023 gitlab@128.199.218.8 "cd /var/docker/api.rumahaqikah.co.id  && docker-compose restart"

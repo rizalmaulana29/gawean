@@ -42,7 +42,8 @@ class KeagenanController extends Controller
                         ->get();
         $i = 0;
         foreach($getPayment as $key => $value){
-            $hello[$i] = $value;
+            $hello[$key] = $value->id_transaksi;
+            var_dump($key);
             $i++;
         }
         dd($hello);

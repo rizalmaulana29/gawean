@@ -22,14 +22,10 @@ class KeagenanController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth');
-        Nicepay::$isProduction = env('NICEPAY_IS_PRODUCTION', 'true');
-
         date_default_timezone_set("Asia/Jakarta");
     }
 
     public function cronKeagenan(Request $request){
-        
         $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.nominal_total")
                         ->leftJoin("ra_setting_fee AS b","ON", "ra_payment_dua.id_agen = b.id_users")
                         ->selectRaw("(ra_payment_dua.nominal_total * b.angka)/100 nominal_fee")
@@ -60,6 +56,6 @@ class KeagenanController extends Controller
         // b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
 
         // c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
-        //     }
+    }
 
 }

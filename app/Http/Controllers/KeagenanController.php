@@ -40,8 +40,12 @@ class KeagenanController extends Controller
                         ->where("b.jenis_fee","=","persentase")
                         ->orderBy("ra_payment_dua.tgl_transaksi","DESC")
                         ->get();
-        
-        dd($getPayment);
+        $i = 0;
+        foreach($getPayment as $key => $value){
+            $hello[$i] = $value;
+            $i++;
+        }
+        dd($hello);
 
         // $savePencairanDetail    = new PencairanDetail;
         // $savePencairanDetail->id_order = $referenceNo;

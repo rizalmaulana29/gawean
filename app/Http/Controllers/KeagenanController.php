@@ -47,20 +47,13 @@ class KeagenanController extends Controller
                         ->orderBy("ra_payment_dua.tgl_transaksi","ASC")
                         ->limit(100)
                         ->get();
-        $i = 0;
+
         echo "Jumlah Transaksi To Updated: ".$getPayment->count();
         echo "<br>";
         echo "<br>";
         foreach($getPayment as $key => $value){
-            $hello[$key]["id_transaksi"]    = $value->id_transaksi;
-            $hello[$key]["id_agen"]         = $value->id_agen;
-            $hello[$key]["id_kantor"]       = $value->id_kantor;
-            $hello[$key]["nominal_total"]   = $value->nominal_total;
-            $hello[$key]["nominal_fee_agen"]     = $value->nominal_fee_agen;
-            $hello[$key]["nominal_fee_kantor"]     = $value->nominal_fee_kantor;
-            $i++;
 
-            echo $value->id_transaksi;
+            echo "Id Transaksi : ".$value->id_transaksi;
             echo "<br>";
             
             $savePencairanDetail    = new PencairanDetail;

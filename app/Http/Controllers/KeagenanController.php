@@ -23,9 +23,12 @@ class KeagenanController extends Controller
     public function __construct()
     {
         date_default_timezone_set("Asia/Jakarta");
+        echo "Start Time: ".Carbon::now();
+        $this->starttime = microtime(true);
     }
 
     public function cronKeagenan(Request $request){
+
         $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.id_kantor","ra_payment_dua.nominal_total")
                         ->selectRaw("(ra_payment_dua.nominal_total * b.angka)/100 nominal_fee_agen")
                         ->selectRaw("(ra_payment_dua.nominal_total * c.angka)/100 nominal_fee_kantor")
@@ -41,9 +44,10 @@ class KeagenanController extends Controller
                         ->where("ra_payment_dua.nominal_total",">",0)
                         ->where("b.jenis_fee","=","persentase")
                         ->orderBy("ra_payment_dua.tgl_transaksi","ASC")
-                        ->limit(5)
+                        ->limit(100)
                         ->get();
         $i = 0;
+        echo "Jumlah Transaksi To Updated: ".$getPayment->count();
         foreach($getPayment as $key => $value){
             $hello[$key]["id_transaksi"]    = $value->id_transaksi;
             $hello[$key]["id_agen"]         = $value->id_agen;
@@ -52,6 +56,8 @@ class KeagenanController extends Controller
             $hello[$key]["nominal_fee_agen"]     = $value->nominal_fee_agen;
             $hello[$key]["nominal_fee_kantor"]     = $value->nominal_fee_kantor;
             $i++;
+
+            echo $value->id_transaksi;
             
             $savePencairanDetail    = new PencairanDetail;
             $savePencairanDetail->id_transaksi  = $value->id_transaksi;
@@ -73,8 +79,21 @@ class KeagenanController extends Controller
             $updatePayment->save();
             # c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
-        var_dump($getPayment->count());
-        dd($hello);
+
+        $endtime = microtime(true);
+        $timediff = $endtime - $this->starttime;
+        echo "End Time ".Carbon::now();
+        echo "Elapsed Time : ". $this->secondsToTime($timediff);
+        die();
+    }
+    // pass in the number of seconds elapsed to get hours:minutes:seconds returned
+    private function secondsToTime($s)
+    {
+        $h = floor($s / 3600);
+        $s -= $h * 3600;
+        $m = floor($s / 60);
+        $s -= $m * 60;
+        return $h.':'.sprintf('%02d', $m).':'.sprintf('%02d', $s);
     }
 
 }

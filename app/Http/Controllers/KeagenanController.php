@@ -24,6 +24,7 @@ class KeagenanController extends Controller
     {
         date_default_timezone_set("Asia/Jakarta");
         echo "Start Time: ".Carbon::now();
+        echo "<br>";
         $this->starttime = microtime(true);
     }
 
@@ -48,6 +49,8 @@ class KeagenanController extends Controller
                         ->get();
         $i = 0;
         echo "Jumlah Transaksi To Updated: ".$getPayment->count();
+        echo "<br>";
+        echo "<br>";
         foreach($getPayment as $key => $value){
             $hello[$key]["id_transaksi"]    = $value->id_transaksi;
             $hello[$key]["id_agen"]         = $value->id_agen;
@@ -58,6 +61,7 @@ class KeagenanController extends Controller
             $i++;
 
             echo $value->id_transaksi;
+            echo "<br>";
             
             $savePencairanDetail    = new PencairanDetail;
             $savePencairanDetail->id_transaksi  = $value->id_transaksi;
@@ -83,7 +87,9 @@ class KeagenanController extends Controller
         $endtime = microtime(true);
         $timediff = $endtime - $this->starttime;
         echo "End Time ".Carbon::now();
-        echo "Elapsed Time : ". $this->secondsToTime($timediff);
+        echo "<br>";
+        echo "Elapsed Time : ". $this->secondsToTime($timediff) ." In Microtime : " .ROUND(($timediff), 4);
+        echo "<br>";
         die();
     }
     // pass in the number of seconds elapsed to get hours:minutes:seconds returned

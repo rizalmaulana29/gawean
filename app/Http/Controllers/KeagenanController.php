@@ -38,7 +38,7 @@ class KeagenanController extends Controller
                         ->where("ra_payment_dua.status","paid")
                         ->where("ra_payment_dua.id_agen","!=","")
                         ->whereNotNull("ra_payment_dua.id_agen")
-                        ->where("ra_payment_dua.varian","Aqiqah")
+                        // ->where("ra_payment_dua.varian","Aqiqah")
                         ->where("ra_payment_dua.tipe","transaksi")
                         ->where("ra_payment_dua.lunas","y")
                         ->whereNull("ra_payment_dua.hitung_fee")

@@ -30,7 +30,7 @@ class KeagenanController extends Controller
 
     public function cronKeagenan(Request $request){
 
-        $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.id_kantor","ra_payment_dua.nominal_total")
+        $getPayment = Payment::select("ra_payment_dua.id_transaksi","ra_payment_dua.id_agen","ra_payment_dua.id_kantor","ra_payment_dua.nominal_total","ra_payment_dua.tgl_transaksi","ra_payment_dua.tgl_kirim")
                         ->selectRaw("(ra_payment_dua.nominal_total * b.angka)/100 nominal_fee_agen")
                         ->selectRaw("(ra_payment_dua.nominal_total * c.angka)/100 nominal_fee_kantor")
                         ->leftJoin("ra_setting_fee AS b","ra_payment_dua.id_agen","=", "b.id_users")
@@ -52,8 +52,10 @@ class KeagenanController extends Controller
         echo "<br>";
         echo "<br>";
         foreach($getPayment as $key => $value){
-
+            $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl_transaksi)->format("Y-m-d");
             echo "Id Transaksi : ".$value->id_transaksi;
+            echo "<br>";
+            echo "Tgl_transaksi : ".$tgl_transaksi;
             echo "<br>";
             
             $savePencairanDetail    = new PencairanDetail;
@@ -61,6 +63,8 @@ class KeagenanController extends Controller
             $savePencairanDetail->id_agen       = $value->id_agen;
             $savePencairanDetail->nominal_total = $value->nominal_total;
             $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
+            // $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
+            // $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
             $savePencairanDetail->save();
             
             $savePencairanDetailKantor    = new PencairanDetail;
@@ -68,6 +72,8 @@ class KeagenanController extends Controller
             $savePencairanDetailKantor->id_agen       = $value->id_kantor;
             $savePencairanDetailKantor->nominal_total = $value->nominal_total;
             $savePencairanDetailKantor->nominal_fee   = $value->nominal_fee_kantor;
+            // $savePencairanDetailKantor->tgl_transaksi = $tgl_transaksi;
+            // $savePencairanDetailKantor->tgl_kirim     = $value->tgl_kirim;
             $savePencairanDetailKantor->save();
             # b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
         
@@ -85,9 +91,10 @@ class KeagenanController extends Controller
         echo "<br>";
         die();
     }
-    // pass in the number of seconds elapsed to get hours:minutes:seconds returned
+
     private function secondsToTime($s)
     {
+        // pass in the number of seconds elapsed to get hours:minutes:seconds returned
         $h = floor($s / 3600);
         $s -= $h * 3600;
         $m = floor($s / 60);

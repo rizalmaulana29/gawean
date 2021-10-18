@@ -63,8 +63,8 @@ class KeagenanController extends Controller
             $savePencairanDetail->id_agen       = $value->id_agen;
             $savePencairanDetail->nominal_total = $value->nominal_total;
             $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
-            // $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
-            // $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
+            $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
+            $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
             $savePencairanDetail->save();
             
             $savePencairanDetailKantor    = new PencairanDetail;
@@ -72,8 +72,8 @@ class KeagenanController extends Controller
             $savePencairanDetailKantor->id_agen       = $value->id_kantor;
             $savePencairanDetailKantor->nominal_total = $value->nominal_total;
             $savePencairanDetailKantor->nominal_fee   = $value->nominal_fee_kantor;
-            // $savePencairanDetailKantor->tgl_transaksi = $tgl_transaksi;
-            // $savePencairanDetailKantor->tgl_kirim     = $value->tgl_kirim;
+            $savePencairanDetailKantor->tgl_transaksi = $tgl_transaksi;
+            $savePencairanDetailKantor->tgl_kirim     = $value->tgl_kirim;
             $savePencairanDetailKantor->save();
             # b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
         

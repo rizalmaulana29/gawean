@@ -24,7 +24,7 @@ class KeagenanController extends Controller
     public function __construct()
     {
         date_default_timezone_set("Asia/Jakarta");
-        echo "Start Time Hallo: " . Carbon::now();
+        echo "Start Time: Test " . Carbon::now();
         echo "<br>";
         $this->starttime = microtime(true);
     }
@@ -51,6 +51,7 @@ class KeagenanController extends Controller
         //                 ->get();
 
         $getPayment = DB::select(DB::raw("
+                    SELECT
                     t.id_transaksi,
                     t.id_agen,
                     t.nominal_total,
@@ -67,9 +68,9 @@ class KeagenanController extends Controller
                 (a.nominal_total * b.angka)/100 nominal_fee,	c.name , concat('Biaya Fee Aqiqah Agen ',c.name,' ','ID ', a.id_transaksi) label,
                     NOW() created_at
                 FROM
-                    ra_payment_dua a 
-                    left join ra_setting_fee b on a.id_agen = b.id_users
-                    left join cms_users c ON a.id_agen = c.id
+                    ra_payment_dua AS a 
+                    left join ra_setting_fee AS b on a.id_agen = b.id_users
+                    left join cms_users AS c ON a.id_agen = c.id
                 WHERE
                     a.STATUS = 'paid' 
                     AND a.id_agen != '' 
@@ -93,9 +94,9 @@ class KeagenanController extends Controller
                 (a.nominal_total * b.angka)/100 nominal_fee	, c.name , concat('Biaya Fee Aqiqah SO ',c.name,' ','ID ', a.id_transaksi) label,
                     NOW() created_at
                 FROM
-                    ra_payment_dua a 
-                    left join ra_setting_fee b on a.id_kantor = b.id_users
-                    left join cms_users c ON a.id_kantor = c.id
+                    ra_payment_dua AS a 
+                    left join ra_setting_fee AS b on a.id_kantor = b.id_users
+                    left join cms_users AS c ON a.id_kantor = c.id
                 WHERE
                     a.STATUS = 'paid' 
                     AND a.id_agen != '' 
@@ -119,9 +120,9 @@ class KeagenanController extends Controller
                 (a.nominal_total * b.angka)/100 nominal_fee	, c.name,  concat('Biaya Fee Retail_Food SO ',c.name,' ','ID ', a.id_transaksi) label,
                     NOW() created_at 
                 FROM
-                    ra_payment_dua a 
-                    left join ra_setting_fee b on a.id_kantor = b.id_users
-                    left join cms_users c ON a.id_kantor = c.id
+                    ra_payment_dua AS a 
+                    left join ra_setting_fee AS b on a.id_kantor = b.id_users
+                    left join cms_users AS c ON a.id_kantor = c.id
                 WHERE
                     a.STATUS = 'paid' 
                     AND a.id_agen != '' 
@@ -132,7 +133,7 @@ class KeagenanController extends Controller
                     AND a.lunas = 'y' 
                     AND a.hitung_fee IS NULL
                     AND a.nominal_total > 0
-                    AND b.jenis_fee = 'persentase' ) t"));
+                    AND b.jenis_fee = 'persentase' ) AS t"));
 
         echo "Jumlah Transaksi To Updated: " . count($getPayment);
         echo "<br>";

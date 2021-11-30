@@ -24,7 +24,7 @@ class KeagenanController extends Controller
     public function __construct()
     {
         date_default_timezone_set("Asia/Jakarta");
-        echo "Start Time: Test " . Carbon::now();
+        echo "Start Time Hallo: " . Carbon::now();
         echo "<br>";
         $this->starttime = microtime(true);
     }

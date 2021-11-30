@@ -55,7 +55,8 @@ class KeagenanController extends Controller
                     t.id_transaksi,
                     t.id_agen,
                     t.nominal_total,
-                    t.tgl, t.tgl_kirim,
+                    t.tgl, 
+                    t.tgl_kirim,
                     t.varian,
                     t.nominal_fee,	t.name , t.label,
                     t.created_at from 
@@ -140,12 +141,12 @@ class KeagenanController extends Controller
         echo "<br>";
 
         foreach($getPayment as $key => $value){
-            $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl_transaksi)->format("Y-m-d");
+            $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl)->format("Y-m-d");
             echo "Id Transaksi : ".$value->id_transaksi;
             echo "<br>";
             echo "Tgl_transaksi : ".$tgl_transaksi;
             echo "<br>";
-            
+
             // $savePencairanDetail    = new PencairanDetail;
             // $savePencairanDetail->id_transaksi  = $value->id_transaksi;
             // $savePencairanDetail->id_agen       = $value->id_agen;
@@ -153,6 +154,10 @@ class KeagenanController extends Controller
             // $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
             // $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
             // $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
+            // $savePencairanDetail->varian        = $value->varian;
+            // $savePencairanDetail->label         = $value->label;
+            // $savePencairanDetail->nama_agen     = $value->name;
+            // $savePencairanDetail->created_at    = $value->created_at;
             // $savePencairanDetail->save();
             
             // $savePencairanDetailKantor    = new PencairanDetail;

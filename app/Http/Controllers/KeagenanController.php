@@ -51,7 +51,6 @@ class KeagenanController extends Controller
         //                 ->get();
 
         $getPayment = DB::select(DB::raw("
-                    SELECT
                     t.id_transaksi,
                     t.id_agen,
                     t.nominal_total,

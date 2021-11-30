@@ -152,7 +152,7 @@ class KeagenanController extends Controller
             $savePencairanDetail->id_transaksi  = $value->id_transaksi;
             $savePencairanDetail->id_agen       = $value->id_agen;
             $savePencairanDetail->nominal_total = $value->nominal_total;
-            $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
+            $savePencairanDetail->nominal_fee   = $value->nominal_fee;
             $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
             $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
             $savePencairanDetail->varian        = $value->varian;

@@ -50,7 +50,8 @@ class KeagenanController extends Controller
         //                 ->limit(100)
         //                 ->get();
 
-        $getPayment = Payment::selectRaw("
+        $getPayment = DB::table("ra_payment_dua")
+                    ->selectRaw("
                     SELECT
                     t.id_transaksi,
                     t.id_agen,
@@ -137,7 +138,7 @@ class KeagenanController extends Controller
                     AND b.jenis_fee = 'persentase' ) t")
             ->get();
 
-        echo "Jumlah Transaksi To Updated: " . $getPayment->count();
+        echo "Jumlah Transaksi To Updated: " . count($getPayment);
         echo "<br>";
         echo "<br>";
         /*

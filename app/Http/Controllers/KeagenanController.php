@@ -141,7 +141,8 @@ class KeagenanController extends Controller
         echo "<br>";
 
         foreach($getPayment as $key => $value){
-            $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl)->format("Y-m-d");
+            // $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl)->format("Y-m-d");
+            $tgl_transaksi = $value->tgl;
             echo "Id Transaksi : ".$value->id_transaksi;
             echo "<br>";
             echo "Tgl_transaksi : ".$tgl_transaksi;

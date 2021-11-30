@@ -24,7 +24,7 @@ class KeagenanController extends Controller
     public function __construct()
     {
         date_default_timezone_set("Asia/Jakarta");
-        echo "Start Time: " . Carbon::now();
+        echo "Start Time: Test " . Carbon::now();
         echo "<br>";
         $this->starttime = microtime(true);
     }
@@ -51,7 +51,7 @@ class KeagenanController extends Controller
         //                 ->get();
 
         $getPayment = DB::table("ra_payment_dua")
-                    ->selectRaw("
+                    ->select(DB::raw("
                     SELECT
                     t.id_transaksi,
                     t.id_agen,
@@ -135,7 +135,7 @@ class KeagenanController extends Controller
                     AND a.lunas = 'y' 
                     AND a.hitung_fee IS NULL
                     AND a.nominal_total > 0
-                    AND b.jenis_fee = 'persentase' ) t")
+                    AND b.jenis_fee = 'persentase' ) t"))
             ->get();
 
         echo "Jumlah Transaksi To Updated: " . count($getPayment);

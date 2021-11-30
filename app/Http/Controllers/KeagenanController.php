@@ -138,7 +138,7 @@ class KeagenanController extends Controller
         echo "Jumlah Transaksi To Updated: " . count($getPayment);
         echo "<br>";
         echo "<br>";
-        /*
+
         foreach($getPayment as $key => $value){
             $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl_transaksi)->format("Y-m-d");
             echo "Id Transaksi : ".$value->id_transaksi;
@@ -146,14 +146,14 @@ class KeagenanController extends Controller
             echo "Tgl_transaksi : ".$tgl_transaksi;
             echo "<br>";
             
-            $savePencairanDetail    = new PencairanDetail;
-            $savePencairanDetail->id_transaksi  = $value->id_transaksi;
-            $savePencairanDetail->id_agen       = $value->id_agen;
-            $savePencairanDetail->nominal_total = $value->nominal_total;
-            $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
-            $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
-            $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
-            $savePencairanDetail->save();
+            // $savePencairanDetail    = new PencairanDetail;
+            // $savePencairanDetail->id_transaksi  = $value->id_transaksi;
+            // $savePencairanDetail->id_agen       = $value->id_agen;
+            // $savePencairanDetail->nominal_total = $value->nominal_total;
+            // $savePencairanDetail->nominal_fee   = $value->nominal_fee_agen;
+            // $savePencairanDetail->tgl_transaksi = $tgl_transaksi;
+            // $savePencairanDetail->tgl_kirim     = $value->tgl_kirim;
+            // $savePencairanDetail->save();
             
             // $savePencairanDetailKantor    = new PencairanDetail;
             // $savePencairanDetailKantor->id_transaksi  = $value->id_transaksi;
@@ -165,12 +165,12 @@ class KeagenanController extends Controller
             // $savePencairanDetailKantor->save();
             # b. insert hasil select tadi ke ra_pencairan_detail (id_transaksi, id_agen, nominal_total, nominal_fee) 
         
-            $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi)->first();
-            $updatePayment->hitung_fee   = "y";
-            $updatePayment->save();
+            // $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi)->first();
+            // $updatePayment->hitung_fee   = "y";
+            // $updatePayment->save();
             # c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
-        */
+    
 
         $endtime = microtime(true);
         $timediff = $endtime - $this->starttime;

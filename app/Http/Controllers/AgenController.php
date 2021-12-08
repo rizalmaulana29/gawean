@@ -47,7 +47,7 @@ class AgenController extends Controller
             $updateUser = CmsUser::where('name', $request['nama'])
                             ->where('id_cms_privileges',4)
                             ->where('id_kantor',$request['kotaKantor'])
-                            ->update(['password' => $password, 'status'=>'inActive']);
+                            ->update(['password' => $password, 'status'=>'Active']);
 
             if (!$updateUser) {
                 $response = ["status" =>False,
@@ -65,7 +65,7 @@ class AgenController extends Controller
             $insertUser->id_kantor = $request['kotaKantor'];
             $insertUser->id_cms_privileges = 4;
             $insertUser->created_at = Carbon::now();
-            $insertUser->status = 'inActive';
+            $insertUser->status = 'Active';
             $insertUser->save();
 
             if (!$insertUser) {

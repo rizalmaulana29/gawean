@@ -30,6 +30,8 @@ class AgenController extends Controller
         $to_address = $request['email'];
         $nama       = $request['nama'];
 
+        $sendWa = $this->sendWa($nama, $to_address,$request['password'], $request['hp']);
+
         $hasil = Mail::send(
             (new AgenMail($to_address,$nama, $request['password']))->build()
         );
@@ -101,5 +103,60 @@ class AgenController extends Controller
         $data->delete();
 
         return response('Berhasil Menghapus Data');
+    }
+
+    public function sendWa($nama, $to_address, $password, $hp){
+        if (substr($hp,0,1) == 0) {
+        $nohp = str_replace('0','+62',$hp);
+        }
+
+        else {
+            $nohp = $hp;
+        }
+
+        $key='c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+        $url='http://116.203.92.59/api/async_send_message';
+
+        
+            $data = array(
+                    "phone_no"=> $nohp,
+                    "key"   =>$key,
+                    "message" =>
+                                    "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.'
+                                    \\n'.'Selamat bergabung di Perwira Agro Academy '.'
+                                    \\n'.' Berikut Akses Login:'.'
+                                    \\n'.' URL               : https://backend.rumahaqiqah.co.id/admin/login
+                                    \\n'.' Nama              : '.$nama.'
+                                    \\n'.' Email             : '.$to_address.'
+                                    \\n'.' Password             : '.$password.'
+                                    \\n'.' No. Hp            : '.$hp.'
+                                    \\n'.'  
+                                    \\n'.'
+                                    \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
+                                    \\n'.'wa.me/628112317711'.'
+                                    \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
+                                    \\n'.'Terima kasih telah memilih rumahqurban.id'.'
+                                    \\n'.'Terima Kasih 😊🙏'
+                    );
+        
+        
+        
+        $data_string = json_encode($data);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data_string))
+        );
+        $res=curl_exec($ch);
+        curl_close($ch);
     }
 }

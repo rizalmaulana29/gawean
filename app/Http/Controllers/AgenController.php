@@ -130,7 +130,23 @@ class AgenController extends Controller
                                     \\n'.' Email             : '.$to_address.'
                                     \\n'.' Password             : '.$password.'
                                     \\n'.' No. Hp            : '.$hp.'
-                                    \\n'.'  
+                                    \\n'.'  benefit dari PAA diantaranya sebagai  berikut:
+
+                                    \\n'.'1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
+                                    
+                                    \\n'.'2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan
+                                    
+                                    \\n'.'3. Gratis materi promosi
+                                    
+                                    \\n'.'4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera
+                                    
+                                    \\n'.'5. Berhak mengikuti Perwira Agro Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)
+                                    
+                                    \\n'.'Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.
+                                    
+                                    \\n'.'Perwira Agro Academy
+                                    
+                                    \\n'.'Saatnya Kamu Jadi Miliarder
                                     \\n'.'
                                     \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
                                     \\n'.'wa.me/628112317711'.'

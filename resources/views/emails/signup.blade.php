@@ -16,9 +16,7 @@
 	<table style="border-collapse:collapse;width:100%">
         <tbody>
             
-            <tr>
-                <td style="padding:15px 16px"><img src="https://order.rumahaqiqah.co.id/images/logo.png" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="rumahaqiqah.co.id" style="border:none;max-width:100%;display:block;width:192px" class="CToWUd"></td>
-            </tr>
+             
             <tr>
                 <td style="padding:8px 16px">
                     <div>
@@ -28,31 +26,58 @@
             </tr>
             <tr>
                 <td style="padding:15px 16px">
-                    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <h1 style="margin:0 0 16px;font-size:25px;line-height:38px">Assalamu'alaikum {{ $nama }},</h1>
-                                    <p style="margin:0;font-size:16px;line-height:24px">Selamat anda telah bergabung dengan Agro Grup</b></p>
-                                    <p style="margin:0;font-size:16px;line-height:24px">Untuk Aktivasi Akun Anda Silahkan Melakukan Pembayaran di bawah ini : </b></p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+				<table style="border-collapse: collapse; width: 100%;" border="0">
+<tbody>
+<tr>
+<td style="width: 7.54031%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/PERWIRA%20AGRO.png" alt="" width="147" height="111" /></td>
+<td style="width: 67.8909%;">&nbsp;</td>
+<td style="width: 24.5687%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/agro%20baru-01%20copy.png" alt="" width="291" height="120" /></td>
+</tr>
+<tr>
+<td style="width: 99.9999%; margin: 10px 10px 10px 10px; padding: 10px 10px 10px 10px;" colspan="3">
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Halo   {{ $nama }}</p>
+<p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Selamat bergabung di Perwira Agro Academy atau disingkat PAA.</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Disini Kamu bisa meningkatkan potensi jualan Kamu karena akan dibimbing oleh para coaches serta mentor yang keren-keren.</p>
+<p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Apakah Kamu sudah melakukan AKTIVASI akun?<span class="Apple-converted-space">&nbsp;</span></p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Kalau belum, segera lakukan Aktivasi akun kamu untuk mendapatkan Promo menarik serta benefit lainnya.</p>
+<p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Klik link berikut untuk login</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><span style="font-family: Helvetica Neue;"><span style="font-size: 12px;"><a href="https://backend.rumahaqiqah.co.id/admin/login">https://backend.rumahaqiqah.co.id/admin/login</a></span></span></p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><span style="font-family: Helvetica Neue;"><span style="font-size: 12px;">username :  {{ $to_address }}</span></span></p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><span style="font-family: Helvetica Neue;"><span style="font-size: 12px;">password :  {{ $password }}</span></span></p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Apabila kamu sudah aktivasi akun dan melakukan transaksi pertama, maka kamu akan mendapatkan banyak sekali benefit dari PAA diantaranya sebagai berikut berikut:</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">3. Gratis materi promosi</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">5. Berhak mengikuti Perwira Agro Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)</p>
+<p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.</p>
+<p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Perwira Agro Academy</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Saatnya Kamu Jadi Miliarder</p>
+</td>
+</tr>
+<tr>
+<td style="width: 7.54031%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/rumah%20aqiqah%20logo-04.png" alt="" width="179" height="179" /></td>
+<td style="width: 67.8909%;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://storage.googleapis.com/donol.cinte.id/asp/SANUSA%20COLOR-05-05.png" alt="" /></td>
+<td style="width: 24.5687%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/RUMAH%20QURBAN%20COLOR-04.png" alt="" width="303" height="139" /></td>
+</tr>
+</tbody>
+</table>
                 </td>
             </tr>
 
-            <tr>
-                <td style="padding:12px 16px">
-                    <h2 style="background:#f5f6fa;font-size:16px;line-height:24px;margin:0;padding:8px 16px;border-color:#dee2ee;border-style:solid;border-width:1px 1px 0;border-radius:8px 8px 0 0">
-                        Informasi Pembayaran
-                    </h2>
-                    <div style="border-color:#dee2ee;border-style:solid;border-width:0 1px 1px;padding:16px;border-radius:0 0 8px 8px">
-                        
-                    </div>
-                </td>
-            </tr>
-
+            
 			
         	<tr>
         		<td style="padding:12px 16px">
@@ -60,10 +85,7 @@
         				Butuh bantuan? Silahkan <a href="https://api.whatsapp.com/send?phone=6281370071330&text=Assalamu%27alaikum%20Rumah%20Aqiqah">klik disini.</a>
         			</p>
 
-        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Terima kasih telah memilih <a href="https://rumahaqiqah.co.id">rumahaqiqah.co.id</a></p>
-
-        			<p style="font-size:14px;line-height:21px;margin:0 0 20px">Salam,
-        				<br><a href="https://rumahaqiqah.co.id">rumahaqiqah.co.id</a></p>
+        			 
         			</td>
         		</tr>
 
@@ -94,7 +116,7 @@
         						</tr>
         						<tr>
         							<td>
-        								<p style="padding-top:5px;font-size:13px;line-height:1.22;margin:0">© 2019-2020 PT. Agro Surya Perkasa. All Rights Reserved.</p>
+        								<p style="padding-top:5px;font-size:13px;line-height:1.22;margin:0">© 2019-2022 PT. Agro Surya Perkasa. All Rights Reserved.</p>
         							</td>
         						</tr>
         					</tbody>

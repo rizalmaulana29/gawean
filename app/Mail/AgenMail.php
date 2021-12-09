@@ -14,9 +14,10 @@ class AgenMail extends Mailable
      * @return void
      */
     
-    public function __construct($to_address,$nama)
+    public function __construct($to_address,$nama, $password)
     {
         $this->to_address  = $to_address;
+        $this->password = $password;
         // $this->transdata   = $transdata;
         // $this->orderdata   = $orderdata;
         $this->nama        = $nama;
@@ -46,8 +47,8 @@ class AgenMail extends Mailable
                     // 'orderdata'     => $this->orderdata,
                     'nama'          => $this->nama,
                     // 'alamat'        => $this->alamat,
-                    // 'email'         => $this->email,
-                    // 'hp'            => $this->hp,
+                     'email'         => $this->to_address,
+                     'password'            => $this->password,
                     // 'parent_id'     => $this->parent_id,
                     // 'number'        => $this->number,
                 ]

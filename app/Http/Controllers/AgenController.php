@@ -31,7 +31,7 @@ class AgenController extends Controller
         $nama       = $request['nama'];
 
         $hasil = Mail::send(
-            (new AgenMail($to_address,$nama))->build()
+            (new AgenMail($to_address,$nama, $request['password']))->build()
         );
 
         return response('Berhasil Tambah Data');

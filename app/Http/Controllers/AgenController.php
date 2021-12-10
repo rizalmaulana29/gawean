@@ -124,12 +124,13 @@ class AgenController extends Controller
                     "message" =>
                                     "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.'
                                     \\n'.'Selamat bergabung di Perwira Agro Academy '.'
-                                    \\n'.' Berikut Akses Login:'.'
-                                    \\n'.' URL               : https://backend.rumahaqiqah.co.id/admin/login
-                                    \\n'.' Nama              : '.$nama.'
-                                    \\n'.' Email             : '.$to_address.'
-                                    \\n'.' Password             : '.$password.'
-                                    \\n'.' No. Hp            : '.$hp.'
+                                    \\n'.' Berikut Akses Login anda:'.'
+                                    \\n'.' URL      : https://backend.rumahaqiqah.co.id/admin/login
+                                    \\n'.' Nama     : '.$nama.'
+                                    \\n'.' Email    : '.$to_address.'
+                                    \\n'.' Password : '.$password.'
+                                    \\n'.' No. Hp   : '.$hp.'
+                                    \\n'.'
                                     \\n'.'  benefit dari PAA diantaranya sebagai  berikut:
 
                                     \\n'.'1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
@@ -150,8 +151,6 @@ class AgenController extends Controller
                                     \\n'.'
                                     \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
                                     \\n'.'wa.me/628112317711'.'
-                                    \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
-                                    \\n'.'Terima kasih telah memilih rumahqurban.id'.'
                                     \\n'.'Terima Kasih 😊🙏'
                     );
         

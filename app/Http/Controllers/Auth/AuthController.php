@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 // use App\Helpers\OTP;
 use App\Helpers\JWT;
 use App\Helpers\Tools;
-use App\User;
+use App\CmsUser As User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 

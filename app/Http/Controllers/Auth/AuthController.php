@@ -52,7 +52,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'token' => JWT::Sign($user->id_donatur),
+            'token' => JWT::Sign($user->email),
             'expired' => time() + 60 * 60 * 24 * 7
         ]);
     }

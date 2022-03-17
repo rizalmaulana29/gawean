@@ -40,23 +40,15 @@ class AuthController extends Controller
             ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->where("status","Active")
             ->first();
-
         if(!$user){
-            return response()->json(["status" => false, "message" => "No user Found"], 404);
+            return response()->json(["status" => false, "message" => "No User Found"], 404);
         }
-
-        $password1  = Hash::make($password);
+        
         $password   = Hash::check($password, $user->password);
-        var_dump($password1);
-        dd($password);
-        // not registed set default id_user and redirect to signup page.
-        if (!$user) {
-            return response()->json([
-                'status' => 'notRegistered',
-                'token' => JWT::Sign('99999999'),
-                'expired' => time() + 60 * 60 * 24 * 7
-            ]);
+        if(!$password){
+            return response()->json(["status" => false, "message" => "No User Found"], 404);
         }
+        // not registed set default id_user and redirect to signup page.
 
         return response()->json([
             'status' => 'success',

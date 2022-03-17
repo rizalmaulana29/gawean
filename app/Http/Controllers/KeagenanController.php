@@ -51,7 +51,7 @@ class KeagenanController extends Controller
         //                 ->get();
 
         $getPayment = DB::select(DB::raw("
-                    SELECT
+                SELECT
                     t.id_transaksi,
                     t.id_agen,
                     t.nominal_total,
@@ -59,93 +59,93 @@ class KeagenanController extends Controller
                     t.tgl_kirim,
                     t.varian,
                     t.nominal_fee,	t.name , t.label,
-                    t.created_at from 
-                    ( SELECT
-                    a.id_transaksi,
-                    a.id_agen,
-                    a.nominal_total,
-                    a.tgl, a.tgl_kirim,
-                    a.varian,
-                (a.nominal_total * b.angka)/100 nominal_fee,	c.name , concat('Biaya Fee Aqiqah Agen ',c.name,' ','ID ', a.id_transaksi) label,
-                    NOW() created_at
-                FROM
-                    ra_payment_dua AS a 
-                    left join ra_setting_fee AS b on a.id_agen = b.id_users
-                    left join cms_users AS c ON a.id_agen = c.id
-                WHERE
-                    a.STATUS = 'paid' 
-                    AND a.id_agen != '' 
-                    AND a.id_agen != 'null' 
-                    AND a.varian = 'Aqiqah' 
-                    AND b.varian = 'Aqiqah' 
-                    AND a.tipe = 'transaksi' 
-                    AND a.lunas = 'y' 
-                    AND a.hitung_fee IS NULL
-                    AND a.nominal_total > 0
-                    AND b.jenis_fee = 'persentase'
-                
-                UNION 
-                    
+                    t.created_at 
+                FROM ( 
                     SELECT
-                    a.id_transaksi,
-                    a.id_kantor id_agen,
-                    a.nominal_total,
-                    a.tgl, a.tgl_kirim,
-                    a.varian,
-                (a.nominal_total * b.angka)/100 nominal_fee	, c.name , concat('Biaya Fee Aqiqah SO ',c.name,' ','ID ', a.id_transaksi) label,
-                    NOW() created_at
-                FROM
-                    ra_payment_dua AS a 
-                    left join ra_setting_fee AS b on a.id_kantor = b.id_users
-                    left join cms_users AS c ON a.id_kantor = c.id
-                WHERE
-                    a.STATUS = 'paid' 
-                    AND a.id_agen != '' 
-                    AND a.id_agen != 'null' 
-                    AND a.varian = 'Aqiqah' 
-                    AND b.varian = 'Aqiqah' 
-                    AND a.tipe = 'transaksi' 
-                    AND a.lunas = 'y' 
-                    AND a.hitung_fee IS NULL
-                    AND a.nominal_total > 0
-                    AND b.jenis_fee = 'persentase'
+                        a.id_transaksi,
+                        a.id_agen,
+                        a.nominal_total,
+                        a.tgl, a.tgl_kirim,
+                        a.varian,
+                        (a.nominal_total * b.angka)/100 nominal_fee,
+                        c.name , 
+                        concat('Biaya Fee Aqiqah Agen ',c.name,' ','ID ', a.id_transaksi) label,
+                        NOW() created_at
+                    FROM
+                        ra_payment_dua AS a 
+                        left join ra_setting_fee AS b on a.id_agen = b.id_users
+                        left join cms_users AS c ON a.id_agen = c.id
+                    WHERE
+                        a.STATUS = 'paid' 
+                        AND a.id_agen != '' 
+                        AND a.id_agen != 'null' 
+                        AND a.varian = 'Aqiqah' 
+                        AND b.varian = 'Aqiqah' 
+                        AND a.tipe = 'transaksi' 
+                        AND a.lunas = 'y' 
+                        AND a.hitung_fee IS NULL
+                        AND a.nominal_total > 0
+                        AND b.jenis_fee = 'persentase'
                     
-                    UNION 
-                    
-                    SELECT
-                    a.id_transaksi,
-                    a.id_kantor id_agen,
-                    a.nominal_total,
-                    a.tgl, a.tgl_kirim,
-                    a.varian,
-                (a.nominal_total * b.angka)/100 nominal_fee	, c.name,  concat('Biaya Fee Retail_Food SO ',c.name,' ','ID ', a.id_transaksi) label,
-                    NOW() created_at 
-                FROM
-                    ra_payment_dua AS a 
-                    left join ra_setting_fee AS b on a.id_kantor = b.id_users
-                    left join cms_users AS c ON a.id_kantor = c.id
-                WHERE
-                    a.STATUS = 'paid' 
-                    AND a.id_agen != '' 
-                    AND a.id_agen != 'null' 
-                    AND a.varian = 'Retail_Food' 
-                    AND b.varian = 'Retail_Food' 
-                    AND a.tipe = 'transaksi' 
-                    AND a.lunas = 'y' 
-                    AND a.hitung_fee IS NULL
-                    AND a.nominal_total > 0
-                    AND b.jenis_fee = 'persentase' ) AS t"));
+                    UNION SELECT
+                        a.id_transaksi,
+                        a.id_kantor id_agen,
+                        a.nominal_total,
+                        a.tgl, a.tgl_kirim,
+                        a.varian,
+                        (a.nominal_total * b.angka)/100 nominal_fee	, c.name , concat('Biaya Fee Aqiqah SO ',c.name,' ','ID ', a.id_transaksi) label,
+                        NOW() created_at
+                    FROM
+                        ra_payment_dua AS a 
+                        left join ra_setting_fee AS b on a.id_kantor = b.id_users
+                        left join cms_users AS c ON a.id_kantor = c.id
+                    WHERE
+                        a.STATUS = 'paid' 
+                        AND a.id_agen != '' 
+                        AND a.id_agen != 'null' 
+                        AND a.varian = 'Aqiqah' 
+                        AND b.varian = 'Aqiqah' 
+                        AND a.tipe = 'transaksi' 
+                        AND a.lunas = 'y' 
+                        AND a.hitung_fee IS NULL
+                        AND a.nominal_total > 0
+                        AND b.jenis_fee = 'persentase'
+                        
+                    UNION SELECT
+                        a.id_transaksi,
+                        a.id_kantor id_agen,
+                        a.nominal_total,
+                        a.tgl, a.tgl_kirim,
+                        a.varian,
+                    (a.nominal_total * b.angka)/100 nominal_fee	, c.name,  concat('Biaya Fee Retail_Food SO ',c.name,' ','ID ', a.id_transaksi) label,
+                        NOW() created_at 
+                    FROM
+                        ra_payment_dua AS a 
+                        left join ra_setting_fee AS b on a.id_kantor = b.id_users
+                        left join cms_users AS c ON a.id_kantor = c.id
+                    WHERE
+                        a.STATUS = 'paid' 
+                        AND a.id_agen != '' 
+                        AND a.id_agen != 'null' 
+                        AND a.varian = 'Retail_Food' 
+                        AND b.varian = 'Retail_Food' 
+                        AND a.tipe = 'transaksi' 
+                        AND a.lunas = 'y' 
+                        AND a.hitung_fee IS NULL
+                        AND a.nominal_total > 0
+                        AND b.jenis_fee = 'persentase' 
+                ) AS t"));
 
         echo "Jumlah Transaksi To Updated: " . count($getPayment);
         echo "<br>";
         echo "<br>";
 
-        foreach($getPayment as $key => $value){
+        foreach ($getPayment as $key => $value) {
             // $tgl_transaksi = Carbon::createFromFormat('Y-m-d H:i:s', $value->tgl)->format("Y-m-d");
             $tgl_transaksi = $value->tgl;
-            echo "Id Transaksi : ".$value->id_transaksi;
+            echo "Id Transaksi : " . $value->id_transaksi;
             echo "<br>";
-            echo "Tgl_transaksi : ".$tgl_transaksi;
+            echo "Tgl_transaksi : " . $tgl_transaksi;
             echo "<br>";
 
             $savePencairanDetail    = new PencairanDetail;
@@ -160,13 +160,13 @@ class KeagenanController extends Controller
             $savePencairanDetail->nama_agen     = $value->name;
             $savePencairanDetail->created_at    = $value->created_at;
             $savePencairanDetail->save();
-        
-            $updatePayment    = Payment::where("id_transaksi",$value->id_transaksi)->first();
+
+            $updatePayment    = Payment::where("id_transaksi", $value->id_transaksi)->first();
             $updatePayment->hitung_fee   = "y";
             $updatePayment->save();
             # c. update ra_payment_dua set hitung_fee = y where id_transaksi IN (transaksi yg poin a tadi di atas )
         }
-    
+
 
         $endtime = microtime(true);
         $timediff = $endtime - $this->starttime;

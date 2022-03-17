@@ -80,6 +80,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	
 	$router->get('cron/keagenan', 		['uses' => 'KeagenanController@cronKeagenan']);
 	// $router->post('cron/keagenan', 		['uses' => 'KeagenanController@cronNPCheker']);
+
+	$router->group(['prefix' => 'auth'], function () use ($router) {
+		$router->options('/login', ['uses' => 'AuthController@authenticate']);
+        $router->post('/login', ['uses' => 'AuthController@authenticate']);
+        $router->options('/login/SSO', ['uses' => 'AuthController@SSOauthenticate']);
+        $router->post('/login/SSO', ['uses' => 'AuthController@SSOauthenticate']);
+	});
 });
 
 $router->group(['prefix' => 'uploads'], function() use ($router){

@@ -37,7 +37,6 @@ class AuthController extends Controller
         
         
         $user = User::where('email', $request->input('email'))
-            ->where("password",$password)
             ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->where("status","Active")
             ->first();

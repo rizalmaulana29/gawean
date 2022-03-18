@@ -90,6 +90,7 @@ return new Illuminate\Filesystem\FilesystemManager($app);
 
 $app->routeMiddleware([
     // 'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
+    'jwt.auth' => App\Http\Middleware\JWTAccess::class,
     'all.cors' => App\Http\Middleware\CorsAllMiddleware::class,
 ]);
 

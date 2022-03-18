@@ -27,12 +27,11 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => 'invalidInput'],400);
         }
+        
+        if ($request->header("Authorization") != "xF8shfjsfo934j5o03d352jn8EReH23T") {
+            return response()->json(['status' => 'Unauthorized Access'],401);
+        }
 
-        // if (!OTP::Verify($request->input('uuid'), $request->input('otp').":".$request->input('email'))) {
-        //     return response()->json([
-        //         'status' => 'wrongOTPCode'
-        //     ], 400);
-        // }
         $password = $request->input("password") ?? null ? $request->input("password") : null;
         
         
@@ -52,7 +51,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'token' => JWT::Sign($user->email),
+            'token' => JWT::Sign($user->id),
             'expired' => time() + 60 * 60 * 24 * 7
         ]);
     }
@@ -83,7 +82,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'token' => JWT::Sign($donatur->id_donatur),
+            'token' => JWT::Sign($donatur->id),
             'expired' => time() + 60 * 60 * 24 * 7
         ]);
     }

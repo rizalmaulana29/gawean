@@ -87,6 +87,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->options('/login/SSO', ['uses' => 'Auth\AuthController@SSOauthenticate']);
         $router->post('/login/SSO', ['uses' => 'Auth\AuthController@SSOauthenticate']);
 	});
+	$router->group(['prefix' => 'signed','middleware' => 'jwt.auth'], function () use ($router) {
+		$router->get('total', 	['uses' => 'CartController@checkNumber']);
+	});
 });
 
 $router->group(['prefix' => 'uploads'], function() use ($router){

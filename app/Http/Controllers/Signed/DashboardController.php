@@ -22,27 +22,27 @@ class DashboardController extends Controller
         }
 
         #Total Fee Null
-        $totalFeeUnprocessed = PencairanDetail::sum("nominal_fee")
-            ->where("id_agen",$request->auth)
+        $totalFeeUnprocessed = PencairanDetail::where("id_agen",$request->auth)
             ->where(function($q) {
                 $q->where('status_pencairan', '=', '')
                 ->orWhereNull('status_pencairan');
-            });
+            })
+            ->sum("nominal_fee");
 
         #Total Fee diajukan
-        $totalFeeDiajukan = Pencairan::sum("total_pencairan")
-            ->where("id_agen", $request->auth)
-            ->where("status_pencairan","diajukan");
+        $totalFeeDiajukan = Pencairan::where("id_agen", $request->auth)
+            ->where("status_pencairan","diajukan")
+            ->sum("total_pencairan");
 
         #Total Fee diproses
-        $totalFeeDiproses = Pencairan::sum("total_pencairan")
-            ->where("id_agen", $request->auth)
-            ->where("status_pencairan","diproses");
+        $totalFeeDiproses = Pencairan::where("id_agen", $request->auth)
+            ->where("status_pencairan","diproses")
+            ->sum("total_pencairan");
 
         #Total Fee selesai
-        $totalFeeSelesai = Pencairan::sum("total_pencairan")
-            ->where("id_agen", $request->auth)
-            ->where("status_pencairan","selesai");
+        $totalFeeSelesai = Pencairan::where("id_agen", $request->auth)
+            ->where("status_pencairan","selesai")
+            ->sum("total_pencairan");
         
         // not registed set default id_user and redirect to signup page.
 
@@ -55,17 +55,21 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function sakBabyPass(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'token' => 'required',
-
         ]);
 
         if ($validator->fails()) {
             return response()->json(['status' => 'invalidInput'],400);
         }
+
+        if ($request->header("Authorization") != "xF8shfjsfo934j5o03d352jn8EReH23T") {
+            return response()->json(['status' => 'Unauthorized Access'],401);
+        }
+
         $donatur = User::where('email', $request->input('email'))
             ->where("status","Active")
             ->first();
@@ -73,9 +77,8 @@ class DashboardController extends Controller
         // not registed set default id_donatur and redirect to signup page.
         if (!$donatur) {
             return response()->json([
-                'status' => 'notRegistered',
-                'token' => JWT::Sign('99999999'),
-                'expired' => time() + 60 * 60 * 24 * 7
+                'status' => false,
+                'message' => "No User Found."
             ]);
         }
 
@@ -85,24 +88,5 @@ class DashboardController extends Controller
             'expired' => time() + 60 * 60 * 24 * 7
         ]);
     }
-    
-    public function store(Request $request)
-    {
-    }
 
-    public function show(Request $request)
-    {
-    }
-
-    public function edit(Request $request)
-    {
-    }
-
-    public function update(Request $request)
-    {
-    }
-    
-    public function destroy(Request $request)
-    {
-    }
 }

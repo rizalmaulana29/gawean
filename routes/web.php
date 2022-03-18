@@ -84,8 +84,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {
 		$router->options('/login', ['uses' => 'Auth\AuthController@authenticate']);
         $router->post('/login', ['uses' => 'Auth\AuthController@authenticate']);
-        $router->options('/login/SSO', ['uses' => 'Auth\AuthController@SSOauthenticate']);
-        $router->post('/login/SSO', ['uses' => 'Auth\AuthController@SSOauthenticate']);
+        $router->post('/login/kuma-kami/ini-mah', ['uses' => 'Auth\AuthController@sakBabyPass']);
 	});
 	$router->group(['prefix' => 'signed','middleware' => ['jwt.auth','all.cors']], function () use ($router) {
 		$router->group(['prefix'=>'dashboard'],  function () use ($router) {

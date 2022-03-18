@@ -81,15 +81,19 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('cron/keagenan', 		['uses' => 'KeagenanController@cronKeagenan']);
 	// $router->post('cron/keagenan', 		['uses' => 'KeagenanController@cronNPCheker']);
 
-	$router->group(['prefix' => 'auth'], function () use ($router) {
+	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {
 		$router->options('/login', ['uses' => 'Auth\AuthController@authenticate']);
         $router->post('/login', ['uses' => 'Auth\AuthController@authenticate']);
         $router->options('/login/SSO', ['uses' => 'Auth\AuthController@SSOauthenticate']);
         $router->post('/login/SSO', ['uses' => 'Auth\AuthController@SSOauthenticate']);
 	});
-	$router->group(['prefix' => 'signed','middleware' => 'jwt.auth'], function () use ($router) {
-		$router->get('total', 	['uses' => 'CartController@checkNumber']);
+	$router->group(['prefix' => 'signed','middleware' => ['jwt.auth','all.cors']], function () use ($router) {
+		$router->group(['prefix'=>'dashboard'],  function () use ($router) {
+			$router->get('/', ['uses' => 'DashboardController@index']);
+		});
 	});
+
+	
 });
 
 $router->group(['prefix' => 'uploads'], function() use ($router){

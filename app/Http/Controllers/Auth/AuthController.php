@@ -47,7 +47,7 @@ class AuthController extends Controller
         // not registed set default id_user and redirect to signup page.
 
         return response()->json([
-            'status' => 'success',
+            'status' => true,
             'token' => JWT::Sign($user->id),
             'expired' => time() + 60 * 60 * 24 * 7
         ]);

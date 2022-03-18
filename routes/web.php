@@ -89,7 +89,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	});
 	$router->group(['prefix' => 'signed','middleware' => ['jwt.auth','all.cors']], function () use ($router) {
 		$router->group(['prefix'=>'dashboard'],  function () use ($router) {
-			$router->get('/', ['uses' => 'DashboardController@index']);
+			$router->get('/', ['uses' => 'Signed\DashboardController@index']);
 		});
 	});
 

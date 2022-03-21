@@ -46,20 +46,20 @@ class DashboardController extends Controller
             "status" => true,
             "data" => [
                 "totalFeeNull"  => [
-                    "title"     => "Total Fee",
-                    "nominal"   => $totalFeeUnprocessed ? $totalFeeUnprocessed : 0
+                    "Total Fee",
+                    $totalFeeUnprocessed ? $totalFeeUnprocessed : 0
                 ],
                 "totalFeeDiajukan"  => [
-                    "title"     => "Total Fee Diajukan",
-                    "nominal"   => $totalFeeDiajukan ? $totalFeeDiajukan : 0
+                    "Total Fee Diajukan",
+                    $totalFeeDiajukan ? $totalFeeDiajukan : 0
                 ],
                 "totalFeeDiproses"  => [
-                    "title"     => "Total Fee Diproses",
-                    "nominal"   => $totalFeeDiproses ? $totalFeeDiproses : 0,
+                    "Total Fee Diproses",
+                    $totalFeeDiproses ? $totalFeeDiproses : 0,
                 ],
                 "totalFeeSelesai"  => [
-                    "title"     => "Total Fee Selesai",
-                    "nominal"   => $totalFeeSelesai ? $totalFeeSelesai : 0,
+                    "Total Fee Selesai",
+                    $totalFeeSelesai ? $totalFeeSelesai : 0,
                 ],
             ]
         ]);

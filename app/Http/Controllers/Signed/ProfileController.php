@@ -36,15 +36,15 @@ class ProfileController extends Controller
             return response()->json(['status' => false, "message" => 'Unauthorized Access'],401);
         }
 
-        $linkRA = "https://www.rumahaqiqah.com";
-        $linkRQ = "https://www.rumahqurban.com";
-        $linkSF = "https://www.sanusafood.com";
+        $linkRA = "https://order.rumahaqiqah.co.id/?source=";
+        $linkRQ = "https://agrosurya.co.id/katalog/?source=";
+        $linkSF = "https://order.rumahaqiqah.co.id/?source=";
         return response()->json([
             "status" => true,
             "data"  =>[
-                "ra_link"  => $linkRA."/shop?ref=".$request->auth,
-                "rq_link"  => $linkRQ."/shop?ref=".$request->auth,
-                "sf_link"  => $linkSF."/shop?ref=".$request->auth,
+                "ra_link"  => $linkRA.$request->auth,
+                "rq_link"  => $linkRQ.$request->auth,
+                "sf_link"  => $linkSF.$request->auth,
             ]
         ]);
     }

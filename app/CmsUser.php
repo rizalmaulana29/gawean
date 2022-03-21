@@ -13,7 +13,7 @@ class CmsUser extends Model
      */
     protected $primaryKey = 'id';
     protected $table = 'cms_users';
-    protected $guarded = [];
+    protected $guarded = ['password'];
     // protected $casts = [
     //     'id_order' => 'string'
     // ];
@@ -24,5 +24,5 @@ class CmsUser extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['password'];
 }

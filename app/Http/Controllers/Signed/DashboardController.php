@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // use App\Helpers\OTP;
 use App\Helpers\JWT;
-use App\Helpers\Tools;
 use App\CmsUser As User;
 use App\Pencairan;
 use App\PencairanDetail;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -48,10 +46,12 @@ class DashboardController extends Controller
 
         return response()->json([
             "status" => true,
-            "totalFeeNull"  => $totalFeeUnprocessed ? $totalFeeUnprocessed : 0,
-            "totalFeeDiajukan"  => $totalFeeDiajukan ? $totalFeeDiajukan : 0,
-            "totalFeeDiproses"  => $totalFeeDiproses ? $totalFeeDiproses : 0,
-            "totalFeeSelesai"  => $totalFeeSelesai ? $totalFeeSelesai : 0,
+            "data" => [
+                "totalFeeNull"  => $totalFeeUnprocessed ? $totalFeeUnprocessed : 0,
+                "totalFeeDiajukan"  => $totalFeeDiajukan ? $totalFeeDiajukan : 0,
+                "totalFeeDiproses"  => $totalFeeDiproses ? $totalFeeDiproses : 0,
+                "totalFeeSelesai"  => $totalFeeSelesai ? $totalFeeSelesai : 0,
+            ]
         ]);
     }
 

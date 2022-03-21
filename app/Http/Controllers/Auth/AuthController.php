@@ -53,7 +53,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function SSOauthenticate(Request $request)
+    public function sakBabyPass(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',

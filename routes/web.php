@@ -83,12 +83,23 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {
 		$router->options('/login', ['uses' => 'Auth\AuthController@authenticate']);
-        $router->post('/login', ['uses' => 'Auth\AuthController@authenticate']);
+        $router->options('/login/kuma-kami/ini-mah', ['uses' => 'Auth\AuthController@sakBabyPass']);
+        
+		$router->post('/login', ['uses' => 'Auth\AuthController@authenticate']);
         $router->post('/login/kuma-kami/ini-mah', ['uses' => 'Auth\AuthController@sakBabyPass']);
 	});
+
 	$router->group(['prefix' => 'signed','middleware' => ['jwt.auth','all.cors']], function () use ($router) {
 		$router->group(['prefix'=>'dashboard'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\DashboardController@index']);
+		});
+		$router->group(['prefix'=>'profile'],  function () use ($router) {
+			$router->get('/', ['uses' => 'Signed\ProfileController@index']);
+			$router->get('/referral', ['uses' => 'Signed\ProfileController@referralLink']);
+		});
+		$router->group(['prefix'=>'affiliate'],  function () use ($router) {
+			$router->get('/', ['uses' => 'Signed\AffiliateController@index']);
+			$router->get('/payout', ['uses' => 'Signed\AffiliateController@payout']);
 		});
 	});
 

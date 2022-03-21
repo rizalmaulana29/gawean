@@ -40,7 +40,7 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => env('DB_PREFIX', ''),
         ],
-
+        
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '128.199.218.8'),

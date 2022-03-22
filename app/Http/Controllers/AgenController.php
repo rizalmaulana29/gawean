@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\CmsUser; //File Model
 use App\Kontak;
@@ -9,59 +10,49 @@ use App\Mail\AgenMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AgenController extends Controller
 {
-   
+
     public function signup(Request $request)
     {
-        $agen              = new Kontak();
-        $agen->nama_kontak = $request['nama'];
-        $agen->email       = $request['email'];
-        $agen->hp          = $request['hp'];
-        $agen->status      = 'Agen';
-        $agen->id_kantor   = $request['kotaKantor'];
-        $agen->tgl_reg     = Carbon::now();
+        $validator = Validator::make($request->all(), [
+            "nama" => "required",
+            "email" => "required",
+            "hp" => "required",
+            "password" => "required",
+            "kotaKantor" => "required",
+        ]);
 
-        $agen->save();
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => 'invalidInput'], 400);
+        }
 
-        $updateCMS  = $this->userCms($request);
-
+        $createCMS  = $this->userCms($request);
+        if (!$createCMS["status"]) {
+            return response()->json($createCMS);
+        }
         $to_address = $request['email'];
         $nama       = $request['nama'];
 
-        $sendWa = $this->sendWa($nama, $to_address,$request['password'], $request['hp']);
+        $sendWa = $this->sendWa($nama, $to_address, $request['password'], $request['hp']);
 
         $hasil = Mail::send(
-            (new AgenMail($to_address,$nama, $request['password']))->build()
+            (new AgenMail($to_address, $nama, $request['password']))->build()
         );
 
-        return response()->json(["status" => true,
-                        "message" => 'Berhasil Tambah Data'
-                    ]);
+        return response()->json([
+            "status" => true,
+            "message" => 'Berhasil Tambah Data'
+        ]);
     }
 
-    private function userCMS($request){
-        $checkUser = CmsUser::where('name', $request['nama'])
-                            ->where('id_cms_privileges',4)
-                            ->where('id_kantor',$request['kotaKantor'])
-                            ->first();
-        if ($checkUser || $checkUser != null) {
-            $password   = Hash::make($request['password']);
-            $updateUser = CmsUser::where('name', $request['nama'])
-                            ->where('id_cms_privileges',4)
-                            ->where('id_kantor',$request['kotaKantor'])
-                            ->update(['password' => $password, 'status'=>'Active']);
-
-            if (!$updateUser) {
-                $response = ["status" =>False,
-                             "message"=> 'Gagal Mengupdate Data ke CMS User'];
-            } else {
-                $response = ["status" =>true,
-                             "message"=> 'Berhasil Mengupdate Data ke CMS User'];
-            }
-
-        } else {
+    private function userCMS($request)
+    {
+        $checkUser = CmsUser::where('email', $request['email'])
+            ->first();
+        if (!$checkUser) {
             $insertUser       = new CmsUser();
             $insertUser->name = $request['nama'];
             $insertUser->email = $request['email'];
@@ -73,17 +64,24 @@ class AgenController extends Controller
             $insertUser->save();
 
             if (!$insertUser) {
-                $response = ["status" =>False,
-                             "message"=> 'Gagal Menambahkan Data ke CMS User'];
+                $response = [
+                    "status" => false,
+                    "message" => 'Gagal Menambahkan Data ke CMS User'
+                ];
             } else {
-                $response = ["status" =>true,
-                             "message"=> 'Berhasil Menambahkan Data ke CMS User'];
+                $response = [
+                    "status" => true,
+                    "message" => 'Berhasil Menambahkan Data ke CMS User'
+                ];
             }
-            
+        } else {
+            $response = [
+                "status" => false,
+                "message" => 'User dgn email tsb sudah terdaftar'
+            ];
         }
 
         return $response;
-        
     }
 
     public function forgotPassword(Request $request, $id)
@@ -119,56 +117,56 @@ class AgenController extends Controller
         return $nohp;
     }
 
-    public function sendWa($nama, $to_address, $password, $hp){
-        if (substr($hp,0,1) == 0) {
+    public function sendWa($nama, $to_address, $password, $hp)
+    {
+        if (substr($hp, 0, 1) == 0) {
             $nohp = $this->numhp0to62($hp);
-        }
-        else {
+        } else {
             $nohp = $hp;
         }
 
-        $key='c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
-        $url='http://116.203.92.59/api/async_send_message';
+        $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+        $url = 'http://116.203.92.59/api/async_send_message';
 
-        
-            $data = array(
-                    "phone_no"=> $nohp,
-                    "key"   =>$key,
-                    "message" =>
-                                    "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.'
-                                    \\n'.'Selamat bergabung di Perwira Agro Academy '.'
-                                    \\n'.' Berikut Akses Login anda:'.'
-                                    \\n'.' URL      : https://backend.rumahaqiqah.co.id/admin/login
-                                    \\n'.' Nama     : '.$nama.'
-                                    \\n'.' Email    : '.$to_address.'
-                                    \\n'.' Password : '.$password.'
-                                    \\n'.' No. Hp   : '.$hp.'
-                                    \\n'.'
-                                    \\n'.'  benefit dari PAA diantaranya sebagai  berikut:
 
-                                    \\n'.'1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
+        $data = array(
+            "phone_no" => $nohp,
+            "key"   => $key,
+            "message" =>
+            "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
+                                    \\n' . 'Selamat bergabung di Perwira Agro Academy ' . '
+                                    \\n' . ' Berikut Akses Login anda:' . '
+                                    \\n' . ' URL      : https://backend.rumahaqiqah.co.id/admin/login
+                                    \\n' . ' Nama     : ' . $nama . '
+                                    \\n' . ' Email    : ' . $to_address . '
+                                    \\n' . ' Password : ' . $password . '
+                                    \\n' . ' No. Hp   : ' . $hp . '
+                                    \\n' . '
+                                    \\n' . '  benefit dari PAA diantaranya sebagai  berikut:
+
+                                    \\n' . '1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
                                     
-                                    \\n'.'2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan
+                                    \\n' . '2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan
                                     
-                                    \\n'.'3. Gratis materi promosi
+                                    \\n' . '3. Gratis materi promosi
                                     
-                                    \\n'.'4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera
+                                    \\n' . '4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera
                                     
-                                    \\n'.'5. Berhak mengikuti Perwira Agro Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)
+                                    \\n' . '5. Berhak mengikuti Perwira Agro Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)
                                     
-                                    \\n'.'Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.
+                                    \\n' . 'Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.
                                     
-                                    \\n'.'Perwira Agro Academy
+                                    \\n' . 'Perwira Agro Academy
                                     
-                                    \\n'.'Saatnya Kamu Jadi Miliarder
-                                    \\n'.'
-                                    \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
-                                    \\n'.'wa.me/628112317711'.'
-                                    \\n'.'Terima Kasih 😊🙏'
-                    );
-        
-        
-        
+                                    \\n' . 'Saatnya Kamu Jadi Miliarder
+                                    \\n' . '
+                                    \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
+                                    \\n' . 'wa.me/628112317711' . '
+                                    \\n' . 'Terima Kasih 😊🙏'
+        );
+
+
+
         $data_string = json_encode($data);
 
         $ch = curl_init($url);
@@ -180,11 +178,15 @@ class AgenController extends Controller
         curl_setopt($ch, CURLOPT_TIMEOUT, 360);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json',
-        'Content-Length: ' . strlen($data_string))
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string)
+            )
         );
-        $res=curl_exec($ch);
+        $res = curl_exec($ch);
         curl_close($ch);
     }
 }

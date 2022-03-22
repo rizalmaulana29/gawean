@@ -105,11 +105,22 @@ class AgenController extends Controller
         return response('Berhasil Menghapus Data');
     }
 
+    private function numhp0to62($nohp)
+    {
+        if (!preg_match('/[^+0-9]/', trim($nohp))) {
+            // cek apakah no hp karakter 1-3 adalah +62
+            $nohp = str_replace("+", "", $nohp);
+            if (substr(trim($nohp), 0, 1) == 0) {
+                $nohp = substr_replace($nohp, "62", 0, 1);
+            }
+        }
+        return $nohp;
+    }
+
     public function sendWa($nama, $to_address, $password, $hp){
         if (substr($hp,0,1) == 0) {
-        $nohp = str_replace('0','+62',$hp);
+            $nohp = $this->numhp0to62($hp);
         }
-
         else {
             $nohp = $hp;
         }

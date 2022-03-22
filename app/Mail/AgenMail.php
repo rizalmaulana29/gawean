@@ -1,4 +1,6 @@
-<?php namespace App\Mail;
+<?php
+
+namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 
@@ -13,8 +15,8 @@ class AgenMail extends Mailable
      * 
      * @return void
      */
-    
-    public function __construct($to_address,$nama, $password)
+
+    public function __construct($to_address, $nama, $password)
     {
         $this->to_address  = $to_address;
         $this->password = $password;
@@ -26,7 +28,7 @@ class AgenMail extends Mailable
         // $this->hp          = $hp;
         // $this->parent_id   = $parent_id;
         // $this->number      = $number;
-        
+
     }
 
     /**
@@ -47,8 +49,8 @@ class AgenMail extends Mailable
                     // 'orderdata'     => $this->orderdata,
                     'nama'          => $this->nama,
                     // 'alamat'        => $this->alamat,
-                     'email'         => $this->to_address,
-                     'password'            => $this->password,
+                    'email'         => $this->to_address,
+                    'password'      => $this->password,
                     // 'parent_id'     => $this->parent_id,
                     // 'number'        => $this->number,
                 ]

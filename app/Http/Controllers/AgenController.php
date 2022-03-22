@@ -36,7 +36,9 @@ class AgenController extends Controller
             (new AgenMail($to_address,$nama, $request['password']))->build()
         );
 
-        return response('Berhasil Tambah Data');
+        return response()->json(["status" => true,
+                        "message" => 'Berhasil Tambah Data'
+                    ]);
     }
 
     private function userCMS($request){

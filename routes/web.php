@@ -99,7 +99,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		});
 		$router->group(['prefix'=>'affiliate'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\AffiliateController@index']);
-			$router->get('/payout', ['uses' => 'Signed\AffiliateController@payout']);
+		});
+		$router->group(['prefix'=>'withdraw'],  function () use ($router) {
+			$router->get('/', ['uses' => 'Signed\WithdrawController@index']);
+			$router->get('/payout', ['uses' => 'Signed\WithdrawController@payout']);
 		});
 	});
 

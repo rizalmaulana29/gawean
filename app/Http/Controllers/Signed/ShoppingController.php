@@ -32,20 +32,27 @@ class ShoppingController extends Controller
         $end    = $request->input("end_date") ?? null ? $request->input("end_date") : null; 
         $take   = $request->input("take") ?? null ? $request->input("take") : 10; 
         $skip   = $request->input("skip") ?? null ? $request->input("skip") : 0; 
+        $varian   = $request->input("varian") ?? null ? $request->input("varian") : 0; 
         
         $order   = $request->input("order") ?? null ? $request->input("order") : "tgl_transaksi"; 
         $sort   = $request->input("sort") ?? null ? $request->input("sort") : "DESC"; 
         
         
         # shopping
-        $shopping = Payment::select("id_transaksi", "tgl_transaksi", "status", "transaksi")
+        $shopping = Payment::select("id_transaksi", "tgl_transaksi", "status", "nominal_total")
             ->where("id_agen",$request->auth)
-            ->where("status", "paid")
-            ->where("lunas", "y");
+            // ->where("status", "paid")
+            // ->where("lunas", "y")
+            ->where("tipe", "transaksi");
+
 
         if($start && $end){
             $shopping = $shopping->where("tgl_transaksi", ">=", $start)
                 ->where("tgl_transaksi", "<=", $end);
+        }
+
+        if($varian){
+            $shopping = $shopping->where("varian", $varian);
         }
 
         $shopping = $shopping->take($take)
@@ -53,15 +60,15 @@ class ShoppingController extends Controller
             ->orderBy($order, $sort)
             ->get();
 
-        if($shopping->count() == 0){
+        if($shopping->count() > 0){
             return response()->json([
-                "status" => false,
-                "message" => "No History Shopping"
-            ],404);    
+                "status" => true,
+                "data" => $shopping
+            ],200);
         }
         return response()->json([
-            "status" => true,
-            "data" => $shopping
-        ],200);
+            "status" => false,
+            "message" => "No History Shopping"
+        ],404);    
     }
 }

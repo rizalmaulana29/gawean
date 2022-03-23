@@ -47,6 +47,12 @@ class WithdrawController extends Controller
             ->orderBy($order, $sort)
             ->get();
 
+        if($withdrawed->count() == 0){
+            return response()->json([
+                "status" => false,
+                "message" => "No History Withdraw"
+            ],404);    
+        }
         return response()->json([
             "status" => true,
             "data" => $withdrawed

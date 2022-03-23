@@ -55,6 +55,8 @@ class ShoppingController extends Controller
             $shopping = $shopping->where("varian", $varian);
         }
 
+        $total = $shopping->count();
+
         $shopping = $shopping->take($take)
             ->skip($skip)
             ->orderBy($order, $sort)
@@ -63,7 +65,8 @@ class ShoppingController extends Controller
         if($shopping->count() > 0){
             return response()->json([
                 "status" => true,
-                "data" => $shopping
+                "data" => $shopping,
+                "total" => $total
             ],200);
         }
         return response()->json([

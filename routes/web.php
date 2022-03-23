@@ -102,7 +102,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		});
 		$router->group(['prefix'=>'withdraw'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\WithdrawController@index']);
-			$router->get('/payout', ['uses' => 'Signed\WithdrawController@payout']);
+			$router->post('/payout', ['uses' => 'Signed\WithdrawController@payout']);
 		});
 	});
 

@@ -66,8 +66,7 @@ class WithdrawController extends Controller
         }
 
         #Progressed
-        $progressed = Pencairan::where("id_agen", $request->auth)
-            
+        $progressed = Pencairan::where("id_agen", $request->auth)  
             ->where(function($q) {
                 $q->where("status_pencairan","diajukan")
                 ->orWhere("status_pencairan","diproses");
@@ -87,8 +86,10 @@ class WithdrawController extends Controller
                 $q->where('status_pencairan', '=', '')
                 ->orWhereNull('status_pencairan');
             });
-
+        
+        
         $pencairan = $saldo->sum("nominal_fee");
+        
         if($pencairan == 0){
             return response()->json([
                 "status" => false,
@@ -100,9 +101,9 @@ class WithdrawController extends Controller
 
         $payout = new Pencairan;
         $payout->id_pencairan   = $now->format("ymdHi").rand(100, 999);
-        $payout->id_agen        = $request->auth();
+        $payout->id_agen        = $request->auth;
         $payout->total_pencairan    = $pencairan;
-        $payout->tgl_pengajuan      = $now()->toDateTimeString();
+        $payout->tgl_pengajuan      = $now->toDateTimeString();
         $payout->status_pencairan   = "diajukan";
         $payout->save();
 

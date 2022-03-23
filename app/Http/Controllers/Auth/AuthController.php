@@ -15,7 +15,6 @@ class AuthController extends Controller
 {
     public function authenticate(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
@@ -33,7 +32,8 @@ class AuthController extends Controller
         
         
         $user = User::where('email', $request->input('email'))
-            ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
+            ->where("id_cms_privileges",4)
+            // ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->where("status","Active")
             ->first();
         if(!$user){

@@ -18,7 +18,8 @@ class ProfileController extends Controller
         $user = User::select("name", "created_at", "label", "photo", "bank_pencairan", "norek_pencairan")
             ->where("id",$request->auth)
             ->where("status","Active")
-            ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
+            ->where("id_cms_privileges",4)
+            // ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->first();
 
         if(!$user){

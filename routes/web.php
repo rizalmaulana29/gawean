@@ -104,6 +104,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\WithdrawController@index']);
 			$router->post('/payout', ['uses' => 'Signed\WithdrawController@payout']);
 		});
+		$router->group(['prefix'=>'shopping'],  function () use ($router) {
+			$router->get('/', ['uses' => 'Signed\ShoppingController@index']);
+		});
 	});
 
 	

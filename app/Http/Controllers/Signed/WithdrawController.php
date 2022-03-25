@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\CmsUser As User;
 use App\Pencairan;
+use App\PencairanDevel;
 use App\PencairanDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,7 @@ class WithdrawController extends Controller
         $order   = $request->input("order") ?? null ? $request->input("order") : "tgl_pengajuan"; 
         $sort   = $request->input("sort") ?? null ? $request->input("sort") : "DESC"; 
         # withdrawed
-        $withdrawed = Pencairan::where("id_agen",$request->auth)
+        $withdrawed = PencairanDevel::where("id_agen",$request->auth)
             ->where("status_pencairan", "selesai");
 
         if($start && $end){

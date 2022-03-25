@@ -33,13 +33,17 @@ class AgenController extends Controller
         if (!$createCMS["status"]) {
             return response()->json($createCMS);
         }
+
         $to_address = $request['email'];
         $nama       = $request['nama'];
 
-        $sendWa = $this->sendWa($nama, $to_address, $request['password'], $request['hp']);
+        $token_email_verify = substr(base64_encode(sha1(mt_rand())), 0, 36);
+        $link_email_verify = "https://api.rumahaqiqah.co.id/api/email/verify?payloads=".$token_email_verify;
+
+        $sendWa = $this->sendWa($nama, $to_address, $request['password'], $request['hp'], $link_email_verify);
 
         $hasil = Mail::send(
-            (new AgenMail($to_address, $nama, $request['password']))->build()
+            (new AgenMail($to_address, $nama, $request['password'], $link_email_verify))->build()
         );
 
         return response()->json([
@@ -60,7 +64,7 @@ class AgenController extends Controller
             $insertUser->id_kantor = $request['kotaKantor'];
             $insertUser->id_cms_privileges = 4;
             $insertUser->created_at = Carbon::now();
-            $insertUser->status = 'Active';
+            $insertUser->status = 'inActive';
             $insertUser->save();
 
             if (!$insertUser) {
@@ -117,7 +121,7 @@ class AgenController extends Controller
         return $nohp;
     }
 
-    public function sendWa($nama, $to_address, $password, $hp)
+    public function sendWa($nama, $to_address, $password, $hp, $link_email_verify)
     {
         if (substr($hp, 0, 1) == 0) {
             $nohp = $this->numhp0to62($hp);

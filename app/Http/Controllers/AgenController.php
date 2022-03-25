@@ -28,8 +28,9 @@ class AgenController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => 'invalidInput'], 400);
         }
+        $token_email_verify = substr(base64_encode(sha1(mt_rand())), 0, 36);
 
-        $createCMS  = $this->userCms($request);
+        $createCMS  = $this->userCms($request, $token_email_verify);
         if (!$createCMS["status"]) {
             return response()->json($createCMS);
         }
@@ -37,7 +38,6 @@ class AgenController extends Controller
         $to_address = $request['email'];
         $nama       = $request['nama'];
 
-        $token_email_verify = substr(base64_encode(sha1(mt_rand())), 0, 36);
         $link_email_verify = "https://api.rumahaqiqah.co.id/api/email/verify?payloads=".$token_email_verify;
 
         $sendWa = $this->sendWa($nama, $to_address, $request['password'], $request['hp'], $link_email_verify);
@@ -52,7 +52,7 @@ class AgenController extends Controller
         ]);
     }
 
-    private function userCMS($request)
+    private function userCMS($request, $token_email_verify)
     {
         $checkUser = CmsUser::where('email', $request['email'])
             ->first();
@@ -65,6 +65,7 @@ class AgenController extends Controller
             $insertUser->id_cms_privileges = 4;
             $insertUser->created_at = Carbon::now();
             $insertUser->status = 'inActive';
+            $insertUser->token_email_verification = $token_email_verify;
             $insertUser->save();
 
             if (!$insertUser) {
@@ -86,6 +87,27 @@ class AgenController extends Controller
         }
 
         return $response;
+    }
+
+    public function verifyEmail(Request $request){
+        $validator = Validator::make($request->all(), [
+            "payloads" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => 'invalidInput'], 400);
+        }
+
+        $payloads = $request->input("payloads") ?? null ? $request->input("payloads") : null;
+        if(!$payloads) return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
+        
+        $verify_email = CmsUser::where("token_email_verification",$payloads)->first();
+        if(!$verify_email) return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
+
+        $now = Carbon::now()->toDateTimeString();
+        $verify_email->update(["email_verified_at",$now]);
+
+        return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
     }
 
     public function forgotPassword(Request $request, $id)

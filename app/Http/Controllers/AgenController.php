@@ -66,6 +66,7 @@ class AgenController extends Controller
             $insertUser->created_at = Carbon::now();
             $insertUser->status = 'inActive';
             $insertUser->token_email_verification = $token_email_verify;
+            $insertUser->id_parent_agen = $request['source'] ?? null ? $request['source'] : null;
             $insertUser->save();
 
             if (!$insertUser) {
@@ -103,9 +104,15 @@ class AgenController extends Controller
         
         $verify_email = CmsUser::where("token_email_verification",$payloads)->first();
         if(!$verify_email) return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
+        
+        $verified = $verify_email->email_verified_at;
+        if($verified) return response()->json(["status"=>false, "message"=>"Your Email Has Been Verified"], 400);
 
         $now = Carbon::now()->toDateTimeString();
-        $verify_email->update(["email_verified_at",$now]);
+        $verify_email->update([
+            "email_verified_at"=>$now,
+            "status"=>"Active"
+        ]);
 
         return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
     }

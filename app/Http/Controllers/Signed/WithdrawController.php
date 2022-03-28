@@ -99,16 +99,17 @@ class WithdrawController extends Controller
         }
 
         $now  = Carbon::now();
+        $id_pencairan = $now->format("ymdHi").rand(100, 999);
 
         $payout = new Pencairan;
-        $payout->id_pencairan   = $now->format("ymdHi").rand(100, 999);
+        $payout->id_pencairan   = $id_pencairan;
         $payout->id_agen        = $request->auth;
         $payout->total_pencairan    = $pencairan;
         $payout->tgl_pengajuan      = $now->toDateTimeString();
         $payout->status_pencairan   = "diajukan";
         $payout->save();
 
-        $saldo_diajukan = $saldo->update(["status_pencairan"=>"diajukan"]);
+        $saldo_diajukan = $saldo->update(["status_pencairan"=>"diajukan", "id_pencairan" => $id_pencairan]);
 
         if($saldo_diajukan && $payout){
             return response()->json([
@@ -119,7 +120,7 @@ class WithdrawController extends Controller
         else{
             return response()->json([
                 "status" => false,
-                "message" => "Some Update Fail"
+                "message" => "Request Payout Failed."
             ],400);
         }
     }

@@ -38,7 +38,7 @@ class AgenController extends Controller
         $to_address = $request['email'];
         $nama       = $request['nama'];
 
-        $link_email_verify = "https://api.rumahaqiqah.co.id/api/email/verify?payloads=".$token_email_verify;
+        $link_email_verify = "https://api.rumahaqiqah.co.id/api/email/verify?payloads=" . $token_email_verify;
 
         $sendWa = $this->sendWa($nama, $to_address, $request['password'], $request['hp'], $link_email_verify);
 
@@ -90,31 +90,39 @@ class AgenController extends Controller
         return $response;
     }
 
-    public function verifyEmail(Request $request){
+    public function verifyEmail(Request $request)
+    {
+        $root_url   = "https://beta.kawandagang.id/agen/login";
+        $url        = $root_url . "?verified=fail";
+
         $validator = Validator::make($request->all(), [
             "payloads" => "required",
         ]);
-
+        
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'invalidInput'], 400);
+            return redirect()->to($url);
+            // return response()->json(['status' => false, 'message' => 'invalidInput'], 400);
         }
 
         $payloads = $request->input("payloads") ?? null ? $request->input("payloads") : null;
-        if(!$payloads) return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
-        
-        $verify_email = CmsUser::where("token_email_verification",$payloads)->first();
-        if(!$verify_email) return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
-        
+        if (!$payloads) return redirect()->to($url);
+        //return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
+
+        $verify_email = CmsUser::where("token_email_verification", $payloads)->first();
+        if (!$verify_email) return redirect()->to($url);
+        // return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
+
+        $url = $root_url . "?verified=done";
         $verified = $verify_email->email_verified_at;
-        if($verified) return response()->json(["status"=>false, "message"=>"Your Email Has Been Verified"], 400);
+        if ($verified) return response()->json(["status" => false, "message" => "Your Email Has Been Verified"], 400);
 
         $now = Carbon::now()->toDateTimeString();
         $verify_email->update([
-            "email_verified_at"=>$now,
-            "status"=>"Active"
+            "email_verified_at" => $now,
+            "status" => "Active"
         ]);
 
-        $url = "https://beta.kawandagang.id/agen/login?verified=y";
+        $url = $root_url . "?verified=y";
         return redirect()->to($url);
     }
 

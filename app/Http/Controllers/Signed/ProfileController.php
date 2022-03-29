@@ -40,12 +40,14 @@ class ProfileController extends Controller
         $linkRA = "https://order.rumahaqiqah.co.id/?source=";
         $linkRQ = "https://agrosurya.co.id/katalog/?source=";
         $linkSF = "https://order.rumahaqiqah.co.id/?source=";
+        $signup = "https://beta.kawandagang.id/agen/signup?source=";
         return response()->json([
             "status" => true,
             "data"  =>[
                 "ra_link"  => $linkRA.$request->auth,
                 "rq_link"  => $linkRQ.$request->auth,
                 "sf_link"  => $linkSF.$request->auth,
+                "signup_link"  => $signup.$request->auth,
             ]
         ]);
     }

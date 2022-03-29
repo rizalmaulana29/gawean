@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 // use App\Helpers\OTP;
 use App\Helpers\JWT;
 use App\CmsUser As User;
+use App\Payment;
 use App\Pencairan;
 use App\PencairanDetail;
+use App\Pendapatan;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -26,6 +28,23 @@ class DashboardController extends Controller
                 ->orWhereNull('status_pencairan');
             })
             ->sum("nominal_fee");
+        
+        #Total Penjualan
+        $totalPenjualan = PencairanDetail::where("id_agen",$request->auth)
+            ->sum("nominal_total");
+        
+        #Total Belanja
+        $totalBelanja = Pendapatan::where("id_agen",$request->auth)
+            ->whereIn("id_produk_parent",[329,330,384])
+            ->where("lunas", "y")
+            ->sum("total_transaksi");
+        
+        #Total Reward
+        $totalReward = Payment::where("id_agen",$request->auth)
+            ->where("status", "paid")
+            ->where("lunas", "y")
+            ->where("tipe", "transaksi")
+            ->count();
 
         #Total Fee diajukan
         $totalFeeDiajukan = Pencairan::where("id_agen", $request->auth)
@@ -60,6 +79,18 @@ class DashboardController extends Controller
                 "totalFeeSelesai"  => [
                     "Total Fee Selesai",
                     $totalFeeSelesai ? $totalFeeSelesai : 0,
+                ],
+                "totalPenjualan"  => [
+                    "Total Penjualan",
+                    $totalPenjualan ? $totalPenjualan : 0,
+                ],
+                "totalBelanja"  => [
+                    "Total Belanja",
+                    $totalBelanja ? $totalBelanja : 0,
+                ],
+                "totalReward"  => [
+                    "Total Reward",
+                    $totalReward ? $totalReward : 0,
                 ],
             ]
         ]);

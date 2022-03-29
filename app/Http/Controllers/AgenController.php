@@ -114,7 +114,8 @@ class AgenController extends Controller
             "status"=>"Active"
         ]);
 
-        return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
+        $url = "https://beta.kawandagang.id/agen/login?verified=y";
+        return redirect()->to($url);
     }
 
     public function forgotPassword(Request $request, $id)

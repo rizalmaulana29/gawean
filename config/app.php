@@ -27,11 +27,12 @@ return [
                         "116.206.14.59", //hp sandi
                         "34.117.59.81",//Insan Mulia
                         "36.79.248.35",//Insan Mulia 5G
-                        "114.122.103.95",// Telkomsel Rivan*/
+                        "114.122.103.95",// Telkomsel Rivan
                         "180.244.134.149",// IP cinte 20 
-                       /* "180.244.133.122", //masih cinte20
+                        "180.244.133.122", //masih cinte20
                         "103.121.18.32",//myrep
                         "114.5.208.180", //indosat irvan*/
+                        "180.244.133.122",
                 ]
         ) ? true : false),
 

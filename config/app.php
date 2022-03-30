@@ -30,6 +30,7 @@ return [
                         "114.122.103.95",// Telkomsel Rivan
                         "180.244.134.149",// IP cinte 20 
                         "180.244.133.122", //masih cinte20
+                        "103.121.18.32",//myrep
                 ]
         ) ? true : false),
 

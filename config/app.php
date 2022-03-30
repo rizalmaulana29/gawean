@@ -22,10 +22,10 @@ return [
                         "210.210.165.250",
                         "36.72.4.121", // id hp nendi
                         "116.206.15.32", // id hp Rivan!
-                        "36.65.240.185", //IP InsMul
+                        "66.96.225.127", //IP InsMul
                         "61.94.89.125", //IP InsMUl di IC
                         "116.206.14.59", //hp sandi
-                        "36.72.0.142",//Insan Mulia
+                        "34.117.59.81",//Insan Mulia
                         "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan
                         "180.244.134.149",// IP cinte 20 

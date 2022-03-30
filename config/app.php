@@ -29,6 +29,7 @@ return [
                         "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan
                         "180.244.134.149",// IP cinte 20 
+                        "180.244.133.122", //masih cinte20
                 ]
         ) ? true : false),
 

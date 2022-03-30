@@ -19,7 +19,7 @@ return [
         'debug' => env('APP_DEBUG', in_array(
                 isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : [],
                 [
-                        "210.210.165.250",
+                       /* "210.210.165.250",
                         "36.72.4.121", // id hp nendi
                         "116.206.15.32", // id hp Rivan!
                         "66.96.225.127", //IP InsMul
@@ -27,11 +27,11 @@ return [
                         "116.206.14.59", //hp sandi
                         "34.117.59.81",//Insan Mulia
                         "36.79.248.35",//Insan Mulia 5G
-                        "114.122.103.95",// Telkomsel Rivan
+                        "114.122.103.95",// Telkomsel Rivan*/
                         "180.244.134.149",// IP cinte 20 
-                        "180.244.133.122", //masih cinte20
+                       /* "180.244.133.122", //masih cinte20
                         "103.121.18.32",//myrep
-                        "114.5.208.180", //indosat irvan
+                        "114.5.208.180", //indosat irvan*/
                 ]
         ) ? true : false),
 

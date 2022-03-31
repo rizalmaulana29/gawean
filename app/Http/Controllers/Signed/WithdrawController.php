@@ -34,13 +34,19 @@ class WithdrawController extends Controller
         
         $order   = $request->input("order") ?? null ? $request->input("order") : "tgl_pengajuan"; 
         $sort   = $request->input("sort") ?? null ? $request->input("sort") : "DESC"; 
+        
+        $status   = $request->input("status") ?? null ? $request->input("status") : ""; 
+        
         # withdrawed
-        $withdrawed = Pencairan::where("id_agen",$request->auth)
-            ->where("status_pencairan", "selesai");
+        $withdrawed = Pencairan::where("id_agen",$request->auth);
 
         if($start && $end){
             $withdrawed = $withdrawed->where("tgl_pengajuan", ">=", $start)
                 ->where("tgl_pengajuan", "<=", $end);
+        }
+
+        if($status){
+            $withdrawed = $withdrawed->where("status_pencairan", $status);
         }
 
         $withdrawed = $withdrawed->take($take)

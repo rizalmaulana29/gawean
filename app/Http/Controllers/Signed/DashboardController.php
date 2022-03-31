@@ -21,77 +21,91 @@ class DashboardController extends Controller
             return response()->json(['status' => 'Unauthorized Access'],401);
         }
 
-        #Total Fee Null
-        $totalFeeUnprocessed = PencairanDetail::where("id_agen",$request->auth)
-            ->where(function($q) {
-                $q->where('status_pencairan', '=', '')
-                ->orWhereNull('status_pencairan');
-            })
-            ->sum("nominal_fee");
+        // #Total Fee Null
+        // $totalFeeUnprocessed = PencairanDetail::where("id_agen",$request->auth)
+        //     ->where(function($q) {
+        //         $q->where('status_pencairan', '=', '')
+        //         ->orWhereNull('status_pencairan');
+        //     })
+        //     ->sum("nominal_fee");
         
-        #Total Penjualan
-        $totalPenjualan = PencairanDetail::where("id_agen",$request->auth)
-            ->sum("nominal_total");
+        // #Total Penjualan
+        // $totalPenjualan = PencairanDetail::where("id_agen",$request->auth)
+        //     ->sum("nominal_total");
         
         #Total Belanja
         $totalBelanja = Pendapatan::where("id_agen",$request->auth)
             ->whereIn("id_produk_parent",[329,330,384])
-            ->where("lunas", "y")
-            ->sum("total_transaksi");
+            ->where("lunas", "y");
         
-        #Total Reward
-        $totalReward = Payment::where("id_agen",$request->auth)
-            ->where("status", "paid")
-            ->where("lunas", "y")
-            ->where("tipe", "transaksi")
-            ->count();
+        $totalBelanjaCount = $totalBelanja->count();
+        $totalBelanja = $totalBelanja->sum("total_transaksi");
+        
+        // #Total Reward
+        // $totalReward = Payment::where("id_agen",$request->auth)
+        //     ->where("status", "paid")
+        //     ->where("lunas", "y")
+        //     ->where("tipe", "transaksi")
+        //     ->count();
 
-        #Total Fee diajukan
-        $totalFeeDiajukan = Pencairan::where("id_agen", $request->auth)
-            ->where("status_pencairan","diajukan")
-            ->sum("total_pencairan");
+        // #Total Fee diajukan
+        // $totalFeeDiajukan = Pencairan::where("id_agen", $request->auth)
+        //     ->where("status_pencairan","diajukan")
+        //     ->sum("total_pencairan");
 
-        #Total Fee diproses
-        $totalFeeDiproses = Pencairan::where("id_agen", $request->auth)
-            ->where("status_pencairan","diproses")
-            ->sum("total_pencairan");
+        // #Total Fee diproses
+        // $totalFeeDiproses = Pencairan::where("id_agen", $request->auth)
+        //     ->where("status_pencairan","diproses")
+        //     ->sum("total_pencairan");
 
-        #Total Fee selesai
-        $totalFeeSelesai = Pencairan::where("id_agen", $request->auth)
-            ->where("status_pencairan","selesai")
-            ->sum("total_pencairan");
+        // #Total Fee selesai
+        // $totalFeeSelesai = Pencairan::where("id_agen", $request->auth)
+        //     ->where("status_pencairan","selesai")
+        //     ->sum("total_pencairan");
+        
+        #Total Diskon
+        $totalDiskon = $totalBelanja * 0.20;
 
         return response()->json([
             "status" => true,
             "data" => [
-                "totalFeeNull"  => [
-                    "Total Fee",
-                    $totalFeeUnprocessed ? $totalFeeUnprocessed : 0
-                ],
-                "totalFeeDiajukan"  => [
-                    "Total Fee Diajukan",
-                    $totalFeeDiajukan ? $totalFeeDiajukan : 0
-                ],
-                "totalFeeDiproses"  => [
-                    "Total Fee Diproses",
-                    $totalFeeDiproses ? $totalFeeDiproses : 0,
-                ],
-                "totalFeeSelesai"  => [
-                    "Total Fee Selesai",
-                    $totalFeeSelesai ? $totalFeeSelesai : 0,
-                ],
-                "totalPenjualan"  => [
-                    "Total Penjualan",
-                    $totalPenjualan ? $totalPenjualan : 0,
-                ],
+                // "totalFeeNull"  => [
+                //     "Total Fee",
+                //     $totalFeeUnprocessed ? $totalFeeUnprocessed : 0
+                // ],
+                // "totalFeeDiajukan"  => [
+                //     "Total Fee Diajukan",
+                //     $totalFeeDiajukan ? $totalFeeDiajukan : 0
+                // ],
+                // "totalFeeDiproses"  => [
+                //     "Total Fee Diproses",
+                //     $totalFeeDiproses ? $totalFeeDiproses : 0,
+                // ],
+                // "totalFeeSelesai"  => [
+                //     "Total Fee Selesai",
+                //     $totalFeeSelesai ? $totalFeeSelesai : 0,
+                // ],
+                // "totalPenjualan"  => [
+                //     "Total Penjualan",
+                //     $totalPenjualan ? $totalPenjualan : 0,
+                // ],
                 "totalBelanja"  => [
                     "Total Belanja",
                     $totalBelanja ? $totalBelanja : 0,
                 ],
-                "totalReward"  => [
-                    "Total Reward",
-                    $totalReward ? $totalReward : 0,
+                // "totalReward"  => [
+                //     "Total Reward",
+                //     $totalReward ? $totalReward : 0,
+                // ],
+                "totalDiskon"  => [
+                    "Total Diskon",
+                    $totalDiskon ? $totalDiskon : 0,
                 ],
+                "totalBelanjaCount"  => [
+                    "Quantity Belanja",
+                    $totalBelanjaCount ? $totalBelanjaCount : 0,
+                ],
+                
             ]
         ]);
     }

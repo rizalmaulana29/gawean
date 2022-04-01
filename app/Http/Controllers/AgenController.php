@@ -176,6 +176,79 @@ class AgenController extends Controller
             "key"   => $key,
             "message" =>
             "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
+                                    \\n' . 'Selamat bergabung di Kawan Dagang ' . '
+                                    \\n' . ' Berikut Akses Login anda:' . '
+                                    \\n' . ' URL      : https://beta.kawandagang.id/admin/login
+                                    \\n' . ' Nama     : ' . $nama . '
+                                    \\n' . ' Email    : ' . $to_address . '
+                                    \\n' . ' Password : ' . $password . '
+                                    \\n' . ' No. Hp   : ' . $hp . '
+                                    \\n' . '
+                                    \\n' . '  benefit dari Kawan Dagang diantaranya sebagai  berikut:
+
+                                    \\n' . '1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
+                                    
+                                    \\n' . '2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan
+                                    
+                                    \\n' . '3. Gratis materi promosi
+                                    
+                                    \\n' . '4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera
+                                    
+                                    \\n' . '5. Berhak mengikuti Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)
+                                    
+                                    \\n' . 'Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.
+                                    
+                                    \\n' . 'Kawan Dagang
+                                    
+                                    \\n' . 'Saatnya Kamu Jadi Miliarder
+                                    \\n' . '
+                                    \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
+                                    \\n' . 'wa.me/628112317711' . '
+                                    \\n' . 'Terima Kasih 😊🙏'
+        );
+
+
+
+        $data_string = json_encode($data);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string)
+            )
+        );
+        $res = curl_exec($ch);
+        curl_close($ch);
+    }
+
+    public function sendWaBackUp($nama, $to_address, $password, $hp, $link_email_verify)
+    {
+        if (substr($hp, 0, 1) == 0) {
+            $nohp = $this->numhp0to62($hp);
+        } else {
+            $nohp = $hp;
+        }
+
+        $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+        $url = 'http://116.203.92.59/api/async_send_message';
+
+
+        $data = array(
+            "phone_no" => $nohp,
+            "key"   => $key,
+            "message" =>
+            "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
                                     \\n' . 'Selamat bergabung di Perwira Agro Academy ' . '
                                     \\n' . ' Berikut Akses Login anda:' . '
                                     \\n' . ' URL      : https://backend.rumahaqiqah.co.id/admin/login

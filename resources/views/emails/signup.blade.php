@@ -29,7 +29,7 @@
 				<table style="border-collapse: collapse; width: 100%;" border="0">
 <tbody>
 <tr>
-<td style="width: 7.54031%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/PERWIRA%20AGRO.png" alt="" width="147" height="111" /></td>
+<td style="width: 7.54031%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/logo%20kawan%20dagang_agro-01.png" alt="" width="147" height="111" /></td>
 <td style="width: 67.8909%;">&nbsp;</td>
 <td style="width: 24.5687%;"><img src="https://storage.googleapis.com/donol.cinte.id/asp/agro%20baru-01%20copy.png" alt="" width="291" height="120" /></td>
 </tr>
@@ -39,7 +39,7 @@
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Halo   {{ $nama }}</p>
 <p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
-<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Selamat bergabung di Perwira Agro Academy atau disingkat PAA.</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Selamat bergabung di Kawan Dagang atau disingkat PAA.</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Disini Kamu bisa meningkatkan potensi jualan Kamu karena akan dibimbing oleh para coaches serta mentor yang keren-keren.</p>
 <p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Apakah Kamu sudah melakukan AKTIVASI akun?<span class="Apple-converted-space">&nbsp;</span></p>
@@ -49,7 +49,7 @@
 <p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Klik link berikut untuk login</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
-<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><span style="font-family: Helvetica Neue;"><span style="font-size: 12px;"><a href="https://backend.rumahaqiqah.co.id/admin/login">https://backend.rumahaqiqah.co.id/admin/login</a></span></span></p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><span style="font-family: Helvetica Neue;"><span style="font-size: 12px;"><a href="https://beta.kawandagang.id/agen/login">https://beta.kawandagang.id/agen/login</a></span></span></p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><span style="font-family: Helvetica Neue;"><span style="font-size: 12px;">username :  {{ $email }}</span></span></p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">&nbsp;</p>
@@ -61,11 +61,11 @@
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">3. Gratis materi promosi</p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera</p>
-<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">5. Berhak mengikuti Perwira Agro Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">5. Berhak mengikuti Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)</p>
 <p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
-<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama <b>Kawan Dagang</b> untuk mendapatkan manfaatnya.</p>
 <p class="p2" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue'; min-height: 14px;">&nbsp;</p>
-<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Perwira Agro Academy</p>
+<p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';"><b>Kawan Dagang</b></p>
 <p class="p1" style="margin: 0px; font-variant-numeric: normal; font-variant-east-asian: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: 'Helvetica Neue';">Saatnya Kamu Jadi Miliarder</p>
 </td>
 </tr>

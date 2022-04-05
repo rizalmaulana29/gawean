@@ -26,7 +26,7 @@ class ProfileController extends Controller
             return response()->json(['status' => false, "message" => 'Unauthorized Access'],401);
         }
 
-        $user['tipe'] = $user["id_cms_privileges"] == 4 ? "Agen" : "Mitra";
+        $user['tipe'] = $user["id_cms_privileges"];
         unset($user["id_cms_privileges"]);
         
         return response()->json([

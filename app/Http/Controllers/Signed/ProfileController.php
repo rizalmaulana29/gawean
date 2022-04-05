@@ -15,10 +15,10 @@ class ProfileController extends Controller
         }
 
         #get User
-        $user = User::select("name", "created_at", "label", "photo", "bank_pencairan", "norek_pencairan")
+        $user = User::select("name", "created_at", "label", "photo", "bank_pencairan", "norek_pencairan", "id_cms_privileges")
             ->where("id",$request->auth)
             ->where("status","Active")
-            ->where("id_cms_privileges",4)
+            ->whereIn("id_cms_privileges",[4,17])
             // ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->first();
 
@@ -26,6 +26,9 @@ class ProfileController extends Controller
             return response()->json(['status' => false, "message" => 'Unauthorized Access'],401);
         }
 
+        $user['tipe'] = $user["id_cms_privileges"] == 4 ? "Agen" : "Mitra";
+        unset($user["id_cms_privileges"]);
+        
         return response()->json([
             "status"    => true,
             "agen"      => $user

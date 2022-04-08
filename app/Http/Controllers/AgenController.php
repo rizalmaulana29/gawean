@@ -75,6 +75,17 @@ class AgenController extends Controller
                     "message" => 'Gagal Menambahkan Data ke CMS User'
                 ];
             } else {
+                $agen               = new Kontak();
+                $agen->id_agen      = $insertUser->id;
+                $agen->nama_kontak  = $request['nama'];
+                $agen->email        = $request['email'];
+                $agen->hp           = $request['hp'];
+                $agen->status       = 'Agen';
+                $agen->id_kantor    = $request['kotaKantor'];
+                $agen->tgl_reg      = Carbon::now();
+
+                $agen->save();
+
                 $response = [
                     "status" => true,
                     "message" => 'Berhasil Menambahkan Data ke CMS User'

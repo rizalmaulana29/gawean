@@ -57,8 +57,8 @@ class CartController extends Controller
       $n = 0;
 
       $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
-      if ($request->input('kategori') == 'QA' || $request->input('kategori') == 'QB') {
-        $varian = 'Qurban';
+      if ($request->input('kategori') == 'QA' || $request->input('kategori') == 'QB' || $request->input('kategori') == 'RF') {
+        $varian = $request->input('kategori') != 'RF' ? 'Qurban' : 'Retail Food' ;
         if ($request->input('kategori') == 'QA') {
           $adminentitas = '10';
         } else {
@@ -101,7 +101,7 @@ class CartController extends Controller
       ]);
 
       foreach ($req['id_produk_harga'] as $key => $id_produk) {
-  
+
           $order = new Order;
           $order->id_ra_payment = $result[2]->id;
           $order->id_order = $result[2]->id_transaksi;
@@ -213,8 +213,7 @@ class CartController extends Controller
         );
       $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta); 
       
-
-      #ASK. GIMANA RESPONSE TERBAIKNYA? KUMAHA MANEH WE
+      # PEMABAYARAN DENGAN NICEPAY
       if($np){
           if($response->resultCd == '0000'){
             return response()->json(["data"=>$response, 

@@ -97,6 +97,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		$router->group(['prefix'=>'profile'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\ProfileController@index']);
 			$router->get('/referral', ['uses' => 'Signed\ProfileController@referralLink']);
+			$router->post('/update', ['uses' => 'Signed\ProfileController@update']);
 		});
 		$router->group(['prefix'=>'affiliate'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\AffiliateController@index']);

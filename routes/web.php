@@ -23,6 +23,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('harga', 	['uses' =>'HargaController@show']);
 	$router->get('code',	['uses' =>'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
+	$router->get('transaction', ["middleware" => "jwt.auth",'uses' => 'TransactionController@detailTrx']);
 
 	$router->post('signup/agen', ['uses' =>'AgenController@signup']);
 	$router->get('email/verify', ['uses' =>'AgenController@verifyEmail']);
@@ -91,6 +92,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	});
 
 	$router->group(['prefix' => 'signed','middleware' => ['jwt.auth','all.cors']], function () use ($router) {
+
 		$router->group(['prefix'=>'dashboard'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\DashboardController@index']);
 		});

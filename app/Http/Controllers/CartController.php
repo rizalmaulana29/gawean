@@ -207,6 +207,8 @@ class CartController extends Controller
       if (in_array($request->input('id_kantor'), $virtual_office)) {
         if($varian != "Retail Food"){
           $send_notif = $this->notifTransaksi($transdata, $nama, $alamat,$varian);
+        }else{
+          $send_notif = $this->notifTransaksiKawanDagang($transdata, $nama, $alamat,$varian);
         }
       }
 
@@ -616,6 +618,62 @@ class CartController extends Controller
     $datasend = urlencode($data);
 
     $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-1001257247870&text='.$datasend;
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    // echo $response;
+  }
+  
+  public function notifTransaksiKawanDagang($transdata,$nama, $alamat,$varian){
+    
+    $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
+
+    $bankRek = DB::table('ra_bank_rek')->select('keterangan','id_rekening','gambar','id_payment_method','parent_id')
+                 ->where('id', $transdata->id_payment_method)
+                 ->first();    
+
+    if ($bankRek->keterangan == "cash") {
+      $rek   = $bankRek->keterangan;
+     
+    }elseif ($bankRek->keterangan == "Bank Central Asia") {
+      $rek   = $bankRek->keterangan;
+
+    } else {
+      $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
+    }
+
+    $namaPerusahaan = ($varian == 'Qurban') ? 'Rumah Qurban' : 'Rumah Aqiqah' ;
+
+    $data ='Ada transaksi Customer di '.$namaPerusahaan.' Cabang '.$kantor.'
+    untuk pengiriman di tanggal '.date('d M Y',strtotime($transdata->tgl_kirim)).' '.$transdata->waktu_kirim.'
+    Dengan detail order sebagai berikut:'.'
+      Order ID          : '.$transdata->id_transaksi.'
+      Nama              : '.$nama.'
+      Alamat            : '.$alamat.'
+      Total Tagihan     : IDR '.number_format($transdata->nominal_total).'
+
+    Metode Pembayaran:'.'
+      - '.$rek.'
+
+    Tolong di cek @Rumah_Aqiqah,'.'
+    Terima Kasih';
+
+    $datasend = urlencode($data);
+
+    $url='https://api.telegram.org/bot5221158221:AAFbohjK2Oko8jS8WcGNc_X5y9Xq2CmNCN8/sendMessage?chat_id=-679409503&text='.$datasend;
     $curl = curl_init();
 
     curl_setopt_array($curl, array(

@@ -174,10 +174,12 @@ class CartController extends Controller
       if($paymeth['parent_id'] <= 5){
           $npRegister = $this->npRegistration($result[2]->id_transaksi);
           $response = json_decode($npRegister);
+          $vendor = "nicepay";
           $np     = true;
       }
       else{
           $response = $result;
+          $vendor = "bank";
           $np     = false;
       }
 
@@ -224,6 +226,7 @@ class CartController extends Controller
                                       "status" => "true", 
                                       "message" => $response->resultMsg,
                                       "id_transaksi"=>$result[2]->id_transaksi,
+                                      "vendor"=>$vendor,
                                       "parent_id"=>$paymeth['parent_id'],
                                       "expired_at"=>date('d M Y ,H:i',strtotime($transdata->expired_at))
                                     ],200);
@@ -232,6 +235,7 @@ class CartController extends Controller
                                       "status" => "false",
                                       "message" => $response->resultMsg,
                                       "id_transaksi"=>$result[2]->id_transaksi,
+                                      "vendor"=>$vendor,
                                       "parent_id"=>$paymeth['parent_id'],
                                       "expired_at"=>date('d M Y ,H:i',strtotime($transdata->expired_at))
                                     ],200);
@@ -241,6 +245,7 @@ class CartController extends Controller
           return response()->json(["status" => "true", 
                                     "message" => $response,
                                     "id_transaksi"=>$result[2]->id_transaksi,
+                                    "vendor"=>$vendor,
                                     "parent_id"=>$paymeth['parent_id'],
                                     "expired_at"=>date('d M Y ,H:i',strtotime($transdata->expired_at))
                                   ],200);

@@ -205,7 +205,9 @@ class CartController extends Controller
 
       $virtual_office = [5,16,163,545,159,160,161,162,466];
       if (in_array($request->input('id_kantor'), $virtual_office)) {
-        $send_notif = $this->notifTransaksi($transdata, $nama, $alamat,$varian);
+        if($varian != "Retail Food"){
+          $send_notif = $this->notifTransaksi($transdata, $nama, $alamat,$varian);
+        }
       }
 
       $hasil = Mail::send(

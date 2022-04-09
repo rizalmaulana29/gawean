@@ -16,16 +16,20 @@ class ProfileController extends Controller
             return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
         }
 
+        $cu = "cms_users";
+        $rk = "ra_kontak";
         #get User
-        $user = User::select("name", "created_at", "label", "photo", "bank_pencairan", "norek_pencairan", "id_cms_privileges")
-            ->where("id", $request->auth)
-            ->where("status", "Active")
-            ->whereIn("id_cms_privileges", [4, 17])
+        $user = User::select("$cu.name", "$cu.created_at", "$cu.label", "$cu.photo", "$cu.bank_pencairan", "$cu.norek_pencairan", "$cu.id_cms_privileges",
+        "$rk.tgl_lahir","$rk.tempat_lahir","$rk.alamat","$rk.kota","$rk.kecamatan","$rk.jk","$rk.id_kantor")
+            ->leftJoin("$rk", "$cu.id", "=", "$rk.id_agen")
+            ->where("$cu.id", $request->auth)
+            ->where("$cu.status", "Active")
+            ->whereIn("$cu.id_cms_privileges", [4, 17])
             // ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->first();
 
         if (!$user) {
-            return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
+            return response()->json(["status" => false, "message" => "Unauthorized Access"], 401);
         }
 
         $user['tipe'] = $user["id_cms_privileges"];

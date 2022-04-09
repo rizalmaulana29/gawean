@@ -604,7 +604,7 @@ class CartController extends Controller
       $rek   = $bankRek->keterangan.'\\n'.$bankRek->id_rekening;
     }
 
-    $namaPerusahaan = ($varian == 'Qurban') ? 'Rumah Qurban' : 'Rumah Aqiqah' ;
+    $namaPerusahaan = ($varian == 'Qurban') ? 'Rumah Qurban' : 'Kawan Dagang' ;
 
     $data ='Ada transaksi Customer di '.$namaPerusahaan.' Cabang '.$kantor.'
     untuk pengiriman di tanggal '.date('d M Y',strtotime($transdata->tgl_kirim)).' '.$transdata->waktu_kirim.'

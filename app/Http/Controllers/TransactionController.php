@@ -24,21 +24,23 @@ class TransactionController extends Controller
     if (!$request->auth) {
       return response()->json(['status' => false, "message" => 'Unauthorized Access as'], 401);
     }
-    
+
     $validator = Validator::make($request->all(), [
       'id_order'      => 'required',
-      'id_payment_method' => 'required'
     ]);
 
     if ($validator->fails()) {
-        return response()->json(["status" => false, "message" => "invalidInput"], 400);
+      return response()->json(["status" => false, "message" => "invalidInput"], 400);
     }
 
-    $trx = Payment::select("expired_at","id_transaksi")
-      ->where("id_transaksi", $request->input("id_order"))
-      ->where("id_payment_method", $request->input("id_payment_method"))
+    $rpyd = "ra_payment_dua";
+    $rbr = "ra_bank_rek";
+
+    $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar")
+      ->leftJoin("$rbr", "$rpyd.id_payment_method", "=", "$rbr.id")
+      ->where("$rpyd.id_transaksi", $request->input("id_order"))
       ->first();
-    if(!$trx){ 
+    if (!$trx) {
       return response()->json(["status" => false, "message" => "invalidInput"], 400);
     }
 
@@ -46,7 +48,7 @@ class TransactionController extends Controller
       ->where("action", "Registration")
       ->value("virtual_account_no");
 
-    if(!$no_bayar){ 
+    if (!$no_bayar) {
       return response()->json(["status" => false, "message" => "invalidInput"], 400);
     }
 
@@ -54,9 +56,9 @@ class TransactionController extends Controller
       "status" => true,
       "no_bayar" => $no_bayar,
       "id_transaksi" => $trx->id_transaksi,
-      "expired_at" => $trx->expired_at
+      "expired_at" => $trx->expired_at,
+      "keterangan" => $trx->keterangan,
+      "gambar" => "https://backend.rumahaqiqah.co.id/" . $trx->gambar
     ], 200);
-
   }
-
 }

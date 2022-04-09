@@ -58,7 +58,7 @@ class CartController extends Controller
 
       $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
       if ($request->input('kategori') == 'QA' || $request->input('kategori') == 'QB' || $request->input('kategori') == 'RF') {
-        $varian = $request->input('kategori') != 'RF' ? 'Qurban' : 'Retail Food' ;
+        $varian = $request->input('kategori') != 'RF' ? 'Qurban' : 'Retail_Food' ;
         if ($request->input('kategori') == 'QA') {
           $adminentitas = '10';
         } else {
@@ -207,7 +207,7 @@ class CartController extends Controller
 
       $virtual_office = [5,16,163,545,159,160,161,162,466];
       if (in_array($request->input('id_kantor'), $virtual_office)) {
-        if($varian != "Retail Food"){
+        if($varian != "Retail_Food"){
           $send_notif = $this->notifTransaksi($transdata, $nama, $alamat,$varian);
         }else{
           $send_notif = $this->notifTransaksiKawanDagang($transdata, $nama, $alamat,$varian);

@@ -493,42 +493,7 @@ class CartController extends Controller
                   \\n'.'Terima Kasih 😊🙏'
 
                 );
-    }elseif($varian == 'Retail_Food'){
-      $data = array("phone_no"=> $nohp,
-                  "key"   =>$key,
-                  "message" =>
-                  "Assalamu'alaikum Bapak/Ibu".' '.$nama.', 🙏'.
-                  ' Berikut adalah tagihan transaksi Bapak/Ibu di Sanusa Food'.
-                  ' untuk pemesanan di tanggal '.date('d M Y ,H:i',strtotime($transdata->tgl_transaksi)).'
-                  \\n'.'Dengan detail order sebagai berikut:'.'
-                  \\n'.' Order ID          : '.$transdata->id_transaksi.'
-                  \\n'.' Nama              : '.$nama.'
-                  \\n'.' No. Hp            : '.$hp.'
-                  \\n'.' Keterangan pesanan: '.$produk.'
-                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
-                  \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Bapak/Ibu menerima pesan ini,'.'
-                  \\n'.'atau pemesananan Bapak/Ibu akan di anggap gagal.'.'
-                  \\n'.'Metode Pembayaran:'.'
-                  \\n'.'- '.$rek
-                  .$bayar.'
-                  \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
-                  \\n'.'1. Virtual Account'.'
-                  \\n'.$link.'
-                  \\n'.'2. Transfer Bank untuk BCA / BNI'.'
-                  \\n'.'bit.ly/PanduanTransferBank'.'
-                  \\n'.'
-                  \\n'.'silakan save dulu nomor ini jika link belum bisa diklik'.'
-                  \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
-                  \\n'.'CS 1 wa.me/6281370071330'.'
-                  \\n'.'CS 2 wa.me/6281320489665'.'
-                  \\n'.'CS 3 wa.me/628112317711'.'
-                  \\n'.'Ingat Order ID Bapak/Ibu saat menghubungi Customer Care.'.'
-                  \\n'.'Terima kasih telah memilih kawandagang.id'.'
-                  \\n'.'Terima Kasih 😊🙏'
-
-                );
-    }
-      else {
+    } else {
       $data = array("phone_no"=> $nohp,
                   "key"   =>$key,
                   "message" =>

@@ -21,6 +21,7 @@ class ProfileController extends Controller
         #get User
         $user = User::select("$cu.name", "$cu.created_at", "$cu.label", "$cu.photo", "$cu.bank_pencairan", "$cu.norek_pencairan", "$cu.id_cms_privileges","$cu.hp",
         "$rk.tgl_lahir","$rk.tempat_lahir","$rk.alamat","$rk.kota","$rk.kecamatan","$rk.jk","$rk.id_kantor")
+            ->selectRaw("$cu.id AS agen")
             ->leftJoin("$rk", "$cu.id", "=", "$rk.id_agen")
             ->where("$cu.id", $request->auth)
             ->where("$cu.status", "Active")

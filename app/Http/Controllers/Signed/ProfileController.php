@@ -19,8 +19,24 @@ class ProfileController extends Controller
         $cu = "cms_users";
         $rk = "ra_kontak";
         #get User
-        $user = User::select("$cu.name", "$cu.created_at", "$cu.label", "$cu.photo", "$cu.bank_pencairan", "$cu.norek_pencairan", "$cu.id_cms_privileges","$cu.email","$cu.hp",
-        "$rk.tgl_lahir","$rk.tempat_lahir","$rk.alamat","$rk.kota","$rk.kecamatan","$rk.jk","$rk.id_kantor")
+        $user = User::select(
+            "$cu.name",
+            "$cu.created_at",
+            "$cu.label",
+            "$cu.photo",
+            "$cu.bank_pencairan",
+            "$cu.norek_pencairan",
+            "$cu.id_cms_privileges",
+            "$cu.email",
+            "$cu.hp",
+            "$rk.tgl_lahir",
+            "$rk.tempat_lahir",
+            "$rk.alamat",
+            "$rk.kota",
+            "$rk.kecamatan",
+            "$rk.jk",
+            "$rk.id_kantor"
+        )
             ->selectRaw("$cu.id AS agen")
             ->leftJoin("$rk", "$cu.id", "=", "$rk.id_agen")
             ->where("$cu.id", $request->auth)
@@ -29,6 +45,7 @@ class ProfileController extends Controller
             // ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->first();
 
+        #Bismillah
         if (!$user) {
             return response()->json(["status" => false, "message" => "Unauthorized Access"], 401);
         }

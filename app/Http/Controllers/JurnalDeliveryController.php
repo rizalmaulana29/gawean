@@ -29,11 +29,11 @@ class JurnalDeliveryController extends Controller
       $start = Carbon::today()->addHour(1)->toDateTimestring();
 
       $getDataTransaksi = Pengiriman::select('ra_pengiriman.id as id','ra_pengiriman.id_pt','ra_pengiriman.grand_total_harga',
-                                          'ra_pengiriman.id_order','ra_pengiriman.alamat','admin_entitas.id_entitas as entitas',
+                                          'ra_pengiriman.id_transaksi','ra_pengiriman.alamat','admin_entitas.id_entitas as entitas',
                                           'ra_pengiriman.tgl_kirim','ra_pengiriman.grand_total_qty','delivery_id','ra_payment_dua.email',
                                           'ra_pengiriman.grand_total_hpp','tambahan_ongkir','ra_pengiriman.alamat',
                                           'ra_payment_dua.person_id','ra_payment_dua.id_pt','ra_payment_dua.sales_order_id')
-                                 ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_order', '=', 'ra_payment_dua.id')
+                                 ->leftjoin('ra_payment_dua', 'ra_pengiriman.id_transaksi', '=', 'ra_payment_dua.id_transaksi')
                                  ->leftjoin('admin_entitas', 'ra_payment_dua.id_pt', '=', 'admin_entitas.id')
                                  ->where('delivery_id','=','')
                                  ->orderBy('ra_pengiriman.tgl_kirim','ASC')
@@ -88,7 +88,7 @@ class JurnalDeliveryController extends Controller
                                   "is_shipped"         => true,
                                   "shipping_address"   => substr($getDataTransaksi['alamat'],0,250),
                                   "transaction_date"   => $tglTransaksi,
-                                  "transaction_no"     => $getDataTransaksi['id_order'],
+                                  "transaction_no"     => $getDataTransaksi['id_transaksi'],
                                   "selected_po_id"     => $getDataTransaksi['sales_order_id'],
                                   "transaction_lines_attributes" => $detail_produk,
                                   "shipping_price"     => $getDataTransaksi['tambahan_ongkir']
@@ -118,7 +118,7 @@ class JurnalDeliveryController extends Controller
 
 
       $insertTolog = JurnalLog::insert(['ra_payment_id'=> $getDataTransaksi['id'],
-                                        'id_transaksi' =>$getDataTransaksi['id_order'],
+                                        'id_transaksi' =>$getDataTransaksi['id_transaksi'],
                                         'action'       => "SalesDelivery",
                                         'insert_at'    => Carbon::now()->format('Y-m-d H:i:s'),
                                         'request_body' => $encodedataRaw,

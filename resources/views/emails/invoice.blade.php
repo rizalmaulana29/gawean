@@ -110,7 +110,7 @@
         							<td colspan="2" style="border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">
         								<?php 
         								$label = DB::table('ra_produk_harga')->select('nama_produk')->where('id', $row->ra_produk_harga_id)->first();
-        								echo $label->label;
+        								echo $label->nama_produk;
         								?>
         							</td>
         							<td style="text-align: right; border: 1px solid #dee2ee; border-collapse:collapse; margin:0 auto;">Rp {{ number_format($row->harga) }}</td>

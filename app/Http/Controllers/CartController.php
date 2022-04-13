@@ -524,7 +524,7 @@ class CartController extends Controller
                   \\n'.'CS 2 wa.me/6281320489665'.'
                   \\n'.'CS 3 wa.me/628112317711'.'
                   \\n'.'Ingat Order ID Bapak/Ibu saat menghubungi Customer Care.'.'
-                  \\n'.'Terima kasih telah memilih kawandagang.id'.'
+                  \\n'.'Terima kasih telah memilih sanusafood.id'.'
                   \\n'.'Terima Kasih 😊🙏'
 
                 );

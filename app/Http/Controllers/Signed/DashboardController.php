@@ -33,13 +33,16 @@ class DashboardController extends Controller
         // $totalPenjualan = PencairanDetail::where("id_agen",$request->auth)
         //     ->sum("nominal_total");
         
+        $rpy    = "ra_payment_dua";
+        $rpd     = "ra_pendapatan_dua";
         #Total Belanja
-        $totalBelanja = Pendapatan::where("id_agen",$request->auth)
-            ->whereIn("id_produk_parent",[329,330,384])
-            ->where("lunas", "y");
+        $totalBelanja = Pendapatan::join("$rpy", "$rpd.id_order", "=", "$rpy.id_transaksi")
+            ->where("$rpd.id_agen",$request->auth)
+            ->whereIn("$rpd.id_produk_parent",[329,330,384])
+            ->where("$rpy.status", "paid");
         
         $totalBelanjaCount = $totalBelanja->count();
-        $totalBelanja = $totalBelanja->sum("total_transaksi");
+        $totalBelanja = $totalBelanja->sum("$rpd.total_transaksi");
         
         // #Total Reward
         // $totalReward = Payment::where("id_agen",$request->auth)

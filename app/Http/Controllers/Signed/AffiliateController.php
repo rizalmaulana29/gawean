@@ -48,4 +48,32 @@ class AffiliateController extends Controller
             ]
         ],200);
     }
+    
+    public function listReseller(Request $request)
+    {
+        if (!$request->auth) {
+            return response()->json(['status' => false, "message" => 'Unauthorized Access'],401);
+        }
+        
+        $checkMitra = User::where("id", $request->auth)
+            ->where("status", "Active")
+            ->value("id_cms_privileges");
+        if($checkMitra != 17 ){
+            return response()->json(['status' => false, "message" => 'Unauthorized Access'],401);
+        }
+
+        $reseller = User::select("created_at", "name")
+            ->where("id_parent_agen", $request->auth)
+            ->where("status", "Active")
+            ->get();
+        
+        if($reseller->count() > 0){
+            return response()->json([
+                "status" => true,
+                "reseller" => $reseller
+            ],200);
+        }
+        return response()->json(['status' => false, "message" => 'No Reseller found'],404);
+
+    }
 }

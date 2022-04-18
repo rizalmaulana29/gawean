@@ -63,6 +63,7 @@ class AffiliateController extends Controller
         }
 
         $reseller = User::select("created_at", "name")
+            ->selectRaw("id AS agen")
             ->where("id_parent_agen", $request->auth)
             ->where("status", "Active")
             ->get();

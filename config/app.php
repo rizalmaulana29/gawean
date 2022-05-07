@@ -53,7 +53,7 @@ return [
                         "114.124.195.75",
                         "103.175.48.54",
                 ]
-        ) ? true : true),
+        ) ? true : false),
 
         'providers' => [
         Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,

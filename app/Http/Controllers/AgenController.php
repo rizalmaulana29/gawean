@@ -57,6 +57,9 @@ class AgenController extends Controller
         $checkUser = CmsUser::where('email', $request['email'])
             ->first();
         if (!$checkUser) {
+            $alamat         = $request->input("alamat") ?? null ? $request->input("alamat") : null;
+            $kota           = $request->input("kota") ?? null ? $request->input("kota") : null;
+
             $insertUser       = new CmsUser();
             $insertUser->name = $request['nama'];
             $insertUser->email = $request['email'];
@@ -67,6 +70,12 @@ class AgenController extends Controller
             $insertUser->status = 'inActive';
             $insertUser->token_email_verification = $token_email_verify;
             $insertUser->id_parent_agen = $request['source'] ?? null ? $request['source'] : null;
+            if ($alamat) {
+                $insertUser->alamat = $alamat;
+            }
+            if ($kota) {
+                $insertUser->kota = $kota;
+            }
             $insertUser->save();
 
             if (!$insertUser) {
@@ -109,7 +118,7 @@ class AgenController extends Controller
         $validator = Validator::make($request->all(), [
             "payloads" => "required",
         ]);
-        
+
         if ($validator->fails()) {
             return redirect()->to($url);
             // return response()->json(['status' => false, 'message' => 'invalidInput'], 400);

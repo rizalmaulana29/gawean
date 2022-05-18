@@ -70,12 +70,7 @@ class AgenController extends Controller
             $insertUser->status = 'inActive';
             $insertUser->token_email_verification = $token_email_verify;
             $insertUser->id_parent_agen = $request['source'] ?? null ? $request['source'] : null;
-            if ($alamat) {
-                $insertUser->alamat = $alamat;
-            }
-            if ($kota) {
-                $insertUser->kota = $kota;
-            }
+            
             $insertUser->save();
 
             if (!$insertUser) {
@@ -92,7 +87,12 @@ class AgenController extends Controller
                 $agen->status       = 'Agen';
                 $agen->id_kantor    = $request['kotaKantor'];
                 $agen->tgl_reg      = Carbon::now();
-
+                if ($alamat) {
+                    $agen->alamat = $alamat;
+                }
+                if ($kota) {
+                    $agen->kota = $kota;
+                }
                 $agen->save();
 
                 $response = [
@@ -112,7 +112,7 @@ class AgenController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        $root_url   = "https://beta.kawandagang.id/agen/login";
+        $root_url   = "https://kawandagang.id/agen/login";
         $url        = $root_url . "?verified=fail";
 
         $validator = Validator::make($request->all(), [

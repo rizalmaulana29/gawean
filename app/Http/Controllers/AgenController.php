@@ -63,6 +63,7 @@ class AgenController extends Controller
             $insertUser       = new CmsUser();
             $insertUser->name = $request['nama'];
             $insertUser->email = $request['email'];
+            $insertUser->hp = $request['hp'];
             $insertUser->password = Hash::make($request['password']);
             $insertUser->id_kantor = $request['kotaKantor'];
             $insertUser->id_cms_privileges = 4;

@@ -63,6 +63,7 @@ class AgenController extends Controller
             $insertUser       = new CmsUser();
             $insertUser->name = $request['nama'];
             $insertUser->email = $request['email'];
+            $insertUser->hp = $request['hp'];
             $insertUser->password = Hash::make($request['password']);
             $insertUser->id_kantor = $request['kotaKantor'];
             $insertUser->id_cms_privileges = 4;
@@ -113,7 +114,7 @@ class AgenController extends Controller
     public function verifyEmail(Request $request)
     {
         $root_url   = "https://kawandagang.id/agen/login";
-        $url        = $root_url . "?verified=fail";
+        $url        = $root_url . "?alert=n";
 
         $validator = Validator::make($request->all(), [
             "payloads" => "required",
@@ -132,9 +133,12 @@ class AgenController extends Controller
         if (!$verify_email) return redirect()->to($url);
         // return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
 
-        $url = $root_url . "?verified=done";
+        $url = $root_url . "?alert=n";
         $verified = $verify_email->email_verified_at;
-        if ($verified) return response()->json(["status" => false, "message" => "Your Email Has Been Verified"], 400);
+        if ($verified) {
+            $url = $root_url . "?alert=y"; 
+            return redirect()->to($url);
+        }
 
         $now = Carbon::now()->toDateTimeString();
         $verify_email->update([
@@ -142,7 +146,7 @@ class AgenController extends Controller
             "status" => "Active"
         ]);
 
-        $url = $root_url . "?verified=y";
+        $url = $root_url . "?alert=y";
         return redirect()->to($url);
     }
 

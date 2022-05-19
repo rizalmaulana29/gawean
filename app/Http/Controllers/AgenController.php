@@ -195,26 +195,30 @@ class AgenController extends Controller
             "phone_no" => $nohp,
             "key"   => $key,
             "message" =>
-            "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
-                                    \\n' . 'Selamat bergabung di Kawan Dagang ' . '
+                                    "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
+                                    \\n' . '
+                                    \\n' . ' Selamat bergabung di Kawan Dagang ' . '
+                                    \\n' . ' Komunitas Reseller untuk meningkatakan pendapatan dan kemampuan bisnis.
+                                    \\n' . '
                                     \\n' . ' Silahkan untuk melakukan AKTIVASI USER terlebih dahulu di email yang sudah didaftarkan, sebelum Anda bisa login.
+                                    \\n' . '
                                     \\n' . ' Berikut Akses Login anda:' . '
-                                    \\n' . ' URL      : https://beta.kawandagang.id/admin/login
+                                    \\n' . '
+                                    \\n' . ' URL      : https://kawandagang.id/admin/login
                                     \\n' . ' Nama     : ' . $nama . '
                                     \\n' . ' Email    : ' . $to_address . '
                                     \\n' . ' Password : ' . $password . '
                                     \\n' . ' No. Hp   : ' . $hp . '
                                     \\n' . '
-                                    \\n' . '  benefit dari Kawan Dagang diantaranya sebagai  berikut:
+                                    \\n' . '  Apa yang kamu dapatkan setelah join Kawan Dagang:
                                     \\n' . '1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
                                     \\n' . '2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan
-                                    \\n' . '3. Gratis materi promosi
+                                    \\n' . '3. Group Telegram https://bit.ly/KawanDagangTalent , untuk mendapatkan materi - materi promo gratis dan sharing informasi
                                     \\n' . '4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera
                                     \\n' . '5. Berhak mengikuti Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)
-                                    
+                                    \\n' . '
                                     \\n' . 'Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.
-                                    \\n' . 'Kawan Dagang
-                                    
+                                    \\n' . '
                                     \\n' . 'Saatnya Kamu Jadi Miliarder
                                     \\n' . '
                                     \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '

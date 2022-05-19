@@ -205,7 +205,6 @@ class AgenController extends Controller
                                     \\n' . ' Email    : ' . $to_address . '
                                     \\n' . ' Password : ' . $password . '
                                     \\n' . ' No. Hp   : ' . $hp . '
-                                    \\n' . '
                                     \\n' . '  Apa yang kamu dapatkan setelah join Kawan Dagang:
                                     \\n' . '1. Mendapatkan harga super hemat hingga 30% dibandingkan harga pasaran
                                     \\n' . '2. Dilatih, dibimbing dan didampingi oleh coaches serta mentor keren untuk berjualan

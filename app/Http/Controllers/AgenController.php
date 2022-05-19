@@ -63,7 +63,6 @@ class AgenController extends Controller
             $insertUser       = new CmsUser();
             $insertUser->name = $request['nama'];
             $insertUser->email = $request['email'];
-            $insertUser->hp = $request['hp'];
             $insertUser->password = Hash::make($request['password']);
             $insertUser->id_kantor = $request['kotaKantor'];
             $insertUser->id_cms_privileges = 4;
@@ -114,7 +113,7 @@ class AgenController extends Controller
     public function verifyEmail(Request $request)
     {
         $root_url   = "https://kawandagang.id/agen/login";
-        $url        = $root_url . "?alert=n";
+        $url        = $root_url . "?verified=fail";
 
         $validator = Validator::make($request->all(), [
             "payloads" => "required",
@@ -133,12 +132,9 @@ class AgenController extends Controller
         if (!$verify_email) return redirect()->to($url);
         // return response()->json(["status"=>false, "message"=>"invalidInput"], 400);
 
-        $url = $root_url . "?alert=n";
+        $url = $root_url . "?verified=done";
         $verified = $verify_email->email_verified_at;
-        if ($verified) {
-            $url = $root_url . "?alert=y"; 
-            return redirect()->to($url);
-        }
+        if ($verified) return response()->json(["status" => false, "message" => "Your Email Has Been Verified"], 400);
 
         $now = Carbon::now()->toDateTimeString();
         $verify_email->update([
@@ -146,7 +142,7 @@ class AgenController extends Controller
             "status" => "Active"
         ]);
 
-        $url = $root_url . "?alert=y";
+        $url = $root_url . "?verified=y";
         return redirect()->to($url);
     }
 
@@ -199,15 +195,11 @@ class AgenController extends Controller
             "phone_no" => $nohp,
             "key"   => $key,
             "message" =>
-                                    "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
-                                    \\n' . '
-                                    \\n' . ' Selamat bergabung di Kawan Dagang ' . '
+            "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
+                                    \\n' . 'Selamat bergabung di Kawan Dagang ' . '
                                     \\n' . ' Komunitas Reseller untuk meningkatakan pendapatan dan kemampuan bisnis.
-                                    \\n' . '
                                     \\n' . ' Silahkan untuk melakukan AKTIVASI USER terlebih dahulu di email yang sudah didaftarkan, sebelum Anda bisa login.
-                                    \\n' . '
                                     \\n' . ' Berikut Akses Login anda:' . '
-                                    \\n' . '
                                     \\n' . ' URL      : https://kawandagang.id/admin/login
                                     \\n' . ' Nama     : ' . $nama . '
                                     \\n' . ' Email    : ' . $to_address . '
@@ -220,9 +212,9 @@ class AgenController extends Controller
                                     \\n' . '3. Group Telegram https://bit.ly/KawanDagangTalent , untuk mendapatkan materi - materi promo gratis dan sharing informasi
                                     \\n' . '4. Kemudahan mendapatkan produk yang tersebar di Pulau Jawa dan Sumatera
                                     \\n' . '5. Berhak mengikuti Reward (Umroh, Trip to Turkey, serta hadiah menarik lainnya)
-                                    \\n' . '
+                                    
                                     \\n' . 'Ajak juga keluarga, rekan, sahabat serta teman kamu untuk ikut bergabung bersama Perwira Agro Academy untuk mendapatkan manfaatnya.
-                                    \\n' . '
+                                    
                                     \\n' . 'Saatnya Kamu Jadi Miliarder
                                     \\n' . '
                                     \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '

@@ -83,6 +83,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('cron/keagenan', 		['uses' => 'KeagenanController@cronKeagenan']);
 	// $router->post('cron/keagenan', 		['uses' => 'KeagenanController@cronNPCheker']);
 
+	$router->post('wanotifsembelih', ['uses' => 'SendWAController@sendWANotification']);
+
+
 	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {
 		$router->options('/login', ['uses' => 'Auth\AuthController@authenticate']);
 		$router->options('/login/kuma-kami/ini-mah', ['uses' => 'Auth\AuthController@sakBabyPass']);
@@ -112,7 +115,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		$router->group(['prefix' => 'shopping'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\ShoppingController@index']);
 		});
-		$router->post('wanotifsembelih', ['uses' => 'SendWAController@sendWANotification']);
 	});
 });
 

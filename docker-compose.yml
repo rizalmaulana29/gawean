@@ -16,7 +16,7 @@ services:
             - apirumahaqiqahcoidphp
         restart: always
     apirumahaqiqahcoidphp:
-        image: nanoninja/php-fpm:7.2.15
+        image: nanoninja/php-fpm:7.4.10
         mem_limit : 512m
         cpus: "0.5"
         volumes:

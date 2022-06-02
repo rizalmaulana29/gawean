@@ -13,9 +13,11 @@ class SendWAController extends Controller
     {
         $referenceNo    = 2147498381;
         $order = Payment::where('id', $referenceNo)->first();
+        $nohp = '6281289637529'; //statik HP
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
         $data = array(
+            "phone_no" => $nohp,
             "key"   => $key,
             "message" =>
             "Assalamualaikum Wr Wb" . ' ' . '

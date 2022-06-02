@@ -84,6 +84,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	// $router->post('cron/keagenan', 		['uses' => 'KeagenanController@cronNPCheker']);
 
 	$router->post('wanotifsembelih', ['uses' => 'SendWAController@sendWhatsapp']);
+	$router->post('sendWAManual', ['uses' => 'SendWAController@sendWhatsappManual']);
+	
 	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {
 		$router->options('/login', ['uses' => 'Auth\AuthController@authenticate']);
 		$router->options('/login/kuma-kami/ini-mah', ['uses' => 'Auth\AuthController@sakBabyPass']);

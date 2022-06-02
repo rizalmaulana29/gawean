@@ -83,7 +83,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('cron/keagenan', 		['uses' => 'KeagenanController@cronKeagenan']);
 	// $router->post('cron/keagenan', 		['uses' => 'KeagenanController@cronNPCheker']);
 
-	$router->post('wanotifsembelih', ['uses' => 'SendWAController@sendWANotification']);
+	$router->post('wanotifsembelih', ['uses' => 'SendWAController@sendWhatsapp']);
 
 
 	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {

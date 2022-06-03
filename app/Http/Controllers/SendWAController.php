@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class SendWAController extends Controller
 {
-    public function sendWhatsapp(Request $request)
+    public function sendWhatsapp()
     {
         $referenceNo    = 2147498381;
         $order = Payment::where('id', $referenceNo)->first();
         $nohp = '6281289637529'; //statik HP admin
+        // $nohp = $order['hp'];
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
         $data = array(

@@ -724,7 +724,7 @@ class CartController extends Controller
 
     $datasend = urlencode($data);
 
-    $url='https://api.telegram.org/bot5221158221:AAFbohjK2Oko8jS8WcGNc_X5y9Xq2CmNCN8/sendMessage?chat_id=-679409503&text='.$datasend;
+    $url='https://api.telegram.org/bot5221158221:AAFbohjK2Oko8jS8WcGNc_X5y9Xq2CmNCN8/sendMessage?chat_id=-1001542393800&text='.$datasend;
     $curl = curl_init();
 
     curl_setopt_array($curl, array(

@@ -60,17 +60,17 @@ class SendWAController extends Controller
     public function sendWhatsappManual(Request $request){
         $id = $request['id'];
         $order = Payment::where('id', $id)->first();
-        // $hp = '6281289637529';
+        // $nohp = '6281289637529';
 
         #dinamisasi get val HP
-        $hp = $order['hp'];
+        $nohp = $order['hp'];
         $nama = $order['nama_customer'];
         $nominal_bayar = $order['nominal_bayar'];
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
-
+        
         $data = array(
-            "phone_no"=> $hp,
+            "phone_no"=> $nohp,
             "key"   =>$key,
             "message" =>
                             "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
@@ -78,7 +78,7 @@ class SendWAController extends Controller
                             \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
                             \\n'.' Order ID          : '.$id.'
                             \\n'.' Nama              : '.$nama.'
-                            \\n'.' No. Hp            : '.$hp.'
+                            \\n'.' No. Hp            : '.$nohp.'
 
                             \\n'.' Total Pembayaran   : IDR '.number_format($nominal_bayar).'
                             \\n'.'Pembayaran dilakukan melalui:'.'
@@ -114,6 +114,5 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
-        
     }
 }

@@ -17,7 +17,8 @@ return [
 
     // INGAT UNTUK DI KOMENTARIN
         'debug' => env('APP_DEBUG', in_array(
-                isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : [],
+                isset($_SERVER['HTTP_X_ORIGINAL_FORWARDED_FOR']) ? $_SERVER['HTTP_X_ORIGINAL_FORWARDED_FOR'] : 
+                (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : []),
                 [
                         "210.210.165.250",
                         "66.96.225.127", //IP InsMul

@@ -114,6 +114,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		});
 		$router->group(['prefix' => 'shopping'],  function () use ($router) {
 			$router->get('/', ['uses' => 'Signed\ShoppingController@index']);
+			$router->get('/detail', ['uses' => 'Signed\ShoppingController@detailShopping']);
 		});
 	});
 });

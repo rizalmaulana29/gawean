@@ -17,7 +17,8 @@ return [
 
     // INGAT UNTUK DI KOMENTARIN
         'debug' => env('APP_DEBUG', in_array(
-                isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : [],
+                isset($_SERVER['HTTP_X_ORIGINAL_FORWARDED_FOR']) ? $_SERVER['HTTP_X_ORIGINAL_FORWARDED_FOR'] : 
+                (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : []),
                 [
                         "210.210.165.250",
                         "66.96.225.127", //IP InsMul
@@ -26,7 +27,7 @@ return [
                         "66.96.225.87",//Insan Mulia
                         "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan ABI 
-                        "180.244.128.220",// IP cinte 20
+                        "180.244.131.132",// IP cinte 20
                         "114.5.208.180", //indosat irvan
                 ]
         ) ? true : false),

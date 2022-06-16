@@ -33,7 +33,8 @@ class SendWAController extends Controller
 
         // $nohp = $order->hp;
         // $nohp = '6281289637529'; //statik HP admin
-        $nohp = '6282120760818'; //statik HP admin
+        // $nohp = '6282120760818'; //statik HP admin
+        $nohp = '6285163040803'; //statik HP admin
         // var_dump($nohp);
         
         // dd($order->nama_customer);
@@ -76,9 +77,9 @@ class SendWAController extends Controller
         curl_close($ch);
 
         if($err){
-            return response()->json(['status' => false, 'message' => $err, 'statusname' => 'fail']);
+            return response()->json(['status' => false, 'message' => $err . " " . $nohp, 'statusname' => 'fail']);
         }else{
-            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih ", 'statusname' => 'sent']);
+            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
         }
     }
 

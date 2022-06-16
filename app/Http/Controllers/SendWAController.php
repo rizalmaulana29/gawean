@@ -18,26 +18,26 @@ class SendWAController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'invalidInput'], 400);
+            return response()->json(['status' => false, 'message' => 'invalidInput', 'statusname' => 'no id'], 400);
         }
         $referenceNo    = $request->input("id_ra_payment"); #2147498381
         $order = Payment::where('id', $referenceNo)->first();
-        // $nohp = '6281289637529'; //statik HP admin
-        // $nohp = '6282120760818'; //statik HP admin
 
         if(!$order){
-            return response()->json(['status' => false, 'message' => 'invalidInput!'], 400);
+            return response()->json(['status' => false, 'message' => 'invalidInput!', 'statusname' => 'no order'], 400);
         }
         
         if(!$order->hp){
-            return response()->json(['status' => false, 'message' => 'invalidInput!'], 400);
+            return response()->json(['status' => false, 'message' => 'invalidInput!', 'statusname' => 'no wa'], 400);
         }
 
-        $nohp = $order->hp;
+        // $nohp = $order->hp;
+        // $nohp = '6281289637529'; //statik HP admin
+        $nohp = '6282120760818'; //statik HP admin
         // var_dump($nohp);
         
         // dd($order->nama_customer);
-        return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp"]);
+        // return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
         
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
@@ -76,9 +76,9 @@ class SendWAController extends Controller
         curl_close($ch);
 
         if($err){
-            return response()->json(['status' => false, 'message' => $err]);
+            return response()->json(['status' => false, 'message' => $err, 'statusname' => 'fail']);
         }else{
-            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih "]);
+            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih ", 'statusname' => 'sent']);
         }
     }
 

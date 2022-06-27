@@ -39,7 +39,7 @@ class SendWAController extends Controller
 
         $url = 'http://116.203.92.59/api/async_send_message';
 
-        if ($request->input("notif") == "notifReport") {
+        if ($request->input("notif") == "report") {
             $data = $this->messageFormat($nohp, $order, $request->input("notif"));
         } else {
             $data = $this->messageFormat($nohp, $order);

@@ -23,35 +23,27 @@ class SendWAController extends Controller
         $referenceNo    = $request->input("id_ra_payment"); #2147498381
         $order = Payment::where('id', $referenceNo)->first();
 
-        if(!$order){
+        if (!$order) {
             return response()->json(['status' => false, 'message' => 'invalidInput!', 'statusname' => 'no order'], 400);
         }
-        
-        if(!$order->hp){
+
+        if (!$order->hp) {
             return response()->json(['status' => false, 'message' => 'invalidInput!', 'statusname' => 'no wa'], 400);
         }
 
         // $nohp = $order->hp;
         // $nohp = '6281289637529'; //statik HP admin
-        // $nohp = '6282120760818'; //statik HP admin
-        $nohp = '6285163040803'; //statik HP admin
-        // var_dump($nohp);
-        
-        // dd($order->nama_customer);
+        $nohp = '6282120760818'; //statik HP admin
+        // $nohp = '6285163040803'; //statik HP admin
         // return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
-        
-        $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+
         $url = 'http://116.203.92.59/api/async_send_message';
-        $data = array(
-            "phone_no" => $nohp,
-            "key"   => $key,
-            "message" =>
-            "Assalamualaikum Wr Wb" . ' ' . '
-                            \\n' . 'Menginformasikan Bapak / Ibu' . $order->nama_customer . ',' . '
-                            \\n' . 'Hewan Qurban Nomor'.$order->id_transaksi.' , sedang / akan disembelih' . '
-                            \\n' . 'Untuk dokumentasi dan report akan dikirim selanjutnya setelah proses qurban selesai' . '
-                            \\n' . 'Terima kasih'
-        );
+
+        if ($request->input("notif") == "notifReport") {
+            $data = $this->messageFormat($nohp, $order, $request->input("notif"));
+        } else {
+            $data = $this->messageFormat($nohp, $order);
+        }
 
         $data_string = json_encode($data);
 
@@ -76,14 +68,51 @@ class SendWAController extends Controller
         $err = curl_error($ch);
         curl_close($ch);
 
-        if($err){
+        if ($err) {
             return response()->json(['status' => false, 'message' => $err . " " . $nohp, 'statusname' => 'fail']);
-        }else{
+        } else {
             return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
         }
     }
 
-    public function sendWhatsappManual(Request $request){
+    private function messageFormat($nohp, $order, $type = "notifSembelih")
+    {
+        $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+        if ($type == "notifSembelih") {
+            $data = array(
+                "phone_no" => $nohp,
+                "key"   => $key,
+                "message" =>
+                "Assalamualaikum Wr Wb" . ' ' . '
+                \\n' . 'Menginformasikan Bapak / Ibu ' . $order->nama_customer . ',' . '
+                \\n' . 'Hewan Qurban Nomor ' . $order->id_transaksi . ' , sedang / akan disembelih' . '
+                \\n' . 'Untuk dokumentasi dan report akan dikirim selanjutnya setelah proses qurban selesai' . '
+                \\n' . 'Terima kasih'
+            );
+        } else {
+            $payloads = "";
+            $linkDownloadReport     = "htpps://api.rumahaqiqah.co.id/api/download/report/qurban/" . $payloads;
+            $linkDownloadSertifikat = "htpps://api.rumahaqiqah.co.id/api/download/sertifikat/qurban/" . $payloads;
+
+            $data = array(
+                "phone_no" => $nohp,
+                "key"   => $key,
+                "message" =>
+                "Assalamualaikum Wr Wb" . ' ' . '
+                \\n' . 'Menginformasikan Bapak / Ibu ' . $order->nama_customer . ',' . '
+                \\n' . 'Hewan Qurban Nomor ' . $order->id_transaksi . ' , sudah disembelih' . '
+                \\n' . 'Untuk report dan sertifikat nya bisa dilihat pada link berikut:' . '
+                \\n' . $linkDownloadReport . '
+                \\n' . $linkDownloadSertifikat . '
+                \\n' . 'Terima kasih'
+            );
+        }
+
+        return $data;
+    }
+
+    public function sendWhatsappManual(Request $request)
+    {
         $id = $request['id'];
         $order = Payment::where('id', $id)->first();
         // $nohp = '6281289637529';
@@ -94,30 +123,30 @@ class SendWAController extends Controller
         $nominal_bayar = $order['nominal_bayar'];
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
-        
+
         $data = array(
-            "phone_no"=> $nohp,
-            "key"   =>$key,
+            "phone_no" => $nohp,
+            "key"   => $key,
             "message" =>
-                            "Assalamu'alaikum Ayah/Bunda".' '.$nama.', 🙏'.'
-                            \\n'.'Terima kasih atas pembayaran Ayah/Bunda'.'
-                            \\n'.'Dengan detail pembayaran order sebagai berikut:'.'
-                            \\n'.' Order ID          : '.$id.'
-                            \\n'.' Nama              : '.$nama.'
-                            \\n'.' No. Hp            : '.$nohp.'
+            "Assalamu'alaikum Ayah/Bunda" . ' ' . $nama . ', 🙏' . '
+                            \\n' . 'Terima kasih atas pembayaran Ayah/Bunda' . '
+                            \\n' . 'Dengan detail pembayaran order sebagai berikut:' . '
+                            \\n' . ' Order ID          : ' . $id . '
+                            \\n' . ' Nama              : ' . $nama . '
+                            \\n' . ' No. Hp            : ' . $nohp . '
 
-                            \\n'.' Total Pembayaran   : IDR '.number_format($nominal_bayar).'
-                            \\n'.'Pembayaran dilakukan melalui:'.'
+                            \\n' . ' Total Pembayaran   : IDR ' . number_format($nominal_bayar) . '
+                            \\n' . 'Pembayaran dilakukan melalui:' . '
 
 
-                            \\n'.'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :'.'
-                            \\n'.'https://order.rumahaqiqah.co.id/tracking-order.php?id='.$id.'
-                            \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
-                            \\n'.'wa.me/6281370071330'.'
-                            \\n'.'Ingat Order ID Anda saat menghubungi Customer Care.'.'
-                            \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
-                            \\n'.'Terima Kasih 😊🙏'
-            );
+                            \\n' . 'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :' . '
+                            \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id . '
+                            \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
+                            \\n' . 'wa.me/6281370071330' . '
+                            \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '
+                            \\n' . 'Terima kasih telah memilih rumahaqiqah.co.id' . '
+                            \\n' . 'Terima Kasih 😊🙏'
+        );
 
         $data_string = json_encode($data);
 

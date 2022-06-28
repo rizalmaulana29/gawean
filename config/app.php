@@ -24,7 +24,7 @@ return [
                         "66.96.225.127", //IP InsMul
                         "61.94.89.125", //IP InsMUl di IC
                         "116.206.14.59", //hp sandi
-                        "66.96.225.87",//Insan Mulia
+                        "103.121.18.7",//Insan Mulia
                         "36.79.248.35",//Insan Mulia 5G
                         "114.122.103.95",// Telkomsel Rivan ABI 
                         "180.244.131.132",// IP cinte 20

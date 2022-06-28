@@ -90,9 +90,15 @@ class SendWAController extends Controller
                 \\n' . 'Terima kasih'
             );
         } else {
-            $payloads = "";
-            $linkDownloadReport     = "htpps://api.rumahaqiqah.co.id/api/download/report/qurban/" . $payloads;
-            $linkDownloadSertifikat = "htpps://api.rumahaqiqah.co.id/api/download/sertifikat/qurban/" . $payloads;
+            $data = array(
+                "id" => $order->id
+            );
+
+            $payloads = json_encode($data);
+			$payloads = openssl_encrypt($payloads, "aes128", "Bis5M1ll4h4ll4hu99",0,"4lL4hu4k84rkA81R");
+            
+            $linkDownloadReport     = "htpps://api.rumahaqiqah.co.id/api/download/report/qurban/" . urlencode($payloads);
+            $linkDownloadSertifikat = "htpps://api.rumahaqiqah.co.id/api/download/sertifikat/qurban/" . urlencode($payloads);
 
             $data = array(
                 "phone_no" => $nohp,

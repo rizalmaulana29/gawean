@@ -31,6 +31,8 @@ $app->configure('image');
 
 $app->configure('mail');
 $app->configure('filesystems');
+$app->configure('dompdf');
+
 $app->alias('Storage',Illuminate\Support\Facades\Storage::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
@@ -114,6 +116,7 @@ $app->register(Intervention\Image\ImageServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(App\Providers\GoogleCloudStorageServiceProvider::class);
+$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

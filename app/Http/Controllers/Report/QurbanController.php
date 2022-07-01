@@ -8,8 +8,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Validator;
 
+use GuzzleHttp\Client;
 use Carbon\Carbon;
-
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ServerException;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class QurbanController extends Controller
 {
@@ -24,33 +30,72 @@ class QurbanController extends Controller
             return redirect()->away("https://www.rumahqurban.id/sorry");
         }
 
-        $curl = curl_init();
+        try {
+            $client = new Client(array(
+                'cookies' => true
+            ));
 
-        $data = array('payloads' => $payloads);
+            $result = $client->request('POST', 'https://backend.rumahaqiqah.co.id/download/qurban/report', [
+                'verify' => false,
+                'form_params' => [
+                    'payloads' => $payloads,
+                ]
+            ]);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://backend.rumahaqiqah.co.id/download/qurban/report',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $data,
-        ));
+            $filename = rand(0,99);
+            $filename = 'temp' . $filename . '.pdf';
 
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
+            $headers = ['Content-Type' =>'application/pdf'];
+            Storage::put($filename, $result->getBody());
+            $response = new BinaryFileResponse(storage_path('app/'.$filename), 200 , $headers);
+            return $response;
+        } catch (ClientException $ex) {
+            // $ex->getMessage();
+            if($ex->getCode()){
+                return redirect("https://www.rumahqurban.id/sorry");
+            }
+        } catch (ServerException $ex) {
+            if($ex->getMessage()){
+                return redirect("https://www.rumahqurban.id/sorry");
+            }
+        }    
     }
 
     public function redirectCertificate($payloads)
     {
         if (!$payloads) {
             return redirect()->away("https://www.rumahqurban.id/sorry");
+        }
+
+        try {
+            $client = new Client(array(
+                'cookies' => true
+            ));
+
+            $result = $client->request('POST', 'https://backend.rumahaqiqah.co.id/download/qurban/report', [
+                'verify' => false,
+                'form_params' => [
+                    'payloads' => $payloads,
+                    'tipe_notif' => "certificate",
+                ]
+            ]);
+
+            $filename = rand(0,99);
+            $filename = 'temp' . $filename . '.pdf';
+
+            $headers = ['Content-Type' =>'application/pdf'];
+            Storage::put($filename, $result->getBody());
+            $response = new BinaryFileResponse(storage_path('app/'.$filename), 200 , $headers);
+            return $response;
+        } catch (ClientException $ex) {
+            // $ex->getMessage();
+            if($ex->getCode()){
+                return redirect("https://www.rumahqurban.id/sorry");
+            }
+        } catch (ServerException $ex) {
+            if($ex->getMessage()){
+                return redirect("https://www.rumahqurban.id/sorry");
+            }
         }
     }
 }

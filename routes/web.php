@@ -118,8 +118,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		});
 	});
 	$router->group(['prefix' => 'download/qurban'], function () use ($router) {
-		$router->get('/report/{$payloads}', ['uses' => 'Report\ShoppingController@index']);
-		$router->get('/certificate/{$payloads}', ['uses' => 'Report\ShoppingController@index']);
+		$router->get('/report/{payloads}', ['uses' => 'Report\QurbanController@redirectReport']);
+		$router->get('/certificate/{payloads}', ['uses' => 'Report\QurbanController@redirectCertificate']);
 	});
 
 });

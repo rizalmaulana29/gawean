@@ -31,7 +31,8 @@ class SendWAController extends Controller
             return response()->json(['status' => false, 'message' => 'invalidInput!', 'statusname' => 'no wa'], 400);
         }
 
-        // $nohp = $order->hp;
+        $nohp = $order->hp;
+        $nohp1  = $this->numhp0to62($nohp);
         // $nohp = '6281289637529'; //statik HP admin
         $nohp = '6282120760818'; //statik HP admin
         // $nohp = '6285163040803'; //statik HP admin
@@ -69,48 +70,62 @@ class SendWAController extends Controller
         curl_close($ch);
 
         if ($err) {
-            return response()->json(['status' => false, 'message' => $err . " " . $nohp, 'statusname' => 'fail']);
+            return response()->json(['status' => false, 'message' => "$err $nohp1", 'statusname' => 'fail']);
         } else {
-            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
+            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp1", 'statusname' => 'sent']);
         }
+    }
+
+    private function numhp0to62($nohp)
+    {
+        if (!preg_match('/[^+0-9]/', trim($nohp))) {
+            // cek apakah no hp karakter 1-3 adalah +62
+            $nohp = str_replace("+", "", $nohp);
+            if (substr(trim($nohp), 0, 1) == 0) {
+                $nohp = substr_replace($nohp, "62", 0, 1);
+            }
+        }
+        return $nohp;
     }
 
     private function messageFormat($nohp, $order, $type = "notifSembelih")
     {
+        $data = array(
+            "id" => $order->id
+        );
+
+        $payloads = json_encode($data);
+        $payloads = openssl_encrypt($payloads, "aes128", "Bis5M1ll4h4ll4hu99", 0, "4lL4hu4k84rkA81R");
+
+        $linkDownloadReport     = "https://api.rumahaqiqah.co.id/api/download/qurban/report/" . urlencode($payloads);
+        $linkDownloadSertifikat = "https://api.rumahaqiqah.co.id/api/download/qurban/certificate/" . urlencode($payloads);
+
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         if ($type == "notifSembelih") {
             $data = array(
                 "phone_no" => $nohp,
                 "key"   => $key,
                 "message" =>
-                "Assalamualaikum Wr Wb" . ' ' . '
+                "Assalamualaikum Wr Wb" . '
                 \\n' . 'Menginformasikan Bapak / Ibu ' . $order->nama_customer . ',' . '
-                \\n' . 'Hewan Qurban Nomor ' . $order->id_transaksi . ' , sedang / akan disembelih' . '
-                \\n' . 'Untuk dokumentasi dan report akan dikirim selanjutnya setelah proses qurban selesai' . '
-                \\n' . 'Terima kasih'
+                \\n' . 'Hewan Qurban Dengan ID Order ' . $order->id_transaksi . ' , Telah Selesai di Sembelih' . '
+                \\n' . 'Berikut Sertifikat Qurban Bapak / Ibu ' . '
+                \\n' . $linkDownloadSertifikat . '
+                \\n' . 'Terima kasih' . '
+                \\n' . 'Rumah Qurban'
             );
         } else {
-            $data = array(
-                "id" => $order->id
-            );
-
-            $payloads = json_encode($data);
-			$payloads = openssl_encrypt($payloads, "aes128", "Bis5M1ll4h4ll4hu99",0,"4lL4hu4k84rkA81R");
-            
-            $linkDownloadReport     = "https://api.rumahaqiqah.co.id/api/download/qurban/report/" . urlencode($payloads);
-            $linkDownloadSertifikat = "https://api.rumahaqiqah.co.id/api/download/qurban/certificate/" . urlencode($payloads);
-
             $data = array(
                 "phone_no" => $nohp,
                 "key"   => $key,
                 "message" =>
-                "Assalamualaikum Wr Wb" . ' ' . '
+                "Assalamualaikum Wr Wb" . '
                 \\n' . 'Menginformasikan Bapak / Ibu ' . $order->nama_customer . ',' . '
-                \\n' . 'Hewan Qurban Nomor ' . $order->id_transaksi . ' , sudah disembelih' . '
-                \\n' . 'Untuk report dan sertifikat nya bisa dilihat pada link berikut:' . '
+                \\n' . 'Hewan Qurban Dengan ID Order ' . $order->id_transaksi . ' , Proses Qurban sudah selesai dilaksanakan' . '
+                \\n' . 'Berikut Dokumentasi dan Report Hewan Qurban Bapak / Ibu:' . '
                 \\n' . $linkDownloadReport . '
-                \\n' . $linkDownloadSertifikat . '
-                \\n' . 'Terima kasih'
+                \\n' . 'Terima kasih' . '
+                \\n' . 'Rumah Qurban'
             );
         }
 

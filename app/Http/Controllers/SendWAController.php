@@ -32,9 +32,8 @@ class SendWAController extends Controller
         }
 
         $nohp = $order->hp;
-        $nohp1  = $this->numhp0to62($nohp);
-        // $nohp = '6281289637529'; //statik HP admin
-        $nohp = '6282120760818'; //statik HP admin
+        $nohp  = $this->numhp0to62($nohp);
+        // $nohp = '6282120760818'; //statik HP admin
         // $nohp = '6285163040803'; //statik HP admin
         // return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
 

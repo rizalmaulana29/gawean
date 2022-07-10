@@ -789,7 +789,7 @@ class JurnalDevNewController extends Controller
           $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
       } 
-      elseif($paymentMethode->parent_id == 28){
+      elseif($paymentMethode->parent_id == 28 && $paymentMethode->id_entitas == "AAM"){
         $payment_method_name = "Bank Transfer";
         $payment_method_id   = $paymentMethode->methode_id_jurnal;
         $deposit_to_name     = $paymentMethode->methode_jurnal;

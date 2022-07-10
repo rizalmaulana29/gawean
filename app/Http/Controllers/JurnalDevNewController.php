@@ -788,7 +788,13 @@ class JurnalDevNewController extends Controller
           $payment_method_id   = $paymentMethode->methode_id_jurnal;
           $deposit_to_name     = $paymentMethode->methode_jurnal;
         }
-      } else {
+      } 
+      elseif($paymentMethode->parent_id == 28){
+        $payment_method_name = "Bank Transfer";
+        $payment_method_id   = $paymentMethode->methode_id_jurnal;
+        $deposit_to_name     = $paymentMethode->methode_jurnal;
+      }
+      else {
         if ($getDataTransaksi['entitas'] == 'PDN') {
           $payment_method_name = "Kas Tunai";
           $payment_method_id   = "1539634";

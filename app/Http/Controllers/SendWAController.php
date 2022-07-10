@@ -69,9 +69,9 @@ class SendWAController extends Controller
         curl_close($ch);
 
         if ($err) {
-            return response()->json(['status' => false, 'message' => "$err $nohp1", 'statusname' => 'fail']);
+            return response()->json(['status' => false, 'message' => "$err $nohp", 'statusname' => 'fail']);
         } else {
-            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp1", 'statusname' => 'sent']);
+            return response()->json(['status' => true, 'message' => "Success Send Notif Sembelih $nohp", 'statusname' => 'sent']);
         }
     }
 

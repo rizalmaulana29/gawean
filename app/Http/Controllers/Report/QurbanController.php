@@ -98,4 +98,42 @@ class QurbanController extends Controller
             }
         }
     }
+
+    public function redirectReportDakta($payloads)
+    {
+        if (!$payloads) {
+            return redirect()->away("https://www.rumahqurban.id/sorry");
+        }
+
+        try {
+            $client = new Client(array(
+                'cookies' => true
+            ));
+
+            $result = $client->request('POST', 'https://backend.rumahaqiqah.co.id/download/qurban/report', [
+                'verify' => false,
+                'form_params' => [
+                    'payloads' => $payloads,
+                    'tipe_notif' => "reportdakta",
+                ]
+            ]);
+
+            $filename = rand(0,99);
+            $filename = 'temp' . $filename . '.pdf';
+
+            $headers = ['Content-Type' =>'application/pdf'];
+            Storage::put($filename, $result->getBody());
+            $response = new BinaryFileResponse(storage_path('app/'.$filename), 200 , $headers);
+            return $response;
+        } catch (ClientException $ex) {
+            // $ex->getMessage();
+            if($ex->getCode()){
+                return redirect("https://www.rumahqurban.id/sorry");
+            }
+        } catch (ServerException $ex) {
+            if($ex->getMessage()){
+                return redirect("https://www.rumahqurban.id/sorry");
+            }
+        }
+    }
 }

@@ -500,7 +500,7 @@ class CartController extends Controller
                   \\n'.'CS 2 wa.me/6281320489665'.'
                   \\n'.'CS 3 wa.me/628112317711'.'
                   \\n'.'Catatan :
-                  \\n'.'Sebutkan ID ORDER saat menghubungi Customer Service'.'
+                  \\n'.'Sebutkan ORDER ID saat menghubungi Customer Service'.'
                   \\n'.'Konfirmasi Pembayaran kepada Customer Service'.'
                   \\n'.'Lakukan transfer hanya ke rekening dengan Atas Nama Rumah Aqiqah'.'                  
                   \\n'.'Ingat Order ID Ayah/Bunda saat menghubungi Customer Care.'.'

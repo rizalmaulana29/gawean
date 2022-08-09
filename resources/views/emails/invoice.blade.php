@@ -128,6 +128,12 @@
         		</td>
         	</tr>
 
+			<tr>
+				<td>
+					<div style="font-weight:bold">*Mohon untuk tidak mentransfer ke Rekening selain Rekening Atas Nama Rumah Aqiqah</div>
+				</td>
+			</tr>
+
         	<tr>
         		<td style="padding:12px 16px">
         			<div style="border-bottom:1px dashed #dee2ee;padding:0 16px"><span class="im">

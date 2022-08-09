@@ -485,6 +485,7 @@ class CartController extends Controller
                   \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
                   \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Ayah/Bunda menerima pesan ini,'.'
                   \\n'.'atau pemesananan Ayah/Bunda akan di anggap gagal.'.'
+                  \\n'.'*Mohon untuk tidak mentransfer ke rekening selain Rekening atas nama Rumah Aqiqah.'.'
                   \\n'.'Metode Pembayaran:'.'
                   \\n'.'- '.$rek
                   .$bayar.'
@@ -499,6 +500,10 @@ class CartController extends Controller
                   \\n'.'CS 1 wa.me/6281370071330'.'
                   \\n'.'CS 2 wa.me/6281320489665'.'
                   \\n'.'CS 3 wa.me/628112317711'.'
+                  \\n'.'Catatan :
+                  \\n'.'Sebutkan ID ORDER saat menghubungi Customer Service'.'
+                  \\n'.'Konfirmasi Pembayaran kepada Customer Service'.'
+                  \\n'.'Lakukan transfer hanya ke rekening dengan Atas Nama Rumah Aqiqah'.'                  
                   \\n'.'Ingat Order ID Ayah/Bunda saat menghubungi Customer Care.'.'
                   \\n'.'Terima kasih telah memilih rumahaqiqah.co.id'.'
                   \\n'.'Terima Kasih 😊🙏'

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Harga;
+use App\Helpers\APILegacy;
 use App\Kantor;
 use App\Produk;
 use App\Order;
@@ -60,5 +61,65 @@ class TransactionController extends Controller
       "keterangan" => $trx->keterangan,
       "gambar" => "https://backend.rumahaqiqah.co.id/" . $trx->gambar
     ], 200);
+  }
+
+  public function checkTrx(Request $request)
+  {
+    if (!$request->header("Authorization")) {
+      return response()->json(['status' => false, "message" => 'Unauthorized Access!'], 401);
+    }
+
+    $validator = Validator::make($request->all(), [
+      'order'      => 'required',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+    }
+
+    $legacy   = new APILegacy;
+    $message  = urldecode($request->input("order"));
+    $id_order = $legacy->DataDecrypt($message);
+
+    $transaction = Payment::where('id_transaksi',$id_order)->value("status");
+
+    if(!$transaction){
+      return response()->json(["status" => false, "message" => "No Data"], 404);
+    }
+
+    $response = ["status" => false, "message" => "No Transaction"];
+    $code_response = 404;   
+    
+    switch ($transaction) {
+      case 'paid':
+        $response = ["status" => true, "message" => "Paid"];
+        $code_response = 200;
+        break;
+      case 'checkout':
+        $response = ["status" => false, "message" => "Checkout"];
+        $code_response = 400;
+        break;
+      
+      default:
+        $response = ["status" => false, "message" => "Checkout"];
+        $code_response = 400;
+        break;
+    }
+
+    return response()->json($response,$code_response);
+  }
+
+  public function testEncrypt($message){
+    $legacy = new APILegacy;
+    $response = $legacy->DataEncrypt($message);
+    
+    return response()->json(["status" => true, "message" => $response], 200);
+  }
+  
+  public function testDecrypt($message){
+    $message = urldecode($message);
+    $legacy = new APILegacy;
+    $response = $legacy->DataDecrypt($message);
+    return response()->json(["status" => true, "message" => $response], 200);
   }
 }

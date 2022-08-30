@@ -24,6 +24,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('code',	['uses' => 'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 	$router->get('transaction', ["middleware" => "jwt.auth", 'uses' => 'TransactionController@detailTrx']);
+	$router->post('cekTransaction', ['uses' => 'TransactionController@checkTrx']);
 
 	$router->post('signup/agen', ['uses' => 'AgenController@signup']);
 	$router->get('email/verify', ['uses' => 'AgenController@verifyEmail']);
@@ -122,6 +123,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		$router->get('/certificate/{payloads}', ['uses' => 'Report\QurbanController@redirectCertificate']);
 	});
 
+	$router->get('test/encrypt/{message}', ['uses' => 'TransactionController@testEncrypt']);
+	$router->get('test/decrypt/{message}', ['uses' => 'TransactionController@testDecrypt']);
 });
 
 $router->group(['prefix' => 'uploads'], function () use ($router) {

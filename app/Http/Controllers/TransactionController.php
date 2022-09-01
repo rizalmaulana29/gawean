@@ -63,14 +63,69 @@ class TransactionController extends Controller
     ], 200);
   }
 
+  public function detailTrxPublic(Request $request)
+  {
+    if (!$request->auth) {
+      return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
+    }
+
+    if ($request->auth != "HelloWorldN3v3rD13sDud3s") {
+      return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
+    }
+
+    $validator = Validator::make($request->all(), [
+      'id_order'      => 'required',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+    }
+
+    $rpyd = "ra_payment_dua";
+    $rbr = "ra_bank_rek";
+
+    $legacy   = new APILegacy;
+    $message  = urldecode($request->input("order"));
+    // $id_order = $legacy->DataDecrypt($message);
+    $id_order = $request->input("id_order");
+
+    $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar")
+      ->leftJoin("$rbr", "$rpyd.id_payment_method", "=", "$rbr.id")
+      ->where("$rpyd.id_transaksi", $id_order)
+      ->first();
+    if (!$trx) {
+      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+    }
+
+    $no_bayar  = Nicepaylog::where("id_order", $id_order)
+      ->where("action", "Registration")
+      ->value("virtual_account_no");
+
+    if (!$no_bayar) {
+      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+    }
+
+    return response()->json([
+      "status" => true,
+      "no_bayar" => $no_bayar,
+      "id_transaksi" => $trx->id_transaksi,
+      "expired_at" => $trx->expired_at,
+      "keterangan" => $trx->keterangan,
+      "gambar" => "https://backend.rumahaqiqah.co.id/" . $trx->gambar
+    ], 200);
+  }
+
   public function checkTrx(Request $request)
   {
     if (!$request->header("Authorization")) {
       return response()->json(['status' => false, "message" => 'Unauthorized Access!'], 401);
     }
+    if ($request->Authorization != "HelloWorldN3v3rD13sDud3s") {
+      return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
+    }
 
     $validator = Validator::make($request->all(), [
-      'order'      => 'required',
+      'id_order'      => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -78,8 +133,9 @@ class TransactionController extends Controller
     }
 
     $legacy   = new APILegacy;
-    $message  = urldecode($request->input("order"));
+    $message  = urldecode($request->input("id_order"));
     $id_order = $legacy->DataDecrypt($message);
+    // $id_order = $request->input("id_order");
 
     $transaction = Payment::where('id_transaksi',$id_order)->value("status");
 

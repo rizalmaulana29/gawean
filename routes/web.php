@@ -24,6 +24,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('code',	['uses' => 'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 	$router->get('transaction', ["middleware" => "jwt.auth", 'uses' => 'TransactionController@detailTrx']);
+	$router->get('transaction/detail', ['uses' => 'TransactionController@detailTrxPublic']);
 	$router->post('cekTransaction', ['uses' => 'TransactionController@checkTrx']);
 
 	$router->post('signup/agen', ['uses' => 'AgenController@signup']);

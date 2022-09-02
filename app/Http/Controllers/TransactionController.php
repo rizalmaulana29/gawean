@@ -65,11 +65,11 @@ class TransactionController extends Controller
 
   public function detailTrxPublic(Request $request)
   {
-    if (!$request->auth) {
-      return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
+    if (!$request->header('Authorization')) {
+      return response()->json(['status' => false, "message" => 'Unauthorized Access!'], 401);
     }
 
-    if ($request->auth != "HelloWorldN3v3rD13sDud3s") {
+    if ($request->header('Authorization') != "HelloWorldN3v3rD13sDud3s") {
       return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
     }
 
@@ -78,23 +78,29 @@ class TransactionController extends Controller
     ]);
 
     if ($validator->fails()) {
-      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+      return response()->json(["status" => false, "message" => "invalidInput!"], 400);
     }
 
     $rpyd = "ra_payment_dua";
     $rbr = "ra_bank_rek";
+    
 
     $legacy   = new APILegacy;
-    $message  = urldecode($request->input("order"));
-    // $id_order = $legacy->DataDecrypt($message);
-    $id_order = $request->input("id_order");
+    $message  = urldecode($request->input("id_order"));
+    $message = str_replace(" ","+",$message);
+    $id_order = $legacy->DataDecrypt($message);
+    // $id_order = $request->input("id_order");
 
+    if(!$id_order){
+      return response()->json(["status" => false, "message" => "invalidInput!!"], 400);
+    }
     $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar")
       ->leftJoin("$rbr", "$rpyd.id_payment_method", "=", "$rbr.id")
       ->where("$rpyd.id_transaksi", $id_order)
       ->first();
+
     if (!$trx) {
-      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+      return response()->json(["status" => false, "message" => "No Data"], 404);
     }
 
     $no_bayar  = Nicepaylog::where("id_order", $id_order)
@@ -102,7 +108,7 @@ class TransactionController extends Controller
       ->value("virtual_account_no");
 
     if (!$no_bayar) {
-      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+      return response()->json(["status" => false, "message" => "No Data!"], 404);
     }
 
     return response()->json([
@@ -135,7 +141,7 @@ class TransactionController extends Controller
     $legacy   = new APILegacy;
     $message  = urldecode($request->input("id_order"));
     $id_order = $legacy->DataDecrypt($message);
-    // $id_order = $request->input("id_order");
+    // $id_order = $request->input("id_order");x`
 
     $transaction = Payment::where('id_transaksi',$id_order)->value("status");
 

@@ -143,6 +143,10 @@ class TransactionController extends Controller
     $id_order = $legacy->DataDecrypt($message);
     // $id_order = $request->input("id_order");x`
 
+    if(!$id_order){
+      return response()->json(["status" => false, "message" => "invalidInput"], 400);
+    }
+
     $transaction = Payment::where('id_transaksi',$id_order)->value("status");
 
     if(!$transaction){
@@ -174,7 +178,7 @@ class TransactionController extends Controller
   public function testEncrypt($message){
     $legacy = new APILegacy;
     $response = $legacy->DataEncrypt($message);
-    
+    $response = urlencode($response);
     return response()->json(["status" => true, "message" => $response], 200);
   }
   

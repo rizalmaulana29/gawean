@@ -94,7 +94,7 @@ class TransactionController extends Controller
     if(!$id_order){
       return response()->json(["status" => false, "message" => "invalidInput!!"], 400);
     }
-    $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar")
+    $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar", "$rpyd.nominal_total", "$rpyd.id_payment_method")
       ->leftJoin("$rbr", "$rpyd.id_payment_method", "=", "$rbr.id")
       ->where("$rpyd.id_transaksi", $id_order)
       ->first();
@@ -117,8 +117,12 @@ class TransactionController extends Controller
       "id_transaksi" => $trx->id_transaksi,
       "expired_at" => $trx->expired_at,
       "keterangan" => $trx->keterangan,
+      "payment_method" => $trx->id_payment_method,
+      "nominal" => $trx->nominal_total,
       "gambar" => "https://backend.rumahaqiqah.co.id/" . $trx->gambar
     ], 200);
+
+    #nominal dan payment
   }
 
   public function checkTrx(Request $request)

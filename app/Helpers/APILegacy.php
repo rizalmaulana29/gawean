@@ -5,7 +5,7 @@ namespace App\Helpers;
 class APILegacy {
     // static $donolEncryptionKey = "3378637a376d4864323663663335646d78373244644d4e33646c374e64323147";
     // static $donolIV = "337863337a6232376c6d486463323663"; 
-    static $donolEncryptionKey = "426973354d316c6c3468346c6c3468753939";
+    static $donolEncryptionKey = "6231736d316c6c3468697234686d344e3172723468316d48346d64346c6c3468";
     static $donolIV = "346c4c346875346b3834726b41383152"; 
 
     // Jika Encrypt data sesuaikan timezone dengan server yang decryptnya Ex: CS2: Wib

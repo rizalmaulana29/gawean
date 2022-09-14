@@ -214,9 +214,14 @@ class CartController extends Controller
         }
       }
 
-      $hasil = Mail::send(
-            (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title,$varian))->build()
+      try {
+        $hasil = Mail::send(
+          (new Invoice($to_address, $transdata, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$number,$title,$varian))->build()
         );
+      } catch (\Throwable $th) {
+        #Skip Kirim Email Address
+      }
+      
       $hasil = $this->sendWa($transdata, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta); 
       
       # PEMABAYARAN DENGAN NICEPAY

@@ -166,11 +166,16 @@ class NotificationsController extends Controller
                     $number = $paymeth['id_rekening'];
                 }
 
-                // if($email){
-                //     $hasil = Mail::send(
-                //         (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
-                //     );
-                // }
+                if($email){
+                    try {
+                        $hasil = Mail::send(
+                            (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
+                        );
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                    }
+                    
+                }
                 $peserta    = ($varian == "Qurban") ? $payment['nama_peserta'] : "x" ;
 
                 $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta);
@@ -371,11 +376,16 @@ class NotificationsController extends Controller
                     $number = $paymeth['id_rekening'];
                 }
 
-                // if($email){
-                //     $hasil = Mail::send(
-                //         (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
-                //     );
-                // }
+                if($email){
+                    try {
+                        $hasil = Mail::send(
+                            (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
+                        );
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                    }
+                    
+                }
 
                 $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta);
 

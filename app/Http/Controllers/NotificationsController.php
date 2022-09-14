@@ -171,8 +171,9 @@ class NotificationsController extends Controller
                 //         (new Notification($to_address, $payment, $orderdata, $nama, $alamat, $email, $parent_id,$hp,$title,$number,$varian))->build()
                 //     );
                 // }
+                $peserta    = ($varian == "Qurban") ? $payment['nama_peserta'] : "x" ;
 
-                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian);
+                $sendWa = $this->sendWa($payment, $nama, $alamat, $email, $hp,$number,$title,$varian,$peserta);
             }
 
             if($payment->id_parent){

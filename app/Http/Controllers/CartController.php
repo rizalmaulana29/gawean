@@ -72,6 +72,7 @@ class CartController extends Controller
       
       // $realtotal = $request['nominal'] - $request['diskon'];
       // $countTotal = ($request->input('total') != $realtotal) ? $realtotal : $request->input('total') ;      
+      $tipe_bayar = $request->input('tipe_pembayaran') ?? null ? $request->input('tipe_pembayaran') : "Tunai" ;
 
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
@@ -89,8 +90,9 @@ class CartController extends Controller
           'coa_debit' => $request->input('coa'),
           'sumber_informasi' => $request->input('sumber_info'),
           'tgl_transaksi' => $now,
-          'status' => 'Tunai',
+          'status' => 'checkout',
           'jenis' => 'Online',
+          'tunai' => $tipe_bayar,
           'lunas' => 'Y',
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),
@@ -117,7 +119,7 @@ class CartController extends Controller
           $order->id_payment_method = $request->input('id_payment');
           $order->lunas = 'y';
           $order->approve = 'y';
-          $order->keterangan = 'Tunai';
+          $order->keterangan = $tipe_bayar;
           $order->nik_input = $request->input('nik_input');
           $order->id_entitas = $id_entitas;
           $order->cur = "IDR";

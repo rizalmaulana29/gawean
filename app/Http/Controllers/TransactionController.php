@@ -151,18 +151,18 @@ class TransactionController extends Controller
       return response()->json(["status" => false, "message" => "invalidInput"], 400);
     }
 
-    $transaction = Payment::where('id_transaksi',$id_order)->value("status");
-
+    $transaction = Payment::where('id_transaksi',$id_order)->select("status","nominal_total")->first();
+    
     if(!$transaction){
       return response()->json(["status" => false, "message" => "No Data"], 404);
     }
 
     $response = ["status" => false, "message" => "No Transaction"];
     $code_response = 404;   
-    
-    switch ($transaction) {
+
+    switch ($transaction["status"]) {
       case 'paid':
-        $response = ["status" => true, "message" => "Paid"];
+        $response = ["status" => true, "message" => "Paid", "nominal"=> $transaction["nominal_total"]];
         $code_response = 200;
         break;
       case 'checkout':

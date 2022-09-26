@@ -51,7 +51,6 @@ class CartController extends Controller
 
       $this->passed = $req;
 
-      $total = 0;
       $id = [];
       $x = [];
       $n = 0;
@@ -73,7 +72,12 @@ class CartController extends Controller
       // $realtotal = $request['nominal'] - $request['diskon'];
       // $countTotal = ($request->input('total') != $realtotal) ? $realtotal : $request->input('total') ;      
       $tipe_bayar = $request->input('tipe_pembayaran') ?? null ? $request->input('tipe_pembayaran') : "Tunai" ;
-
+      $diskon = $request->input('diskon') ?? null ? $request->input('diskon') : 0 ;
+      $total = $request->input('total') ?? null ? $request->input('total') : 0 ;
+      
+      $bayar = $request->input('bayar') ?? null ? $request->input('bayar') : 0 ;
+      $bayar = $tipe_bayar == "Tunai" && $bayar == 0 ? $total : $bayar ;
+      
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
           'nama_customer' => $request->input('nama'),
@@ -85,8 +89,9 @@ class CartController extends Controller
           'id_pt'     => $adminentitas,
           'id_payment_method' => $request->input('id_payment'),
           'nominal' => $request->input('nominal'),
-          'nominal_total' => $request->input('total'),
-          'nominal_diskon' => $request->input('diskon'),
+          'nominal_total' => $total,
+          'nominal_diskon' => $diskon,
+          'nominal_bayar' => $bayar,
           'coa_debit' => $request->input('coa'),
           'sumber_informasi' => $request->input('sumber_info'),
           'tgl_transaksi' => $now,

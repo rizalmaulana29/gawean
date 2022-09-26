@@ -93,6 +93,7 @@ class CartController extends Controller
           'status' => 'checkout',
           'jenis' => 'Online',
           'tunai' => $tipe_bayar,
+          'tipe' => "transaksi",
           'lunas' => 'Y',
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),

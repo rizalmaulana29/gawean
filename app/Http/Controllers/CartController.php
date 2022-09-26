@@ -77,6 +77,8 @@ class CartController extends Controller
       
       $bayar = $request->input('bayar') ?? null ? $request->input('bayar') : 0 ;
       $bayar = $tipe_bayar == "Tunai" && $bayar == 0 ? $total : $bayar ;
+      $sisa_bayar =  $total - $bayar;
+      $lunas = $tipe_bayar == "Tunai" ? 'y' : "n" ;
       
       $result[2] = Payment::create([
           'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
@@ -99,7 +101,8 @@ class CartController extends Controller
           'jenis' => 'Online',
           'tunai' => $tipe_bayar,
           'tipe' => "transaksi",
-          'lunas' => 'Y',
+          'lunas' => $lunas,
+          'sisa_pembayaran' => $sisa_bayar,
           'kode' => $request->input('promo'),
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),
@@ -123,7 +126,7 @@ class CartController extends Controller
           $order->tgl_transaksi = $now;
           $order->total_transaksi = $req['qty'][$key] * $req['harga'][$key];
           $order->id_payment_method = $request->input('id_payment');
-          $order->lunas = 'y';
+          $order->lunas = $lunas;
           $order->approve = 'y';
           $order->keterangan = $tipe_bayar;
           $order->nik_input = $request->input('nik_input');

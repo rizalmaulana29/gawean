@@ -94,7 +94,7 @@ class TransactionController extends Controller
     if(!$id_order){
       return response()->json(["status" => false, "message" => "invalidInput!!"], 400);
     }
-    $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar", "$rpyd.nominal_total", "$rpyd.id_payment_method", "$rbr.id_payment_method AS paymentaja" )
+    $trx = Payment::select("$rpyd.expired_at", "$rpyd.id_transaksi", "$rbr.keterangan", "$rbr.gambar", "$rpyd.nominal_total", "$rpyd.nominal_bayar", "$rpyd.id_payment_method", "$rbr.id_payment_method AS paymentaja" )
       ->leftJoin("$rbr", "$rpyd.id_payment_method", "=", "$rbr.id")
       ->where("$rpyd.id_transaksi", $id_order)
       ->first();
@@ -118,7 +118,7 @@ class TransactionController extends Controller
       "expired_at" => $trx->expired_at,
       "keterangan" => $trx->keterangan,
       "payment_method" => $trx->paymentaja,
-      "nominal" => $trx->nominal_total,
+      "nominal" => $trx->nominal_bayar,
       "gambar" => "https://backend.rumahaqiqah.co.id/" . $trx->gambar
     ], 200);
 
@@ -151,7 +151,7 @@ class TransactionController extends Controller
       return response()->json(["status" => false, "message" => "invalidInput"], 400);
     }
 
-    $transaction = Payment::where('id_transaksi',$id_order)->select("status","nominal_total")->first();
+    $transaction = Payment::where('id_transaksi',$id_order)->select("status","nominal_bayar")->first();
     
     if(!$transaction){
       return response()->json(["status" => false, "message" => "No Data"], 404);
@@ -162,7 +162,7 @@ class TransactionController extends Controller
 
     switch ($transaction["status"]) {
       case 'paid':
-        $response = ["status" => true, "message" => "Paid", "nominal"=> $transaction["nominal_total"]];
+        $response = ["status" => true, "message" => "Paid", "nominal"=> $transaction["nominal_bayar"]];
         $code_response = 200;
         break;
       case 'checkout':

@@ -286,7 +286,7 @@ class CartController extends Controller
 
       $timestamp      = date("YmdHis");
       $referenceNo    = $id_trx;
-      $amt            = $payment['nominal_total'];
+      $amt            = $payment['nominal_bayar'];
       
       $payMeth        = $paymeth['parent_id'];
       $payMethod      = sprintf("%02d", $payMeth);
@@ -498,7 +498,7 @@ class CartController extends Controller
                   \\n'.' Nama              : '.$nama.'
                   \\n'.' No. Hp            : '.$hp.'
                   \\n'.' Keterangan pesanan: '.$produk.'
-                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
+                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_bayar']).'
                   \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Ayah/Bunda menerima pesan ini,'.'
                   \\n'.'atau pemesananan Ayah/Bunda akan di anggap gagal.'.'
                   \\n'.'*Mohon untuk tidak mentransfer ke rekening selain Rekening atas nama Rumah Aqiqah.'.'
@@ -536,7 +536,7 @@ class CartController extends Controller
                   \\n'.' Nama              : '.$nama.'
                   \\n'.' No. Hp            : '.$hp.'
                   \\n'.' Keterangan pesanan: '.$produk.'
-                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
+                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_bayar']).'
                   \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Bapak/Ibu menerima pesan ini,'.'
                   \\n'.'atau pemesananan Bapak/Ibu akan di anggap gagal.'.'
                   \\n'.'Metode Pembayaran:'.'
@@ -572,7 +572,7 @@ class CartController extends Controller
                   \\n'.' Nama Peserta      : '.$peserta.'
                   \\n'.' No. Hp            : '.$hp.'
                   \\n'.' Keterangan pesanan: '.$produk.'
-                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_total']).'
+                  \\n'.' Total Tagihan     : IDR '.number_format($transdata['nominal_bayar']).'
                   \\n'.'Silahkan melakukan pembayaran maksimal 24 jam sejak Bapak/Ibu menerima pesan ini,'.'
                   \\n'.'atau pemesananan Bapak/Ibu akan di anggap gagal.'.'
                   \\n'.'Metode Pembayaran:'.'
@@ -678,7 +678,7 @@ class CartController extends Controller
       Order ID          : '.$transdata->id_transaksi.'
       Nama              : '.$nama.'
       Alamat            : '.$alamat.'
-      Total Tagihan     : IDR '.number_format($transdata->nominal_total).'
+      Total Tagihan     : IDR '.number_format($transdata->nominal_bayar).'
 
     Metode Pembayaran:'.'
       - '.$rek.'
@@ -734,7 +734,7 @@ class CartController extends Controller
       Order ID          : '.$transdata->id_transaksi.'
       Nama              : '.$nama.'
       Alamat            : '.$alamat.'
-      Total Tagihan     : IDR '.number_format($transdata->nominal_total).'
+      Total Tagihan     : IDR '.number_format($transdata->nominal_bayar).'
 
     Metode Pembayaran:'.'
       - '.$rek.'

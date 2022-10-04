@@ -137,7 +137,11 @@ class SendWAController extends Controller
         $order = Payment::where('id', $id)->first();
         // $nohp = '6281289637529';
 
+        if(!$order){
+            return response()->json(['status' => false, 'message' => "No Data Found"],404);
+        }
         #dinamisasi get val HP
+        $id_order = $order['id_transaksi'];
         $nohp = $order['hp'];
         $nama = $order['nama_customer'];
         $nominal_bayar = $order['nominal_bayar'];
@@ -151,7 +155,7 @@ class SendWAController extends Controller
             "Assalamu'alaikum Ayah/Bunda" . ' ' . $nama . ', 🙏' . '
                             \\n' . 'Terima kasih atas pembayaran Ayah/Bunda' . '
                             \\n' . 'Dengan detail pembayaran order sebagai berikut:' . '
-                            \\n' . ' Order ID          : ' . $id . '
+                            \\n' . ' Order ID          : ' . $id_order . '
                             \\n' . ' Nama              : ' . $nama . '
                             \\n' . ' No. Hp            : ' . $nohp . '
 
@@ -160,7 +164,7 @@ class SendWAController extends Controller
 
 
                             \\n' . 'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :' . '
-                            \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id . '
+                            \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id_order . '
                             \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
                             \\n' . 'wa.me/6281370071330' . '
                             \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '

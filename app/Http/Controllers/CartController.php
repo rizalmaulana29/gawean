@@ -223,6 +223,8 @@ class CartController extends Controller
         }else{
           $send_notif = $this->notifTransaksiKawanDagang($transdata, $nama, $alamat,$varian);
         }
+      }else{
+        $send_notif = $this->notifTransaksi($transdata, $nama, $alamat,$varian,false);
       }
 
       // try {
@@ -652,7 +654,7 @@ class CartController extends Controller
     // curl_close($ch);
   }
 
-  public function notifTransaksi($transdata,$nama, $alamat,$varian){
+  public function notifTransaksi($transdata,$nama, $alamat,$varian,$virtual = true){
     
     $kantor = Kantor::where('id',$transdata->id_kantor)->value('kantor');
 
@@ -687,8 +689,8 @@ class CartController extends Controller
     Terima Kasih';
 
     $datasend = urlencode($data);
-
-    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id=-1001257247870&text='.$datasend;
+    $idTele = $virtual ? "-1001257247870" : "-869995896";
+    $url='https://api.telegram.org/bot1582839336:AAED5tbyAI3o93qMELdCX7Awvs6vAmDSJ7A/sendMessage?chat_id='.$idTele.'&text='.$datasend;
     $curl = curl_init();
 
     curl_setopt_array($curl, array(

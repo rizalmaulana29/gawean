@@ -6,6 +6,7 @@ use App\Order;
 use App\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Paymeth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -140,6 +141,9 @@ class SendWAController extends Controller
         if(!$order){
             return response()->json(['status' => false, 'message' => "No Data Found"],404);
         }
+
+        $paymeth = Paymeth::where("id",$order->id_payment_method)->first();
+        $paymeth = $paymeth ? $paymeth->keterangan : "Payment Belum ditemukan";
         #dinamisasi get val HP
         $id_order = $order['id_transaksi'];
         $nohp = $order['hp'];
@@ -161,7 +165,7 @@ class SendWAController extends Controller
 
                             \\n' . ' Total Pembayaran   : IDR ' . number_format($nominal_bayar) . '
                             \\n' . 'Pembayaran dilakukan melalui:' . '
-
+                            \\n' . $paymeth . '
 
                             \\n' . 'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :' . '
                             \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id_order . '

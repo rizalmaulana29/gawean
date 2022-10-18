@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 use App\Nicepaylog;
 use App\Thirdparty\Nicepay\Nicepay;
 
@@ -162,16 +165,38 @@ class CartController extends Controller
         $result[1]->ra_payment_id  = $result[2]->id;
         $result[1]->id_order       = $result[2]->id_transaksi;
 
-        // dd($request->file('foto_anak') );
+
+        // dd($request->input('foto_anak') );
         if(isset($request->file('foto_anak')[$key])) {
           $image = $request->file('foto_anak')[$key];
+          
+          # For File Image 
           $imageName = 'raqiqah'. rand(1,1000). '.' . $image->getClientOriginalExtension();
           $storeDatabase = $url. "/" .$imageName;
-          $path= "/uploads/online/";
+          $path = "/uploads/online/";
           $image->storeAs($path,$imageName);
           $result[1]->foto = $storeDatabase;
 
-        }elseif (!isset($request->file('foto_anak')[$key])) {
+      
+        }elseif (isset($request->input('foto_anak')[$key])) {
+          $image = $request->input('foto_anak')[$key];
+
+          # For BaseEncode64 Image
+          $image_64 = $image; //your base64 encoded data
+          $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+          $replace = substr($image_64, 0, strpos($image_64, ',')+1); 
+          
+          // find substring fro replace here eg: data:image/png;base64,
+          $image = str_replace($replace, '', $image_64); 
+          $image = str_replace(' ', '+', $image); 
+          
+          $imageName = Str::random(10).'.'.$extension;
+          Storage::disk('upload')->put($imageName, base64_decode($image));
+          $storeDatabase = $url. "/" .$imageName;
+
+          $result[1]->foto = $storeDatabase;
+        }
+        elseif (!isset($request->file('foto_anak')[$key])) {
           $result[1]->foto = 'https://backend.rumahaqiqah.co.id/vendor/crudbooster/default.jpg';
         } else {
           return response()->json(["Status" => "Field Foto is Not file"]);

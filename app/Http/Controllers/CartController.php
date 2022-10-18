@@ -178,7 +178,7 @@ class CartController extends Controller
           $result[1]->foto = $storeDatabase;
 
       
-        }elseif (isset($request->input('foto_anak')[$key])) {
+        }elseif (isset($request->input('foto_anak')[$key]) && $request->input('foto_anak')[$key] != "") {
           $image = $request->input('foto_anak')[$key];
 
           # For BaseEncode64 Image

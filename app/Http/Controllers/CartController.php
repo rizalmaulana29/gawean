@@ -46,7 +46,7 @@ class CartController extends Controller
       //test
       $req = $request->all();
       $now = Carbon::now();
-      $expired_at = Carbon::now()->addHour(24);
+      $expired_at = Carbon::now()->addDays(7);
 
 
       $this->passed = $req;

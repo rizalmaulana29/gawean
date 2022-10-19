@@ -165,7 +165,7 @@ class CartController extends Controller
         $result[1]->ra_payment_id  = $result[2]->id;
         $result[1]->id_order       = $result[2]->id_transaksi;
 
-
+        // dd($request->input('foto_anak')[$key]);
         // dd($request->input('foto_anak') );
         if(isset($request->file('foto_anak')[$key])) {
           $image = $request->file('foto_anak')[$key];
@@ -178,7 +178,8 @@ class CartController extends Controller
           $result[1]->foto = $storeDatabase;
 
       
-        }elseif (isset($request->input('foto_anak')[$key]) && $request->input('foto_anak')[$key] != "") {
+          
+        }elseif (isset($request->input('foto_anak')[$key]) && $request->input('foto_anak')[$key] != "" && $request->input('foto_anak')[$key] != null && $request->input('foto_anak')[$key] != "null") {
           $image = $request->input('foto_anak')[$key];
 
           # For BaseEncode64 Image

@@ -65,9 +65,9 @@ class ProfileController extends Controller
             return response()->json(['status' => false, "message" => 'Unauthorized Access'], 401);
         }
 
-        $linkRA = "https://order.rumahaqiqah.co.id/?source=";
+        $linkRA = "https://rumahaqiqah.co.id/order?source=";
         $linkRQ = "https://agrosurya.co.id/katalog/?source=";
-        $linkSF = "https://order.rumahaqiqah.co.id/?source=";
+        $linkSF = "https://rumahaqiqah.co.id/order?source=";
         $signup = "https://kawandagang.id/agen/signup?source=";
         return response()->json([
             "status" => true,

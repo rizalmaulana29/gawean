@@ -151,30 +151,54 @@ class SendWAController extends Controller
         $nominal_bayar = $order['nominal_bayar'];
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
+        
+        if($order['varian'] == "Aqiqah"){
+            $data = array(
+                "phone_no" => $nohp,
+                "key"   => $key,
+                "message" =>
+                "Assalamu'alaikum Ayah/Bunda" . ' ' . $nama . ', 🙏' . '
+                                \\n' . 'Terima kasih atas pembayaran Ayah/Bunda' . '
+                                \\n' . 'Dengan detail pembayaran order sebagai berikut:' . '
+                                \\n' . ' Order ID          : ' . $id_order . '
+                                \\n' . ' Nama              : ' . $nama . '
+                                \\n' . ' No. Hp            : ' . $nohp . '
 
-        $data = array(
-            "phone_no" => $nohp,
-            "key"   => $key,
-            "message" =>
-            "Assalamu'alaikum Ayah/Bunda" . ' ' . $nama . ', 🙏' . '
-                            \\n' . 'Terima kasih atas pembayaran Ayah/Bunda' . '
-                            \\n' . 'Dengan detail pembayaran order sebagai berikut:' . '
-                            \\n' . ' Order ID          : ' . $id_order . '
-                            \\n' . ' Nama              : ' . $nama . '
-                            \\n' . ' No. Hp            : ' . $nohp . '
+                                \\n' . ' Total Pembayaran   : IDR ' . number_format($nominal_bayar) . '
+                                \\n' . 'Pembayaran dilakukan melalui:' . '
+                                \\n' . $paymeth . '
 
-                            \\n' . ' Total Pembayaran   : IDR ' . number_format($nominal_bayar) . '
-                            \\n' . 'Pembayaran dilakukan melalui:' . '
-                            \\n' . $paymeth . '
+                                \\n' . 'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :' . '
+                                \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id_order . '
+                                \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
+                                \\n' . 'wa.me/6281370071330' . '
+                                \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '
+                                \\n' . 'Terima kasih telah memilih rumahaqiqah.co.id' . '
+                                \\n' . 'Terima Kasih 😊🙏'
+            );
+        } else {
+            $data = array(
+                "phone_no" => $nohp,
+                "key"   => $key,
+                "message" =>
+                "Assalamu'alaikum Bapak/Ibu" . ' ' . $nama . ', 🙏' . '
+                                \\n' . 'Terima kasih atas pembayaran Bapak/Ibu' . '
+                                \\n' . 'Dengan detail pembayaran order sebagai berikut:' . '
+                                \\n' . ' Order ID          : ' . $id_order . '
+                                \\n' . ' Nama              : ' . $nama . '
+                                \\n' . ' No. Hp            : ' . $nohp . '
 
-                            \\n' . 'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :' . '
-                            \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id_order . '
-                            \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
-                            \\n' . 'wa.me/6281370071330' . '
-                            \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '
-                            \\n' . 'Terima kasih telah memilih rumahaqiqah.co.id' . '
-                            \\n' . 'Terima Kasih 😊🙏'
-        );
+                                \\n' . ' Total Pembayaran   : IDR ' . number_format($nominal_bayar) . '
+                                \\n' . 'Pembayaran dilakukan melalui:' . '
+                                \\n' . $paymeth . '
+
+                                \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
+                                \\n' . 'wa.me/6281370071330' . '
+                                \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '
+                                \\n' . 'Terima kasih telah memilih Platform Kami.' . '
+                                \\n' . 'Terima Kasih 😊🙏'
+            );
+        }
 
         $data_string = json_encode($data);
 

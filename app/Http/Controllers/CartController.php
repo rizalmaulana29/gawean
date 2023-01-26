@@ -110,6 +110,7 @@ class CartController extends Controller
           'id_agen' => $request->input('agen'),
           'tgl_kirim' => $request->input('tgl_kirim'),
           'waktu_kirim' => $request->input('waktu_kirim'),
+          'parent_id' => $request->input('kantor') ?? null ? $request->input('kantor') : null,
           'expired_at' => $expired_at,
           'nama_peserta' => $request->input('atas_nama') ?? null ? $request->input('atas_nama') : ""
       ]);

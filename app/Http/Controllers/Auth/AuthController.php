@@ -32,7 +32,7 @@ class AuthController extends Controller
         
         
         $user = User::where('email', $request->input('email'))
-            ->whereIn("id_cms_privileges",[4,17])
+            ->whereIn("id_cms_privileges",[4,17,21,23])
             // ->whereIn("id_cms_privileges",[2,4,8,9,10,11,12,15,16,17])
             ->where("status","Active")
             ->first();
@@ -49,7 +49,8 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'token' => JWT::Sign($user->id),
-            'expired' => time() + 60 * 60 * 24 * 7
+            'expired' => time() + 60 * 60 * 24 * 7,
+            'roles' => $user->id_cms_privileges
         ]);
     }
 

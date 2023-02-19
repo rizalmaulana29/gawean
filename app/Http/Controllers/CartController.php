@@ -84,7 +84,7 @@ class CartController extends Controller
       $lunas = $tipe_bayar == "Tunai" ? 'y' : "n" ;
       
       $result[2] = Payment::create([
-          'id_transaksi' => date("ymd") . '001' . mt_rand(1000,9999),
+          'id_transaksi' => date("ymdi") . '1' . mt_rand(1000,9999),
           'nama_customer' => $request->input('nama'),
           'alamat'      => $request->input('alamat'),
           'hp'          => $request->input('hp'),

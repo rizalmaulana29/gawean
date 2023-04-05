@@ -24,7 +24,14 @@ class SurveyController extends Controller
     public function index()
     {
         $data_survey = SurveyMaster::where('active', 'y')->get();
-        return response()->json($data_survey, 200);
+        if ($data_survey->count() > 0) {
+            $response = ['status' => true, 'data' => $data_survey];
+            return response()->json($response, 200);
+        }
+        return response()->json(
+            ['status' => false, 'message' => 'No Data'],
+            404
+        );
     }
 
     public function create(Request $request)

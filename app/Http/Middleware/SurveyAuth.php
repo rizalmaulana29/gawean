@@ -19,14 +19,14 @@ class SurveyAuth
         if (!$request->header('Authorization')) {
             return response()->json(
                 ['status' => false, 'message' => 'Unauthorized Access!'],
-                401
+                200
             );
         }
 
         if ($request->header('Authorization') != 'HelloWorldN3v3rD13sDud3s') {
             return response()->json(
                 ['status' => false, 'message' => 'Unauthorized Access'],
-                401
+                200
             );
         }
 

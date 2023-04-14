@@ -51,7 +51,7 @@ class SurveyController extends Controller
         if (!$check_id_order['status']) {
             return response()->json(
                 ['status' => false, 'message' => $check_id_order['message']],
-                400
+                200
             );
         }
 

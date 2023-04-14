@@ -129,10 +129,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	
 	$router->group(['prefix' => 'survey', 'middleware' => ['survey.auth']], function () use ($router) {
 		$router->get('/', ['uses' => 'SurveyController@index']);
+		// $router->options('create', ['uses' => 'SurveyController@create']);
+		// $router->options('checkStatus', ['uses' => 'SurveyController@checkStatusSurvey']);
+		
 		$router->post('create', ['uses' => 'SurveyController@create']);
-		$router->options('create', ['uses' => 'SurveyController@create']);
 		$router->post('checkStatus', ['uses' => 'SurveyController@checkStatusSurvey']);
-		$router->options('checkStatus', ['uses' => 'SurveyController@checkStatusSurvey']);
 	});
 });
 

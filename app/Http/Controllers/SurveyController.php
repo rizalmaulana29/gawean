@@ -30,7 +30,7 @@ class SurveyController extends Controller
         }
         return response()->json(
             ['status' => false, 'message' => 'No Data'],
-            404
+            200
         );
     }
 
@@ -43,7 +43,7 @@ class SurveyController extends Controller
         if ($validator->fails()) {
             return response()->json(
                 ['status' => false, 'message' => 'invalidInput!'],
-                400
+                200
             );
         }
 
@@ -69,7 +69,7 @@ class SurveyController extends Controller
                     'status' => false,
                     'message' => $e->getMessage(),
                 ],
-                400
+                200
             );
         }
 
@@ -79,7 +79,7 @@ class SurveyController extends Controller
                     'status' => false,
                     'keterangan' => 'Failed to Create Survey',
                 ],
-                400
+                200
             );
         }
 
@@ -101,7 +101,7 @@ class SurveyController extends Controller
         if ($validator->fails()) {
             return response()->json(
                 ['status' => false, 'message' => 'invalidInput!'],
-                400
+                200
             );
         }
 
@@ -109,7 +109,7 @@ class SurveyController extends Controller
         if (!$check_id_order['status']) {
             return response()->json(
                 ['status' => false, 'message' => $check_id_order['message']],
-                400
+                200
             );
         }
         return response()->json(

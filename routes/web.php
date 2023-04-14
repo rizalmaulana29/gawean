@@ -127,7 +127,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('test/encrypt/{message}', ['uses' => 'TransactionController@testEncrypt']);
 	$router->get('test/decrypt/{message}', ['uses' => 'TransactionController@testDecrypt']);
 	
-	$router->group(['prefix' => 'survey', 'middleware' => ['all.cors']], function () use ($router) {
+	$router->group(['prefix' => 'survey', 'middleware' => ['survey.auth','all.cors']], function () use ($router) {
 		$router->get('/', ['uses' => 'SurveyController@index']);
 		$router->options('create', ['uses' => 'SurveyController@create']);
 		$router->options('checkStatus', ['uses' => 'SurveyController@checkStatusSurvey']);

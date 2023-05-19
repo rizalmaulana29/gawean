@@ -651,7 +651,7 @@ class NotificationsController extends Controller
                                     \\n'.' Nama Peserta      : '.$peserta.'
                                     \\n'.' No. Hp            : '.$hp.'
                                     \\n'.' Keterangan pesanan: '.$produk.'
-                                    \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'
+                                    
                                     \\n'.'Pembayaran dilakukan melalui:'.'
                                     \\n'.' - '.$rek.'
                                     \\n'.$bayar.'
@@ -663,7 +663,8 @@ class NotificationsController extends Controller
                                     \\n'.'Terima Kasih 😊🙏'
                     );
         }
-        
+       
+        /**  \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'*/
         
         $data_string = json_encode($data);
 

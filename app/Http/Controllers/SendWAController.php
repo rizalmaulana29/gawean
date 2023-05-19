@@ -188,7 +188,7 @@ class SendWAController extends Controller
                                 \\n' . ' Nama              : ' . $nama . '
                                 \\n' . ' No. Hp            : ' . $nohp . '
 
-                                \\n' . ' Total Pembayaran   : IDR ' . number_format($nominal_bayar) . '
+                                
                                 \\n' . 'Pembayaran dilakukan melalui:' . '
                                 \\n' . $paymeth . '
 
@@ -199,6 +199,8 @@ class SendWAController extends Controller
                                 \\n' . 'Terima Kasih 😊🙏'
             );
         }
+
+         /**  \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'*/
 
         $data_string = json_encode($data);
 

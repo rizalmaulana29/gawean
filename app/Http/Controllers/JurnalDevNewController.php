@@ -529,7 +529,8 @@ class JurnalDevNewController extends Controller
                                   "tags"               => [$getDataTransaksi['tgl'],$getDataTransaksi['jenis'],$getDataTransaksi['tunai'],$kantor,$agen],
                                   "email"              => $getDataTransaksi['email'],
                                   "transaction_no"     => $getDataTransaksi['id_transaksi'],
-                                  "custom_id"          => $getDataTransaksi['id_transaksi']
+                                  "custom_id"          => $getDataTransaksi['id_transaksi'],
+                                  "memo"               => $getDataTransaksi['id_transaksi']
                                   ]
                   ];
       

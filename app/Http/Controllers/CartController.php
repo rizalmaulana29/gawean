@@ -112,10 +112,7 @@ class CartController extends Controller
           'waktu_kirim' => $request->input('waktu_kirim'),
           'parent_id' => $request->input('kantor') ?? null ? $request->input('kantor') : null,
           'expired_at' => $expired_at,
-          'nama_peserta' => $request->input('atas_nama') ?? null ? $request->input('atas_nama') : "",
-          'nama_ayah' => $request->input('nama_ayah'),
-          'keterangan' => $request->input('keterangan'),
-          'vendor' => $request->input('vendor')
+          'nama_peserta' => $request->input('atas_nama') ?? null ? $request->input('atas_nama') : ""
       ]);
 
       foreach ($req['id_produk_harga'] as $key => $id_produk) {

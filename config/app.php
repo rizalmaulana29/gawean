@@ -30,6 +30,7 @@ return [
                         "180.244.131.132",// IP cinte 20
                         "114.5.208.180", //indosat irvan
                         "180.244.128.175", // IP Nendi
+                        "180.253.19.239", //ipilmi
                 ]
         ) ? true : false),
 

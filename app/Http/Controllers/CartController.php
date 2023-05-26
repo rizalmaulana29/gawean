@@ -50,6 +50,9 @@ class CartController extends Controller
       $req = $request->all();
       $now = Carbon::now();
       $expired_at = Carbon::now()->addDays(7);
+      $nama_ayah = '';
+      $keterangan_qurban = '';
+      $vendor_qurban = '';
 
 
       $this->passed = $req;
@@ -62,8 +65,14 @@ class CartController extends Controller
       if ($request->input('kategori') == 'QA' || $request->input('kategori') == 'QB' || $request->input('kategori') == 'RF') {
         $varian = $request->input('kategori') != 'RF' ? 'Qurban' : 'Retail_Food' ;
         if ($request->input('kategori') == 'QA') {
+          $nama_ayah = $request->input('nama_ayah');
+          $keterangan_qurban = $request->input('keterangan');
+          $vendor_qurban = $request->input('vendor');
           $adminentitas = '10';
         } else {
+          $nama_ayah = $request->input('nama_ayah');
+          $keterangan_qurban = $request->input('keterangan');
+          $vendor_qurban = $request->input('vendor');
           $adminentitas = '9';
         }
         
@@ -113,9 +122,9 @@ class CartController extends Controller
           'parent_id' => $request->input('kantor') ?? null ? $request->input('kantor') : null,
           'expired_at' => $expired_at,
           'nama_peserta' => $request->input('atas_nama') ?? null ? $request->input('atas_nama') : "",
-          'nama_ayah' => $request->input('nama_ayah') ?? null ? $request->input('nama_ayah') : "",
-          'keterangan' => $request->input('keterangan') ?? null ? $request->input('keterangan') : "",
-          'vendor' => $request->input('vendor') ?? null ? $request->input('vendor') : ""
+          'nama_ayah' => $nama_ayah,
+          'keterangan' => $keterangan_qurban,
+          'vendor' => $vendor_qurban
       ]);
 
       foreach ($req['id_produk_harga'] as $key => $id_produk) {

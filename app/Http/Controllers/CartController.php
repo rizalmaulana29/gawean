@@ -58,7 +58,7 @@ class CartController extends Controller
       $x = [];
       $n = 0;
 
-      $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas');
+      $id_entitas = Kantor::where('id',$request->input('id_kantor'))->value('id_entitas'); #problem 1
       if ($request->input('kategori') == 'QA' || $request->input('kategori') == 'QB' || $request->input('kategori') == 'RF') {
         $varian = $request->input('kategori') != 'RF' ? 'Qurban' : 'Retail_Food' ;
         if ($request->input('kategori') == 'QA') {
@@ -112,7 +112,10 @@ class CartController extends Controller
           'waktu_kirim' => $request->input('waktu_kirim'),
           'parent_id' => $request->input('kantor') ?? null ? $request->input('kantor') : null,
           'expired_at' => $expired_at,
-          'nama_peserta' => $request->input('atas_nama') ?? null ? $request->input('atas_nama') : ""
+          'nama_peserta' => $request->input('atas_nama') ?? null ? $request->input('atas_nama') : "",
+          'nama_ayah' => $request->input('nama_ayah'),
+          'keterangan' => $request->input('keterangan'),
+          'vendor' => $request->input('vendor')
       ]);
 
       foreach ($req['id_produk_harga'] as $key => $id_produk) {

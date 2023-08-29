@@ -376,6 +376,7 @@ class JurnalDevNewController extends Controller
       $jurnalKoneksi = $this->Entitas($getDataTransaksi['entitas'],$requester = 'konektor');
 
       $paymentMethode =  Paymeth::where('id',$getDataTransaksi['id_payment_method'])->first();
+      $kantor       = Kantor::where('id',$getDataTransaksi['id_kantor'])->value('kantor');
 
       $deposit_to_name     = $paymentMethode->methode_jurnal;
       $transfer = [26,33,2,3,4,5]; //id ra_bank_rek u/ transfer dan Nicepay
@@ -417,7 +418,8 @@ class JurnalDevNewController extends Controller
                                                                                      "description" => $tipeTransaksi,
                                                                                      "debit"       => $nominal]],
                                         "memo"               => $tipeTransaksi,
-                                        "custom_id"          => $getDataTransaksi['id_transaksi']
+                                        "custom_id"          => $getDataTransaksi['id_transaksi'],
+                                        "tags"               => $kantor
                                       ]
                   ];  
         

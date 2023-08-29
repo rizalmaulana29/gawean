@@ -419,7 +419,7 @@ class JurnalDevNewController extends Controller
                                                                                      "debit"       => $nominal]],
                                         "memo"               => $tipeTransaksi,
                                         "custom_id"          => $getDataTransaksi['id_transaksi'],
-                                        "tags"               => $kantor
+                                        "tags"               => '['.$kantor.']'
                                       ]
                   ];  
         

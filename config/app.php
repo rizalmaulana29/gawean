@@ -13,7 +13,7 @@ return [
     |
     */
 
-    // 'debug' => env('APP_DEBUG', true),
+     'debug' => env('APP_DEBUG', true),
 
     // INGAT UNTUK DI KOMENTARIN
         'debug' => env('APP_DEBUG', in_array(

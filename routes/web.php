@@ -20,11 +20,13 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
+	
 	$router->get('harga', 	['uses' => 'HargaController@show']);
 	$router->get('code',	['uses' => 'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 	$router->get('transaction', ["middleware" => "jwt.auth", 'uses' => 'TransactionController@detailTrx']);
 	$router->post('transaction/detail', ['uses' => 'TransactionController@detailTrxPublic']);
+	$router->get('order', ['uses' => 'OrderController@order']);
 	$router->post('cekTransaction', ['uses' => 'TransactionController@checkTrx']);
 
 	$router->post('signup/agen', ['uses' => 'AgenController@signup']);

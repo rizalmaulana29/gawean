@@ -16,8 +16,8 @@ class OrderController extends Controller{
         $limit = $request->input('limit',20);
         $offset =  $request->input('offset',0);
         $id_kantor = $request->input('id_kantor');
-        $tgl_trx_awal = $request->input('tgl');
-        $tgl_trx_akhir = $request->input('tgl');
+        $tgl_trx_awal = $request->input('tgl_trx_awal');
+        $tgl_trx_akhir = $request->input('tgl_trx_akhir');
         $nama_customer=  $request->input('nama_customer');
 
         $queryOrder = Payment::selectRaw("ra_payment_dua.id, ra_payment_dua.id_transaksi, ra_payment_dua.varian, ra_payment_dua.jenis, ra_payment_dua.tgl, ra_payment_dua.tgl_transaksi, ra_payment_method.payment_method, ra_payment_dua.nama_customer,  ra_payment_dua.hp, ra_payment_dua.email, ra_payment_dua.alamat, ra_kantor.kantor, ra_payment_dua.id_kantor, ra_payment_dua.nominal, ra_payment_dua.nominal_diskon, ra_payment_dua.nominal_total, ra_payment_dua.nominal_bayar, ra_payment_dua.sisa_pembayaran, ra_payment_dua.status, admin_entitas.entitas as pt, cms_users.name as agen, ra_payment_dua.tgl_kirim, ra_sumber_informasi.sumber_informasi")

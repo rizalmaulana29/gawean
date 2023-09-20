@@ -13,8 +13,12 @@ use Illuminate\Http\Request;
 class OrderController extends Controller{
     public function order (Request $request){
         
-        $limit = $request->input('limit',20);
-        $offset =  $request->input('offset',0);
+        $page = $request->input('page'); // Halaman saat ini dari permintaan
+        $perPage = 20; // Jumlah item per halaman
+
+        // Hitung offset berdasarkan halaman saat ini
+        $offset = ($page - 1) * $perPage;
+
         $id_kantor = $request->input('id_kantor');
         $tgl_trx_awal = $request->input('tgl_trx_awal');
         $tgl_trx_akhir = $request->input('tgl_trx_akhir');
@@ -50,10 +54,13 @@ class OrderController extends Controller{
         // if ($nama_customer){
         //     $query->where('nama_customer', $nama_customer);
         // }
+        $totalorder = $queryOrder->count(); 
 
-
-        $order = $queryOrder->take($limit)->skip($offset)->get();
+        $order = $queryOrder->skip($offset)->take($perPage)->get();
         
-        return $order;
+        return response()->json([
+            'data' => $order,
+            'total' => $totalorder // Menambahkan total data hasil pencarian
+        ]);
     }
 }

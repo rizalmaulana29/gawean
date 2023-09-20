@@ -171,7 +171,7 @@ class SendWAController extends Controller
                                 \\n' . 'Untuk check pesanan Ayah/Bunda silahkan klik link berikut :' . '
                                 \\n' . 'https://order.rumahaqiqah.co.id/tracking-order.php?id=' . $id_order . '
                                 \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
-                                \\n' . 'wa.me/6281370071330' . '
+                                \\n' . 'wa.me/6282218757703' . '
                                 \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '
                                 \\n' . 'Terima kasih telah memilih rumahaqiqah.co.id' . '
                                 \\n' . 'Terima Kasih 😊🙏'
@@ -193,7 +193,7 @@ class SendWAController extends Controller
                                 \\n' . $paymeth . '
 
                                 \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
-                                \\n' . 'wa.me/6281370071330' . '
+                                \\n' . 'wa.me/6282218757703' . '
                                 \\n' . 'Ingat Order ID Anda saat menghubungi Customer Care.' . '
                                 \\n' . 'Terima kasih telah memilih Platform Kami.' . '
                                 \\n' . 'Terima Kasih 😊🙏'

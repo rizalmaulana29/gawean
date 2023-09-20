@@ -217,7 +217,7 @@ class AgenController extends Controller
                                     \\n' . 'Saatnya Kamu Jadi Miliarder
                                     \\n' . '
                                     \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
-                                    \\n' . 'wa.me/628112317711' . '
+                                    \\n' . 'wa.me/6282218757703' . '
                                     \\n' . 'Terima Kasih 😊🙏'
         );
 
@@ -290,7 +290,7 @@ class AgenController extends Controller
                                     \\n' . 'Saatnya Kamu Jadi Miliarder
                                     \\n' . '
                                     \\n' . 'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:' . '
-                                    \\n' . 'wa.me/628112317711' . '
+                                    \\n' . 'wa.me/6282218757703' . '
                                     \\n' . 'Terima Kasih 😊🙏'
         );
 

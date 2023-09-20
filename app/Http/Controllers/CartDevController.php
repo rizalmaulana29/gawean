@@ -441,7 +441,7 @@ class CartDevController extends Controller
                   \\n'.$link.'
                   \\n'.'
                   \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
-                  \\n'.'wa.me/6281370071330'.'
+                  \\n'.'wa.me/6282218757703'.'
                   \\n'.'
                   \\n'.'Ingat Order ID Ayah/Bunda saat menghubungi Customer Care.'.'
                   \\n'.'

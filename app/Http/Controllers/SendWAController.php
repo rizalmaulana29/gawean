@@ -243,13 +243,11 @@ class SendWAController extends Controller
         return response()->json(['status' => false, 'message' => "No Data Found or send_voc is not empty"], 404);
     }*/
 
-    foreach ($orders as $order) {
-        
-        $id_order = $order['id_transaksi'];
-        //$nohp = $order['hp'];
+    if ($order) {
+        $id_order = $order->id_transaksi;
         $nohp = '6281462206437';
-        $nama = $order['nama_customer'];
-        $nominal_bayar = $order['nominal_bayar'];
+        $nama = $order->nama_customer;
+        
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
 

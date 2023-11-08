@@ -260,7 +260,7 @@ class SendWAController extends Controller
             "Assalamu'alaikum Ayah/Bunda " . ' ' . $nama . ', yang berbahagia 🙏' . '
             \\n' . 'Terima kasih sudah mempercayakan aqiqah kepada Rumah Aqiqah.' . '
             \\n' . 'Agar kami dapat terus meningkatkan pelayanan, mohon kesediaannya meluangkan waktu untuk mengisi survey dengan klik link berikut: http://rumahaqiqah.co.id/survey?id_order=' . $id_order . '
-            \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' .  . '
+            \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' . '
             \\n' . 'Terima Kasih 😊🙏' . '
             \\n' . 'Waasalamualaikum ' 
            

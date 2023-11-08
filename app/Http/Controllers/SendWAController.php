@@ -237,7 +237,7 @@ class SendWAController extends Controller
     $orders = Payment::whereDate('tgl_kirim', $twoDaysAfter)
                      ->whereNull('send_voc')->first();*/
      $id = '2003030022851';
-     $order = Payment::where('id', $id)->first();
+     $orders = Payment::where('id', $id)->first();
 
     if ($orders->isEmpty()) {
         return response()->json(['status' => false, 'message' => "No Data Found or send_voc is not empty"], 404);

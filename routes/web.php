@@ -90,7 +90,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 	$router->post('wanotifsembelih', ['uses' => 'SendWAController@sendWhatsapp']);
 	$router->post('sendWAManual', ['uses' => 'SendWAController@sendWhatsappManual']);
-	$router->get('sendWAVOC', ['uses' => 'SendWAController@sendWhatsappVOC']);
+	$router->post('sendWAVOC', ['uses' => 'SendWAController@sendWhatsappVOC']);
 	
 	$router->group(['prefix' => 'auth', 'middleware' => 'all.cors'], function () use ($router) {
 		$router->options('/login', ['uses' => 'Auth\AuthController@authenticate']);

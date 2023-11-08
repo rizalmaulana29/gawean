@@ -249,7 +249,7 @@ class SendWAController extends Controller
         $nama = $order->nama_customer;
         
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
-        $url = 'http://116.203.92.59/api/async_send_message';
+        $url = 'http://116.203.191.58/api/async_send_message';
 
         $data = array(
             "phone_no" => $nohp,

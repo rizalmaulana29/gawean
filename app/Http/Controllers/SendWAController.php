@@ -227,29 +227,23 @@ class SendWAController extends Controller
 
     public function sendWhatsappVOC()
 {
-    /*
+    
     $today = Carbon::now();
 
     
     $twoDaysAfter = $today->addDays(2);
 
     
-    $orders = Payment::whereDate('tgl_kirim', $twoDaysAfter)
-                     ->whereNull('send_voc')->first();*/
-     //$id = '2003030022851';
-     //$order = Payment::where('id', $id)->first();
-    /*
-    if ($orders->isEmpty()) {
-        return response()->json(['status' => false, 'message' => "No Data Found or send_voc is not empty"], 404);
-    }*/
-    $id = '2003030022851';
-    $order = Payment::where('id_transaksi', $id)->first();
+    $order = Payment::whereDate('tgl_kirim', $twoDaysAfter)
+                     ->whereNull('send_voc')->first();
+     
 
     if (!$order) {
         return response()->json(['status' => false, 'message' => 'Order not found'], 404);
     }
 
     $id_order = $order->id_transaksi;
+    //$nohp = $order['hp'];
     $nohp = '6281462206437';
     $nama = $order->nama_customer;
     $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';

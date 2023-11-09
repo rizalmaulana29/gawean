@@ -236,12 +236,14 @@ class SendWAController extends Controller
     
     $orders = Payment::whereDate('tgl_kirim', $twoDaysAfter)
                      ->whereNull('send_voc')->first();*/
-     $id = '2003030022851';
-     $order = Payment::where('id', $id)->first();
+     //$id = '2003030022851';
+     //$order = Payment::where('id', $id)->first();
     /*
     if ($orders->isEmpty()) {
         return response()->json(['status' => false, 'message' => "No Data Found or send_voc is not empty"], 404);
     }*/
+    $id = '2003030022851';
+    $order = Payment::where('id', $id)->first();
 
     if ($order) {
         $id_order = $order->id_transaksi;
@@ -261,7 +263,6 @@ class SendWAController extends Controller
             \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' . '
             \\n' . 'Terima Kasih 😊🙏' . '
             \\n' . 'Waasalamualaikum ' 
-           
         );
 
         $data_string = json_encode($data);
@@ -283,10 +284,17 @@ class SendWAController extends Controller
                 'Content-Length: ' . strlen($data_string)
             )
         );
+
         $res = curl_exec($ch);
+        
+        if ($res === false) {
+            echo 'Curl error: ' . curl_error($ch);
+        } else {
+            echo 'Response: ' . $res;
+        }
+
         curl_close($ch);
 
-        // Set send_voc to 1 after cURL request
         $order->update(['send_voc' => 1]);
     }
 

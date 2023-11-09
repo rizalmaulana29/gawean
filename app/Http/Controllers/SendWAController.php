@@ -293,6 +293,7 @@ class SendWAController extends Controller
     }
 
     curl_close($ch);
+    $order->update(['send_voc' => 1]);
 
     // Kembalikan respons cURL secara langsung
     return response($responseFromCurl, 200);

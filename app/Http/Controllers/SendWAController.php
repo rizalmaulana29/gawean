@@ -248,8 +248,8 @@ class SendWAController extends Controller
     }
 
     $id_order = $order->id_transaksi;
-    //$nohp = $order['hp'];
-    $nohp = '6281462206437';
+    $nohp = $order['hp'];
+    //$nohp = '6281462206437';
     $nama = $order->nama_customer;
     $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
     $url = 'http://116.203.191.58/api/async_send_message';

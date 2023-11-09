@@ -243,7 +243,7 @@ class SendWAController extends Controller
         return response()->json(['status' => false, 'message' => "No Data Found or send_voc is not empty"], 404);
     }*/
     $id = '2003030022851';
-    $order = Payment::where('id', $id)->first();
+    $order = Payment::where('id_transaksi', $id)->first();
 
     if (!$order) {
         return response()->json(['status' => false, 'message' => 'Order not found'], 404);

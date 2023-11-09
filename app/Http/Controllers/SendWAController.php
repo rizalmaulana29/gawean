@@ -245,59 +245,57 @@ class SendWAController extends Controller
     $id = '2003030022851';
     $order = Payment::where('id', $id)->first();
 
-    if ($order) {
-        $id_order = $order->id_transaksi;
-        $nohp = '6281462206437';
-        $nama = $order->nama_customer;
-        
-        $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
-        $url = 'http://116.203.191.58/api/async_send_message';
-
-        $data = array(
-            "phone_no" => $nohp,
-            "key" => $key,
-            "message" =>
-            "Assalamu'alaikum Ayah/Bunda " . ' ' . $nama . ', yang berbahagia 🙏' . '
-            \\n' . 'Terima kasih sudah mempercayakan aqiqah kepada Rumah Aqiqah.' . '
-            \\n' . 'Agar kami dapat terus meningkatkan pelayanan, mohon kesediaannya meluangkan waktu untuk mengisi survey dengan klik link berikut: http://rumahaqiqah.co.id/survey?id_order=' . $id_order . '
-            \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' . '
-            \\n' . 'Terima Kasih 😊🙏' . '
-            \\n' . 'Waasalamualaikum ' 
-        );
-
-        $data_string = json_encode($data);
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 360);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt(
-            $ch,
-            CURLOPT_HTTPHEADER,
-            array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_string)
-            )
-        );
-
-        $res = curl_exec($ch);
-        
-        if ($res === false) {
-            echo 'Curl error: ' . curl_error($ch);
-        } else {
-            echo 'Response: ' . $res;
-        }
-
-        curl_close($ch);
-
-        $order->update(['send_voc' => 1]);
+    if (!$order) {
+        return response()->json(['status' => false, 'message' => 'Order not found'], 404);
     }
 
-    return response()->json(['status' => true, 'message' => "Data Sent and updated send_voc to 1 for eligible orders"], 200);
+    $id_order = $order->id_transaksi;
+    $nohp = '6281462206437';
+    $nama = $order->nama_customer;
+    $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+    $url = 'http://116.203.191.58/api/async_send_message';
+
+    $data = array(
+        "phone_no" => $nohp,
+        "key" => $key,
+        "message" =>
+        "Assalamu'alaikum Ayah/Bunda " . ' ' . $nama . ', yang berbahagia 🙏' . '
+        \\n' . 'Terima kasih sudah mempercayakan aqiqah kepada Rumah Aqiqah.' . '
+        \\n' . 'Agar kami dapat terus meningkatkan pelayanan, mohon kesediaannya meluangkan waktu untuk mengisi survey dengan klik link berikut: http://rumahaqiqah.co.id/survey?id_order=' . $id_order . '
+        \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' . '
+        \\n' . 'Terima Kasih 😊🙏' . '
+        \\n' . 'Waasalamualaikum '
+    );
+
+    $data_string = json_encode($data);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt(
+        $ch,
+        CURLOPT_HTTPHEADER,
+        array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string)
+        )
+    );
+
+    $responseFromCurl = curl_exec($ch);
+
+    if ($responseFromCurl === false) {
+        return response()->json(['status' => false, 'message' => 'Curl error: ' . curl_error($ch)], 500);
+    }
+
+    curl_close($ch);
+
+    // Kembalikan respons cURL secara langsung
+    return response($responseFromCurl, 200);
 }
 }

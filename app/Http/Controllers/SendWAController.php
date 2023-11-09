@@ -236,7 +236,11 @@ class SendWAController extends Controller
 
     
     $order = Payment::whereDate('tgl_kirim', $twoDaysAfter)
-                     ->whereNull('send_voc')->first();
+                     ->whereNull('send_voc')
+                     ->where('tipe','transaksi')
+                     ->where('varian','Aqiqah')
+                     ->where('lunas','y')
+                     ->first();
      
 
     if (!$order) {

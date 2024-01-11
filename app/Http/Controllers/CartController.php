@@ -504,7 +504,7 @@ class CartController extends Controller
 
     if ($bankRek->keterangan == "cash") {
       $rek   = $bankRek->keterangan;
-      $bayar = 'Silahkan Melakukan Pembayaran ke Kantor Rumah Aqiqah'
+      $bayar = 'Silahkan Melakukan Pembayaran ke Kantor Rumah Aqiqah';
      
     }elseif ($bankRek->keterangan == "Bank Central Asia") {
       $rek   = $bankRek->keterangan;

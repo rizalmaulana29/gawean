@@ -504,7 +504,7 @@ class CartController extends Controller
 
     if ($bankRek->keterangan == "cash") {
       $rek   = $bankRek->keterangan;
-      $bayar = 'Silahkan Melakukan Pembayaran ke Kantor Rumah Aqiqah';
+      $bayar = ' - Silahkan Melakukan Pembayaran ke Kantor Rumah Aqiqah';
      
     }elseif ($bankRek->keterangan == "Bank Central Asia") {
       $rek   = $bankRek->keterangan;
@@ -547,7 +547,7 @@ class CartController extends Controller
                   \\n'.'Metode Pembayaran:'.'
                   \\n'.'- '.$rek
                   .$bayar.'
-                  \\n'.'Untuk panduan bayar, silahkan klik link berikut:'.'
+                  \\n'.'Untuk panduan bayar melalui transfer bank, silahkan klik link berikut:'.'
                   \\n'.'1. Virtual Account'.'
                   \\n'.$link.'
                   \\n'.'2. Transfer Bank untuk BCA / BNI'.'
@@ -555,8 +555,6 @@ class CartController extends Controller
                   \\n'.'Silakan save dulu nomor ini jika link belum bisa diklik'.'
                   \\n'.'Butuh bantuan layanan Customer Care kami, silahkan klik link berikut:'.'
                   \\n'.'CS 1 wa.me/6282218757703'.'
-                  \\n'.'CS 2 wa.me/6281320489665'.'
-                  \\n'.'CS 3 wa.me/628112317711'.'
                   \\n'.'Catatan :
                   \\n'.'Sebutkan ORDER ID saat menghubungi Customer Service'.'
                   \\n'.'Konfirmasi Pembayaran kepada Customer Service'.'

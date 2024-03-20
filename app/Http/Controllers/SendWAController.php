@@ -232,7 +232,7 @@ class SendWAController extends Controller
     $today = Carbon::now();
 
     
-    $twoDaysAfter = $today->subDays(2);
+    $twoDaysAfter = $today->subDays(1);
 
     
     $order = Payment::whereDate('tgl_kirim', $twoDaysAfter)

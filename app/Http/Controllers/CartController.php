@@ -73,7 +73,7 @@ class CartController extends Controller
           $nama_ayah = $request->input('nama_ayah');
           $keterangan_qurban = $request->input('keterangan');
           $vendor_qurban = $request->input('vendor');
-          $adminentitas = '9';
+          $adminentitas = '7';
         }
         
       } else {

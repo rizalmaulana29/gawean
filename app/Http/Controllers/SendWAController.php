@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Order;
 use App\Payment;
+use App\Kantor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Paymeth;

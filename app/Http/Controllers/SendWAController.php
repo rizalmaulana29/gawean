@@ -144,8 +144,6 @@ class SendWAController extends Controller
             return response()->json(['status' => false, 'message' => "No Data Found"],404);
         }
 
-        sendTransaksiCabang($request);
-
         $paymeth = Paymeth::where("id",$order->id_payment_method)->first();
         $paymeth = $paymeth ? $paymeth->keterangan : "Payment Belum ditemukan";
         #dinamisasi get val HP
@@ -230,100 +228,30 @@ class SendWAController extends Controller
     }
 
     public function sendWhatsappVOC()
-{
-    
-    $today = Carbon::now();
-
-    
-    $twoDaysAfter = $today->subDays(1);
-
-    
-    $order = Payment::whereDate('tgl_kirim', $twoDaysAfter)
-                     ->whereNull('send_voc')
-                     ->where('tipe','transaksi')
-                     ->where('varian','Aqiqah')
-                     ->where('lunas','y')
-                     ->first();
-     
-
-    if (!$order) {
-        return response()->json(['status' => false, 'message' => 'Order not found'], 404);
-    }
-
-    $id_order = $order->id_transaksi;
-    $nohp = $order['hp'];
-    //$nohp = '6281462206437';
-    $nama = $order->nama_customer;
-    $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
-    $url = 'http://116.203.191.58/api/async_send_message';
-
-    $data = array(
-        "phone_no" => $nohp,
-        "key" => $key,
-        "message" =>
-        "Assalamu'alaikum Ayah/Bunda " . ' ' . $nama . ', yang berbahagia 🙏' . '
-        \\n' . 'Terima kasih sudah mempercayakan aqiqah kepada Rumah Aqiqah.' . '
-        \\n' . 'Agar kami dapat terus meningkatkan pelayanan, mohon kesediaannya meluangkan waktu untuk mengisi survey dengan klik link berikut: https://sistemorder2-asp-fe-dev2.cnt.id/survey?id_order=' . $id_order . '
-        \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' . '
-        \\n' . 'Terima Kasih 😊🙏' . '
-        \\n' . 'Waasalamualaikum '
-    );
-
-    $data_string = json_encode($data);
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 360);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt(
-        $ch,
-        CURLOPT_HTTPHEADER,
-        array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string)
-        )
-    );
-
-    $responseFromCurl = curl_exec($ch);
-
-    if ($responseFromCurl === false) {
-        return response()->json(['status' => false, 'message' => 'Curl error: ' . curl_error($ch)], 500);
-    }
-
-    curl_close($ch);
-    $order->update(['send_voc' => 1]);
-
-    // Kembalikan respons cURL secara langsung
-    return response($responseFromCurl, 200);
-}
-
-public function sendTransaksiCabang($request)
     {
-        echo $request;
-
-        $id = $request['id'];
-        $id_kantor = $request['id_kantor'];
-        $order = Payment::where('id', $id)->first();
-        $kantor = Kantor::where('id', $id_kantor);
-
-        dump($id);
-        dump($id_kantor);
-        dump($order);
-        dump($kantor);
         
+        $today = Carbon::now();
+
+        
+        $twoDaysAfter = $today->subDays(1);
+
+        
+        $order = Payment::whereDate('tgl_kirim', $twoDaysAfter)
+                        ->whereNull('send_voc')
+                        ->where('tipe','transaksi')
+                        ->where('varian','Aqiqah')
+                        ->where('lunas','y')
+                        ->first();
+        
+
         if (!$order) {
             return response()->json(['status' => false, 'message' => 'Order not found'], 404);
         }
 
         $id_order = $order->id_transaksi;
-        $nohp = $kantor['tlp'];
+        $nohp = $order['hp'];
         //$nohp = '6281462206437';
-        $nama_kantor = $kantor['kantor'];
+        $nama = $order->nama_customer;
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.191.58/api/async_send_message';
 
@@ -331,11 +259,10 @@ public function sendTransaksiCabang($request)
             "phone_no" => $nohp,
             "key" => $key,
             "message" =>
-            "Assalamu'alaikum Cabang " . ' ' . $nama_kantor . ', yang berbahagia 🙏' . '
-            \\n' . 'Berikut Ada Order, dengan info sebagai berikut :' . '
-            \\n'.' Order ID          : '.$id_order.'
-            \\n'.' Nama              : '.$order->nama_customer.'
-            \\n'.' No. Hp            : '.$order->$hp.'
+            "Assalamu'alaikum Ayah/Bunda " . ' ' . $nama . ', yang berbahagia 🙏' . '
+            \\n' . 'Terima kasih sudah mempercayakan aqiqah kepada Rumah Aqiqah.' . '
+            \\n' . 'Agar kami dapat terus meningkatkan pelayanan, mohon kesediaannya meluangkan waktu untuk mengisi survey dengan klik link berikut: https://sistemorder2-asp-fe-dev2.cnt.id/survey?id_order=' . $id_order . '
+            \\n' . ' Semoga partisipasi Ayah/Bunda menjadi amal kebaikan dan dibalas oleh Allah SWT. Aamiin.' . '
             \\n' . 'Terima Kasih 😊🙏' . '
             \\n' . 'Waasalamualaikum '
         );
@@ -367,6 +294,7 @@ public function sendTransaksiCabang($request)
         }
 
         curl_close($ch);
+        $order->update(['send_voc' => 1]);
 
         // Kembalikan respons cURL secara langsung
         return response($responseFromCurl, 200);

@@ -224,6 +224,8 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
+
+        sendTransaksiCabang($request);
     }
 
     public function sendWhatsappVOC()
@@ -298,4 +300,67 @@ class SendWAController extends Controller
     // Kembalikan respons cURL secara langsung
     return response($responseFromCurl, 200);
 }
+
+public function sendTransaksiCabang($request)
+    {
+        $id = $request['id'];
+        $id_kantor = $request['id_kantor'];
+        $order = Payment::where('id', $id)->first();
+        $kantor = Kantor::where('id', $id_kantor);
+        
+        if (!$order) {
+            return response()->json(['status' => false, 'message' => 'Order not found'], 404);
+        }
+
+        $id_order = $order->id_transaksi;
+        $nohp = $kantor['tlp'];
+        //$nohp = '6281462206437';
+        $nama_kantor = $kantor['kantor'];
+        $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
+        $url = 'http://116.203.191.58/api/async_send_message';
+
+        $data = array(
+            "phone_no" => $nohp,
+            "key" => $key,
+            "message" =>
+            "Assalamu'alaikum Cabang " . ' ' . $nama_kantor . ', yang berbahagia 🙏' . '
+            \\n' . 'Berikut Ada Order, dengan info sebagai berikut :' . '
+            \\n'.' Order ID          : '.$id_order.'
+            \\n'.' Nama              : '.$order->nama_customer.'
+            \\n'.' No. Hp            : '.$order->$hp.'
+            \\n' . 'Terima Kasih 😊🙏' . '
+            \\n' . 'Waasalamualaikum '
+        );
+
+        $data_string = json_encode($data);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 360);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_string)
+            )
+        );
+
+        $responseFromCurl = curl_exec($ch);
+
+        if ($responseFromCurl === false) {
+            return response()->json(['status' => false, 'message' => 'Curl error: ' . curl_error($ch)], 500);
+        }
+
+        curl_close($ch);
+
+        // Kembalikan respons cURL secara langsung
+        return response($responseFromCurl, 200);
+    }
 }

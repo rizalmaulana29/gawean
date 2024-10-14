@@ -303,10 +303,17 @@ class SendWAController extends Controller
 
 public function sendTransaksiCabang($request)
     {
+        echo $request;
+
         $id = $request['id'];
         $id_kantor = $request['id_kantor'];
         $order = Payment::where('id', $id)->first();
         $kantor = Kantor::where('id', $id_kantor);
+
+        dump($id);
+        dump($id_kantor);
+        dump($order);
+        dump($kantor);
         
         if (!$order) {
             return response()->json(['status' => false, 'message' => 'Order not found'], 404);

@@ -142,9 +142,6 @@ class SendWAController extends Controller
         if(!$order){
             return response()->json(['status' => false, 'message' => "No Data Found"],404);
         }
-        
-        sendTransaksiCabang($request);
-        dump($request);
 
         $paymeth = Paymeth::where("id",$order->id_payment_method)->first();
         $paymeth = $paymeth ? $paymeth->keterangan : "Payment Belum ditemukan";
@@ -302,7 +299,7 @@ class SendWAController extends Controller
     return response($responseFromCurl, 200);
 }
 
-public function sendTransaksiCabang($request)
+public function sendTransaksiCabang(Request $request)
     {
         echo $request;
 

@@ -142,6 +142,9 @@ class SendWAController extends Controller
         if(!$order){
             return response()->json(['status' => false, 'message' => "No Data Found"],404);
         }
+        
+        sendTransaksiCabang($request);
+        dump($request);
 
         $paymeth = Paymeth::where("id",$order->id_payment_method)->first();
         $paymeth = $paymeth ? $paymeth->keterangan : "Payment Belum ditemukan";
@@ -224,8 +227,6 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
-
-        sendTransaksiCabang($request);
     }
 
     public function sendWhatsappVOC()

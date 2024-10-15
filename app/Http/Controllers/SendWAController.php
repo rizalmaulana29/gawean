@@ -137,6 +137,7 @@ class SendWAController extends Controller
     public function sendWhatsappManual(Request $request)
     {
         $id = $request['id'];
+        $id_kantor = $request['id_kantor'];
         $order = Payment::where('id', $id)->first();
         // $nohp = '6281289637529';
 
@@ -225,35 +226,69 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
-        $this->sendWhatsappKaryawan();
+        $this->sendWhatsappKaryawan($id_kantor, $id);
     }
 
-    public function sendWhatsappKaryawan()
+    public function sendWhatsappKaryawan($id_kantor, $id)
     {
-        $url_wa = 'http://116.203.191.58/api/send_message';
-        $header = [
-            'Content-Type: application/json',
-        ];
-        $data = [
-            "phone_no" => "6282111467785",
-            "key" => "c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26",
-            "message" => "Assalamu'alaikum Kang Rhidwan",
-        ];
+        // kantor nya harus ada
+        if ($id_kantor) {
+            $kantor = Kantor::where('id', $id_kantor)->first();
+            // no hp nya harus ada
+            if ($kantor->tlp) {
+                $url_wa = 'http://116.203.191.58/api/send_message';
+                $header = [
+                    'Content-Type: application/json',
+                ];
+                $data = [
+                    "phone_no" => $kantor->tlp,
+                    "key" => "c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26",
+                    "message" => "Assalamu'alaikum Cabang " . ' ' . $kantor->kantor . ', yang berbahagia 🙏' . '
+            \\n' . 'Saat ini Cabang ' . ' ' . $kantor->kantor . ' mendapatkan Pesanan Aqiqah Baru dengan info : ' . '
+            \\n' . ' ID ORDER : ' . '
+            \\n' . ' Segera lakukan Konfirmasi ke Konsumen untuk memastikan pesanan sudah sesuai atau update pesanan' . '
+            \\n' . 'Terima Kasih 😊🙏' . '
+            \\n' . 'Waasalamualaikum ',
+                ];
 
-        $ch = curl_init();
+                $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url_wa);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+                curl_setopt($ch, CURLOPT_URL, $url_wa);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            $result = 'Curl error: ' . curl_error($ch);
+                $result = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    $result = 'Curl error: ' . curl_error($ch);
+                }
+
+                curl_close($ch);
+
+                $url_wa_file = 'http://116.203.191.58/api/send_file_url';
+                $data_file = array(
+                    "phone_no" => $kantor->tlp,
+                    "key" => "c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26",
+                    "url" => "https://backend.rumahaqiqah.co.id/admin/detail/" . $id,
+                );
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, $url_wa_file);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data_file));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+                $result = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    $result = 'Curl error: ' . curl_error($ch);
+                }
+
+                curl_close($ch);
+            }
         }
-
-        curl_close($ch);
     }
 
     public function sendWhatsappVOC()

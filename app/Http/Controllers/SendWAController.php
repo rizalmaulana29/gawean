@@ -229,7 +229,7 @@ class SendWAController extends Controller
         $this->sendWhatsappKaryawan($id_kantor, $id);
     }
 
-    public function sendWhatsappKaryawan($id_kantor, $id)
+    public function sendWhatsappKaryawan($id_kantor, $id, $id_order)
     {
         // kantor nya harus ada
         if ($id_kantor) {
@@ -245,7 +245,7 @@ class SendWAController extends Controller
                     "key" => "c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26",
                     "message" => "Assalamu'alaikum Cabang " . ' ' . $kantor->kantor . ', yang berbahagia 🙏' . '
             \\n' . 'Saat ini Cabang ' . ' ' . $kantor->kantor . ' mendapatkan Pesanan Aqiqah Baru dengan info : ' . '
-            \\n' . ' ID ORDER : ' . '
+            \\n' . ' ID ORDER : ' . $id_order . '
             \\n' . ' Segera lakukan Konfirmasi ke Konsumen untuk memastikan pesanan sudah sesuai atau update pesanan' . '
             \\n' . 'Terima Kasih 😊🙏' . '
             \\n' . 'Waasalamualaikum ',

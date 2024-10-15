@@ -226,7 +226,7 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
-        $this->sendWhatsappKaryawan($id_kantor, $id);
+        $this->sendWhatsappKaryawan($id_kantor, $id, $id_order);
     }
 
     public function sendWhatsappKaryawan($id_kantor, $id, $id_order)

@@ -140,11 +140,11 @@ class SendWAController extends Controller
         $order = Payment::where('id', $id)->first();
         // $nohp = '6281289637529';
 
-        if(!$order){
-            return response()->json(['status' => false, 'message' => "No Data Found"],404);
+        if (!$order) {
+            return response()->json(['status' => false, 'message' => "No Data Found"], 404);
         }
 
-        $paymeth = Paymeth::where("id",$order->id_payment_method)->first();
+        $paymeth = Paymeth::where("id", $order->id_payment_method)->first();
         $paymeth = $paymeth ? $paymeth->keterangan : "Payment Belum ditemukan";
         #dinamisasi get val HP
         $id_order = $order['id_transaksi'];
@@ -153,8 +153,8 @@ class SendWAController extends Controller
         $nominal_bayar = $order['nominal_bayar'];
         $key = 'c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26';
         $url = 'http://116.203.92.59/api/async_send_message';
-        
-        if($order['varian'] == "Aqiqah"){
+
+        if ($order['varian'] == "Aqiqah") {
             $data = array(
                 "phone_no" => $nohp,
                 "key"   => $key,
@@ -202,7 +202,7 @@ class SendWAController extends Controller
             );
         }
 
-         /**  \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'*/
+        /**  \\n'.' Total Pembayaran   : IDR '.number_format($payment['nominal_bayar']).'*/
 
         $data_string = json_encode($data);
 
@@ -225,24 +225,53 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
+        $this->sendWhatsappKaryawan();
+    }
+
+    public function sendWhatsappKaryawan()
+    {
+        $url_wa = 'http://116.203.191.58/api/send_message';
+        $header = [
+            'Content-Type: application/json',
+        ];
+        $data = [
+            "phone_no" => "6282111467785",
+            "key" => "c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26",
+            "message" => "Assalamu'alaikum Kang Rhidwan",
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url_wa);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $result = 'Curl error: ' . curl_error($ch);
+        }
+
+        curl_close($ch);
     }
 
     public function sendWhatsappVOC()
     {
-        
+
         $today = Carbon::now();
 
-        
+
         $twoDaysAfter = $today->subDays(1);
 
-        
+
         $order = Payment::whereDate('tgl_kirim', $twoDaysAfter)
-                        ->whereNull('send_voc')
-                        ->where('tipe','transaksi')
-                        ->where('varian','Aqiqah')
-                        ->where('lunas','y')
-                        ->first();
-        
+            ->whereNull('send_voc')
+            ->where('tipe', 'transaksi')
+            ->where('varian', 'Aqiqah')
+            ->where('lunas', 'y')
+            ->first();
+
 
         if (!$order) {
             return response()->json(['status' => false, 'message' => 'Order not found'], 404);

@@ -226,6 +226,7 @@ class SendWAController extends Controller
         );
         $res = curl_exec($ch);
         curl_close($ch);
+
         $this->sendWhatsappKaryawan($id_kantor, $id, $id_order);
     }
 
@@ -234,6 +235,7 @@ class SendWAController extends Controller
         // kantor nya harus ada
         if ($id_kantor) {
             $kantor = Kantor::where('id', $id_kantor)->first();
+            $order = Payment::where('id', $id)->first();
             // no hp nya harus ada
             if ($kantor->tlp) {
                 $url_wa = 'http://116.203.191.58/api/send_message';
@@ -245,8 +247,12 @@ class SendWAController extends Controller
                     "key" => "c9555ab1745ebbe2521611d931cbfd2bf9f39437404f9b26",
                     "message" => "Assalamu'alaikum Cabang " . ' ' . $kantor->kantor . ', yang berbahagia 🙏' . '
             \\n' . 'Saat ini Cabang ' . ' ' . $kantor->kantor . ' mendapatkan Pesanan Aqiqah Baru dengan info : ' . '
-            \\n' . ' ID ORDER : ' . $id_order . '
+            \\n' . ' ID ORDER   : ' . $id_order . '
+            \\n' . ' NAMA CUST  : ' . $order['nama_customer'] . '
+            \\n' . ' TGL KIRIM  : ' . $order['tgl_kirim'] . '
+            \\n' . ' JAM SAMPAI : ' . $order['waktu_kirim'] . '
             \\n' . ' Segera lakukan Konfirmasi ke Konsumen untuk memastikan pesanan sudah sesuai atau update pesanan' . '
+            \\n' . ' wa.me/'.$order['hp'].'
             \\n' . 'Terima Kasih 😊🙏' . '
             \\n' . 'Waasalamualaikum ',
                 ];

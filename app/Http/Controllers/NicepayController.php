@@ -11,6 +11,7 @@ use Illuminate\Pagination;
 // use App\Transaksi;
 // use App\TransThirdparty;
 use App\NicepayLog;
+use App\Http\Controllers\SendWAController;
 
 use Carbon\Carbon;
 // use Response;
@@ -60,6 +61,7 @@ class NicepayController extends Controller
     }
     function handleFinishNotify($payloadText,$requestData,$requestDataHead,$requestDataBody){
         $dana = new Nicepay;
+        $notifPembayaran = new SendWAController();
 
         $acquirementId     = $requestDataBody['acquirementId'];
         $merchantTransId   = $requestDataBody['merchantTransId'];
@@ -71,6 +73,7 @@ class NicepayController extends Controller
         TransThirdparty::where('id_transaksi',$merchantTransId)->update(['requestOvo' => $payloadText]);
         if($acquirementStatus == 'SUCCESS'){
             Transaksi::where('id_transaksi',$merchantTransId)->update(['status' => 'paid']);
+            $notifPembayaran->sendWhatsappManual($merchantTransId);
         }
         elseif($acquirementStatus == 'CLOSED'){
             Transaksi::where('id_transaksi',$merchantTransId)->update(['status' => 'pending']);

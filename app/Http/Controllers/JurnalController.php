@@ -23,15 +23,17 @@ use App\Helpers\JurnalApi;
 
 class JurnalController extends Controller
 {
-    public function getCustomers(){
+    public function getCustomers($getDataTransaksi){
       try {
+          $getDataTransaksi = 'ANA';
+          $jurnalKoneksi = $this->Entitas($getDataTransaksi,$requester = 'konektor');
           // Define the request method and endpoint
           $requestMethod = 'GET';
           $requestPath = '/public/jurnal/api/v1/customers/68843878';
 
           // Make the API request
           $jurnalApi = new JurnalApi();
-          $response = $jurnalApi->request($requestMethod, $requestPath);
+          $response = $jurnalApi->request($jurnalKoneksi, $requestMethod, $requestPath);
 
           // Display the response
           return response()->json(json_decode($response, true));

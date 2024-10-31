@@ -5,22 +5,22 @@ namespace App\Helpers;
 use Exception;
 
 class JurnalApi {
-    private $hmacUsername;
-    private $hmacSecret;
-    private $apiUrl;
+    // private $hmacUsername;
+    // private $hmacSecret;
+    // private $apiUrl;
 
-    public function __construct($environment = 'production') {
-        // $this->hmacUsername = $username;
-        // $this->hmacSecret = $secret;
+    // public function __construct($environment = 'production') {
+    //     // $this->hmacUsername = $username;
+    //     // $this->hmacSecret = $secret;
 
-        $this->hmacUsername = 'K53pOtKTo5ga9Vij';
-        $this->hmacSecret = 'Bsr3sJDPY2OUnRBzdVnoJRenW5Xovdqv';
+    //     $this->hmacUsername = 'K53pOtKTo5ga9Vij';
+    //     $this->hmacSecret = 'Bsr3sJDPY2OUnRBzdVnoJRenW5Xovdqv';
 
-        // Set the environment (default to sandbox)
-        $this->apiUrl = $environment === 'production' 
-                        ? 'https://api.mekari.com' 
-                        : 'https://sandbox-api.mekari.com';
-    }
+    //     // Set the environment (default to sandbox)
+    //     $this->apiUrl = $environment === 'production' 
+    //                     ? 'https://api.mekari.com' 
+    //                     : 'https://sandbox-api.mekari.com';
+    // }
 
     private function generateSignature($method, $path) {
         $dateString = gmdate('D, d M Y H:i:s') . ' GMT';
@@ -34,7 +34,12 @@ class JurnalApi {
         ];
     }
 
-    public function request($method, $path) {
+    public function request($koneksi, $method, $path) {
+        $this->hmacUsername = $koneksi['jurnal_auth'];
+        $this->hmacSecret = $koneksi['jurnal_key'];
+
+        $this->apiUrl = 'https://api.mekari.com' ;
+
         $signatureData = $this->generateSignature($method, $path);
 
         $hmacHeader = 'hmac username="' . $this->hmacUsername . '", algorithm="hmac-sha256", headers="date request-line", signature="' . $signatureData['signature'] . '"';

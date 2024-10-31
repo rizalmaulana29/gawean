@@ -30,7 +30,8 @@ class JurnalController extends Controller
           $requestPath = '/public/jurnal/api/v1/customers/68843878';
 
           // Make the API request
-          $response = JurnalApi::request($requestMethod, $requestPath);
+          $jurnalApi = new JurnalApi();
+          $response = $jurnalApi->request($requestMethod, $requestPath);
 
           // Display the response
           return response()->json(json_decode($response, true));

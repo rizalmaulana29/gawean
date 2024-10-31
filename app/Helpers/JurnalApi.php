@@ -9,7 +9,7 @@ class JurnalApi {
     private $hmacSecret;
     private $apiUrl;
 
-    public function __construct($environment = 'sandbox') {
+    public function __construct($environment = 'production') {
         // $this->hmacUsername = $username;
         // $this->hmacSecret = $secret;
 

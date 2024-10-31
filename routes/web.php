@@ -38,6 +38,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('signup/agen', ['uses' => 'AgenController@signup']);
 	$router->get('email/verify', ['uses' => 'AgenController@verifyEmail']);
 
+	//testing get customer from jurnal with new configuration
+	$router->get('/customers', 'JurnalController@getCustomers');
+
 	$router->post('create/customer', 		['uses' => 'JurnalController@CreateCustomer']);
 	$router->post('create/salesorder', 		['uses' => 'JurnalController@SalesOrder']);
 	$router->get('filter', 					['uses' => 'JurnalController@Filtering']);

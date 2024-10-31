@@ -19,9 +19,27 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use App\Helpers\JurnalApi;
 
 class JurnalController extends Controller
 {
+    public function getCustomers(){
+      try {
+          // Define the request method and endpoint
+          $requestMethod = 'GET';
+          $requestPath = '/public/jurnal/api/v1/customers/68843878';
+
+          // Make the API request
+          $response = JurnalApi::request($requestMethod, $requestPath);
+
+          // Display the response
+          return response()->json(json_decode($response, true));
+
+      } catch (\Exception $e) {
+          return response()->json(['error' => $e->getMessage()], 500);
+      }
+    }
+
     public function Filtering(){
       $endDate = Carbon::now()->endOfMonth();
       $start = Carbon::today()->addHour(1)->toDateTimestring();

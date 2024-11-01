@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\JurnalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,12 @@
 // header('Access-Control-Allow-Origin: *');
 // header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
 // header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
+// routes/web.php atau routes/api.php
+$router->get('/test-jurnal', function () {
+    $jurnalApi = app(App\Services\JurnalApi::class);
+    return response()->json(['status' => 'success', 'message' => 'JurnalApi instance created']);
+});
+
 
 $router->get('/', function () use ($router) {
 	return $router->app->version();
@@ -26,6 +33,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('cart', 	['uses' => 'CartController@cart']);
 	$router->get('transaction', ["middleware" => "jwt.auth", 'uses' => 'TransactionController@detailTrx']);
 	$router->post('transaction/detail', ['uses' => 'TransactionController@detailTrxPublic']);
+	$router->get('/customers', [JurnalController::class, 'getCustomers']);
 
 	$router->get('order', ['uses' => 'OrderController@order']);
 	$router->get('vendor', ['uses' => 'VendorController@vendor']);

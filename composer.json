@@ -10,11 +10,14 @@
         "barryvdh/laravel-dompdf": "^0.8.6",
         "firebase/php-jwt": "^5",
         "guzzlehttp/guzzle": "^6.5",
-        "illuminate/mail": "5.8",
-        "intervention/image": "^2.5",
+        "illuminate/hashing": "^5.8",
+        "illuminate/mail": "^5.8",
+        "intervention/image": "^2.7",
         "laravel/lumen-framework": "5.8.*",
         "league/flysystem": "^1.0",
-        "superbalist/laravel-google-cloud-storage": "^2.2"
+        "nesbot/carbon": "^2.72",
+        "superbalist/laravel-google-cloud-storage": "^2.2",
+        "symfony/http-foundation": "^4.4"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

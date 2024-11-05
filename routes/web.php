@@ -12,8 +12,7 @@ use App\Http\Controllers\JurnalController;
 |
 */
 
-<<<<<<< HEAD
- //header('Access-Control-Allow-Origin: *');
+
  //header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
  //header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
 //$router->get('/test', function () {
@@ -31,7 +30,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     // Route untuk get customers
     $router->get('customers', 'JurnalController@getCustomers');
 });
-=======
+
 // header('Access-Control-Allow-Origin: *');
 // header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
 // header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
@@ -41,7 +40,7 @@ $router->get('/test-jurnal', function () {
     return response()->json(['status' => 'success', 'message' => 'JurnalApi instance created']);
 });
 
->>>>>>> fd0bdd20e9b3c7c78c65876536f7d948a000e97b
+
 
 $router->get('/', function () use ($router) {
 	return $router->app->version();

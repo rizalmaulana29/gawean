@@ -15,7 +15,7 @@ $app = require __DIR__.'/../bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
-| Run The Application
+| Run The ApplicationRoutesRequests.php
 |--------------------------------------------------------------------------
 |
 | Once we have the application, we can handle the incoming request
@@ -26,3 +26,4 @@ $app = require __DIR__.'/../bootstrap/app.php';
 */
 
 $app->run();
+   

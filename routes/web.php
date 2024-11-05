@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\JurnalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,9 +12,24 @@
 |
 */
 
-// header('Access-Control-Allow-Origin: *');
-// header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
-// header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
+ //header('Access-Control-Allow-Origin: *');
+ //header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+ //header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin, Authorization');
+//$router->get('/test', function () {
+  //  return response()->json(['message' => 'Test route is working']);
+//});
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->get('customers', 'JurnalController@getCustomers');
+});
+
+$router->get('/test', function () {
+    return response()->json(['message' => 'Route is working!']);
+});
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+    // Route untuk get customers
+    $router->get('customers', 'JurnalController@getCustomers');
+});
 
 $router->get('/', function () use ($router) {
 	return $router->app->version();
@@ -21,6 +37,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 	
+
 	$router->get('harga', 	['uses' => 'HargaController@show']);
 	$router->get('code',	['uses' => 'CodeController@unicCode']);
 	$router->post('cart', 	['uses' => 'CartController@cart']);
@@ -39,7 +56,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('email/verify', ['uses' => 'AgenController@verifyEmail']);
 
 	//testing get customer from jurnal with new configuration
-	$router->get('/customers', 'JurnalController@getCustomers');
+	
+
+	//$router->get('customers', ['uses' => 'getCustomers']);
+
 
 	$router->post('create/customer', 		['uses' => 'JurnalController@CreateCustomer']);
 	$router->post('create/salesorder', 		['uses' => 'JurnalController@SalesOrder']);

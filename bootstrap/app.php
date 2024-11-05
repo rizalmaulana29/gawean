@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\JurnalController;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -49,6 +50,7 @@ $app->alias('image', Intervention\Image\Facades\Image::class);
 | your own bindings here if you like or you can make another file.
 |
 */
+
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Harga;
 use App\Kantor;
@@ -20,68 +21,71 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Helpers\JurnalApi;
+use Laravel\Lumen\Routing\Controller as BaseController;
+use GuzzleHttp\Client;
 
-class JurnalController extends Controller
+class JurnalController extends Controller 
 {
-    public function getCustomers($getDataTransaksi){
-      try {
-          $getDataTransaksi = 'ANA';
-          $jurnalKoneksi = $this->Entitas($getDataTransaksi,$requester = 'konektor');
-          // Define the request method and endpoint
-          $requestMethod = 'GET';
-          $requestPath = '/public/jurnal/api/v1/customers/68843878';
+    protected $jurnalApi;
 
-          // Make the API request
-          $jurnalApi = new JurnalApi();
-          $response = $jurnalApi->request($jurnalKoneksi, $requestMethod, $requestPath);
-
-          // Display the response
-          return response()->json(json_decode($response, true));
-
-      } catch (\Exception $e) {
-          return response()->json(['error' => $e->getMessage()], 500);
-      }
+    public function __construct(JurnalApi $jurnalApi)
+    {
+        $this->jurnalApi = $jurnalApi;
     }
 
-    public function Filtering(){
-      $endDate = Carbon::now()->endOfMonth();
-      $start = Carbon::today()->addHour(1)->toDateTimestring();
+    public function getCustomers()
+    {
+        try {
+            $requestMethod = 'GET';
+            $requestPath = '/core/api/v1/customers';
+            $response = $this->jurnalApi->request($requestMethod, $requestPath);
+            return response()->json(json_decode($response, true));
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
-      $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
-                                          'ra_payment_dua.tgl_transaksi',
-                                          'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
-                                          'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
-                                          'tunai','ra_order_dua.id_entitas as id_entitas')
-                                 ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
-                                 ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
-                                          ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
-                                 ->where('tunai','Tunai')
-                                 ->where('status','paid')
-                                 ->where('varian','!=','Qurban')
-                                 ->where('ra_payment_dua.lunas','y')
-                                 ->where('person_id','=','')
-                                 ->where(function($q) {
-                                            $q->where('sisa_pembayaran', '=', 0)
-                                            ->orWhereNull('sisa_pembayaran');
-                                        })
-                                 ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
-                                 ->first();
-                                 // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
-                                 // ->get();
 
-      if (isset($getDataTransaksi)) {
-        $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
-        if ($validasiJurnal['status'] == true) {
-          $createCustomer = $this->CreateCustomer($getDataTransaksi);
-          if ($createCustomer['status'] == true) {
-            if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
-              $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
-                if ($salesOrder['status'] == true) {
-                        return response()->json(["status"       => true,
-                                                 "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
-                                                 "Data Request" => $getDataTransaksi,
-                                                 "Data Response"=> $salesOrdertoInvoice['message']
-                                                ],200);
+public function Filtering(){
+  $endDate = Carbon::now()->endOfMonth();
+  $start = Carbon::today()->addHour(1)->toDateTimestring();
+
+  $getDataTransaksi = Payment::select('ra_payment_dua.id as id','id_transaksi','nama_customer','alamat',
+                                      'ra_payment_dua.tgl_transaksi',
+                                      'ra_payment_dua.id_payment_method','tgl_kirim','hp','email','ra_payment_dua.id_kantor',
+                                      'ra_payment_dua.id_agen','nominal_diskon','nominal_bayar','nominal_total','jenis','tgl',
+                                      'tunai','ra_order_dua.id_entitas as id_entitas')
+                             ->leftjoin('ra_order_dua', 'ra_payment_dua.id_transaksi', '=', 'ra_order_dua.id_order')
+                             ->where([["ra_payment_dua.tgl_transaksi", ">=", $start],
+                                      ["ra_payment_dua.tgl_transaksi", "<=", $endDate->toDateTimestring()]])
+                             ->where('tunai','Tunai')
+                             ->where('status','paid')
+                             ->where('varian','!=','Qurban')
+                             ->where('ra_payment_dua.lunas','y')
+                             ->where('person_id','=','')
+                             ->where(function($q) {
+                                        $q->where('sisa_pembayaran', '=', 0)
+                                        ->orWhereNull('sisa_pembayaran');
+                                    })
+                             ->orderBy('ra_payment_dua.tgl_transaksi','ASC')
+                             ->first();
+                             // ->limit(50) //==>untuk mengambil data lebih banyak *update juga di createCustomer looping data
+                             // ->get();
+
+  if (isset($getDataTransaksi)) {
+    $validasiJurnal = $this->Entitas($getDataTransaksi['id_entitas'],$requester = $getDataTransaksi['id_transaksi']);
+    if ($validasiJurnal['status'] == true) {
+      $createCustomer = $this->CreateCustomer($getDataTransaksi);
+      if ($createCustomer['status'] == true) {
+        if ($getDataTransaksi['tgl_kirim'] <= $endDate->toDateString()) {
+          $salesOrder = $this->SalesOrder($getDataTransaksi,$createCustomer['message']);
+            if ($salesOrder['status'] == true) {
+                    return response()->json(["status"       => true,
+                                             "message"      => "Data sales invoice berhasil di inputkan ke JurnalID",
+                                             "Data Request" => $getDataTransaksi,
+                                             "Data Response"=> $salesOrder['message']
+                                            ],200);
+
                    
                 }
                 return $salesOrder;

@@ -3,24 +3,47 @@
 namespace App\Helpers;
 
 use Exception;
+use GuzzleHttp\Client;
 
 class JurnalApi {
-    // private $hmacUsername;
-    // private $hmacSecret;
-    // private $apiUrl;
+    private $hmacUsername;
+    private $hmacSecret;
+    private $apiUrl;
 
-    // public function __construct($environment = 'production') {
-    //     // $this->hmacUsername = $username;
-    //     // $this->hmacSecret = $secret;
+    public function __construct($environment = 'production') {
+        $this->hmacUsername = 'K53pOtKTo5ga9Vij';
+        $this->hmacSecret ='Bsr3sJDPY2OUnRBzdVnoJRenW5Xovdqv';
+        $this->apiUrl = $environment === 'production' 
+                        ? 'https://api.mekari.com'
+                        : 'https://sandbox-api.mekari.com';
+    }
 
-    //     $this->hmacUsername = 'K53pOtKTo5ga9Vij';
-    //     $this->hmacSecret = 'Bsr3sJDPY2OUnRBzdVnoJRenW5Xovdqv';
+    public function request($method, $path) {
+        $signatureData = $this->generateSignature($method, $path);
+        $hmacHeader = 'hmac username="' . $this->hmacUsername . '", algorithm="hmac-sha256", headers="date request-line", signature="' . $signatureData['signature'] . '"';
 
-    //     // Set the environment (default to sandbox)
-    //     $this->apiUrl = $environment === 'production' 
-    //                     ? 'https://api.mekari.com' 
-    //                     : 'https://sandbox-api.mekari.com';
-    // }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->apiUrl . $path);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Tambahkan opsi ini untuk menonaktifkan verifikasi SSL
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: ' . $hmacHeader,
+            'Date: ' . $signatureData['date'],
+            'Accept: application/json'
+        ]);
+
+        $response = curl_exec($ch);
+        
+        if(curl_errno($ch)) {
+            throw new \Exception('cURL Error: ' . curl_error($ch));
+        }
+        
+        curl_close($ch);
+        return $response;
+    }
 
     private function generateSignature($method, $path) {
         $dateString = gmdate('D, d M Y H:i:s') . ' GMT';
@@ -32,33 +55,5 @@ class JurnalApi {
             'signature' => $signature,
             'date' => $dateString
         ];
-    }
-
-    public function request($koneksi, $method, $path) {
-        $this->hmacUsername = $koneksi['jurnal_auth'];
-        $this->hmacSecret = $koneksi['jurnal_key'];
-
-        $this->apiUrl = 'https://api.mekari.com' ;
-
-        $signatureData = $this->generateSignature($method, $path);
-
-        $hmacHeader = 'hmac username="' . $this->hmacUsername . '", algorithm="hmac-sha256", headers="date request-line", signature="' . $signatureData['signature'] . '"';
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->apiUrl . $path);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Authorization: ' . $hmacHeader,
-            'Date: ' . $signatureData['date'],
-            'Accept: application/json'
-        ]);
-
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            throw new Exception('cURL Error: ' . curl_error($ch));
-        } else {
-            return $response;
-        }
-        curl_close($ch);
     }
 }

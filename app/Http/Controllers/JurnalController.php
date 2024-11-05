@@ -20,13 +20,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-<<<<<<< HEAD
 use App\Helpers\JurnalApi;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use GuzzleHttp\Client;
-=======
 use App\Services\JurnalApi;
->>>>>>> fd0bdd20e9b3c7c78c65876536f7d948a000e97b
+
 
 class JurnalController extends Controller 
 {
@@ -40,12 +38,12 @@ class JurnalController extends Controller
     public function getCustomers()
     {
         try {
-<<<<<<< HEAD
+
             $requestMethod = 'GET';
             $requestPath = '/core/api/v1/customers';
             $response = $this->jurnalApi->request($requestMethod, $requestPath);
             return response()->json(json_decode($response, true));
-=======
+
             // Tentukan metode permintaan dan endpoint
             $requestMethod = 'GET';
             $requestPath = '/public/jurnal/api/v1/customers';
@@ -56,12 +54,12 @@ class JurnalController extends Controller
             // Tampilkan respons
             return response()->json(json_decode($response, true));
 
->>>>>>> fd0bdd20e9b3c7c78c65876536f7d948a000e97b
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-<<<<<<< HEAD
+
 
 
 public function Filtering(){
@@ -104,7 +102,7 @@ public function Filtering(){
                                              "Data Response"=> $salesOrder['message']
                                             ],200);
 
-=======
+
   
   
     public function Filtering(){
@@ -145,7 +143,7 @@ public function Filtering(){
                               "Data Request" => $getDataTransaksi,
                               "Data Response"=> $salesOrder['message'] // Ubah ke $salesOrder['message']
                           ], 200);
->>>>>>> fd0bdd20e9b3c7c78c65876536f7d948a000e97b
+
                    
                 }
                 return $salesOrder;

@@ -9,12 +9,21 @@
         "barryvdh/laravel-cors": "^0.11.4",
         "barryvdh/laravel-dompdf": "^0.8.6",
         "firebase/php-jwt": "^5",
+<<<<<<< HEAD
         "guzzlehttp/guzzle": "^7.8",
         "illuminate/mail": "5.8",
         "intervention/image": "^2.5",
+=======
+        "guzzlehttp/guzzle": "^6.5",
+        "illuminate/hashing": "^5.8",
+        "illuminate/mail": "^5.8",
+        "intervention/image": "^2.7",
+>>>>>>> fd0bdd20e9b3c7c78c65876536f7d948a000e97b
         "laravel/lumen-framework": "5.8.*",
         "league/flysystem": "^1.0",
-        "superbalist/laravel-google-cloud-storage": "^2.2"
+        "nesbot/carbon": "^2.72",
+        "superbalist/laravel-google-cloud-storage": "^2.2",
+        "symfony/http-foundation": "^4.4"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

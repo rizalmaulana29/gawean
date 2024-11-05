@@ -29,7 +29,7 @@ $app->withEloquent();
 
 
 $app->configure('image');
-
+$app->configure('Services');
 $app->configure('mail');
 $app->configure('filesystems');
 // $app->configure('dompdf');
@@ -66,6 +66,14 @@ $app->singleton(
 Illuminate\Contracts\Filesystem\Factory::class,
 function ($app) {
 return new Illuminate\Filesystem\FilesystemManager($app);
+});
+
+$app->singleton(App\Providers\JurnalApiServiceProvider::class, function ($app) {
+    return new App\Providers\JurnalApiServiceProvider(
+        config('services.jurnal.username'),
+        config('services.jurnal.secret'),
+        config('services.jurnal.environment', 'sandbox')
+    );
 });
 
 /*
@@ -112,14 +120,17 @@ $app->routeMiddleware([
 
 // $app->register(Barryvdh\Cors\ServiceProvider::class);
 // $app->register(\Fruitcake\Cors\CorsServiceProvider::class);
-$app->register(App\Providers\AppServiceProvider::class);
+
+$app->register(App\Providers\JurnalApiServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Intervention\Image\ImageServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(App\Providers\GoogleCloudStorageServiceProvider::class);
-// $app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+
+
+//$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
